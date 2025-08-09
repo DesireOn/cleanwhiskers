@@ -1,0 +1,8 @@
+{
+  "name": "cleanwhiskers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/DesireOn/cleanwhiskers.git",
+  "author": "Petar Stoqnov <desireon98@gmail.com>",
+  "license": "MIT"
+}
