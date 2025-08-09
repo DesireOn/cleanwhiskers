@@ -3,47 +3,48 @@ name: Deploy to Production
 on:
   push:
     branches:
-        - main  # Deploy to production when pushing to main branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     env:
-        APP_ENV: prod
-        RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-        EC2_USER: ${{ secrets.EC2_USER }}
+      APP_ENV: prod
+      RDS_ENDPOINT: ${{ secrets.RDS_ENDPOINT }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_USER: ${{ secrets.EC2_USER }}
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-            php-version: '8.3'
-            extensions: zip, intl, mbstring, curl, bcmath, xml
+          php-version: '8.3'
+          extensions: zip, intl, mbstring, curl, bcmath, xml
 
       - name: Set .env file
         run: |
-            cp .env.production .env
-            envsubst '$RDS_ENDPOINT $DB_USER $DB_PASSWORD' < .env > .env.tmp
-            mv .env.tmp .env
+          cp .env.production .env
+          envsubst '$RDS_ENDPOINT $DB_USER $DB_PASSWORD' < .env > .env.tmp
+          mv .env.tmp .env
 
       - name: Install Dependencies
         env:
           SKIP_CACHE_CLEAR: "1"
         run: |
-            composer install --no-dev --optimize-autoloader  --no-scripts
+          composer install --no-dev --optimize-autoloader --no-scripts
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20.x'
+          cache: 'yarn'
 
       - name: Install Node.js Dependencies
         run: yarn install
@@ -53,23 +54,23 @@ jobs:
 
       - name: Deploy to Production Server
         run: |
-            echo "$SSH_PRIVATE_KEY" > private_key.pem
-            chmod 600 private_key.pem
-            rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_HOST:/var/www/cleanwhiskers.com
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_HOST:/var/www/cleanwhiskers.com
 
       - name: Run Migrations on Production Server
         run: |
-            echo "$SSH_PRIVATE_KEY" > private_key.pem
-            chmod 600 private_key.pem
-            ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-            "cd /var/www/cleanwhiskers.com && php bin/console --no-interaction doctrine:migrations:migrate"
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && php bin/console --no-interaction doctrine:migrations:migrate"
 
       - name: Clear Cache on Production Server
         run: |
-            echo "$SSH_PRIVATE_KEY" > private_key.pem
-            chmod 600 private_key.pem
-            ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-            "cd /var/www/cleanwhiskers.com && php bin/console cache:clear"
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && php bin/console cache:clear"
 
       - name: Run Asset Map Compile on Prod Server
         run: |
