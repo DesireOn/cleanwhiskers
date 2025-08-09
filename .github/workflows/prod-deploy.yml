@@ -65,6 +65,13 @@ jobs:
           chmod 600 private_key.pem
           rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_HOST:/var/www/cleanwhiskers.com
 
+      - name: Ensure writable directories on Production Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && mkdir -p var/cache var/log public/build && chown -R www-data:www-data var public/build"
+
       - name: Run Migrations on Production Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
