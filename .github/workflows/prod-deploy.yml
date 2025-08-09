@@ -70,7 +70,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && mkdir -p var/cache var/log public/build public/assets public/bundles assets/vendor && sudo chown -R www-data:www-data var public/build public/assets public/bundles assets/vendor"
+          "cd /var/www/cleanwhiskers.com && mkdir -p var/cache var/log public/build && sudo chown -R www-data:www-data var public/build"
 
       - name: Run Migrations on Production Server
         run: |
