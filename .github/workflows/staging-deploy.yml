@@ -74,6 +74,15 @@ jobs:
           chmod 600 private_key.pem
           rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_STAGING_HOST:/var/www/staging.cleanwhiskers.com
 
+      - name: Ensure writable directories on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "sudo mkdir -p /var/www/staging.cleanwhiskers.com/var/cache/prod \
+          && sudo chown -R www-data:www-data /var/www/staging.cleanwhiskers.com/var \
+          && sudo chmod -R 775 /var/www/staging.cleanwhiskers.com/var/cache /var/www/staging.cleanwhiskers.com/var/log"
+
       - name: Run Migrations on Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
