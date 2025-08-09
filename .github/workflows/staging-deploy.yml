@@ -1,0 +1,87 @@
+name: Deploy to Staging 
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_ENV: staging
+      STAGING_RDS_ENDPOINT: ${{ secrets.STAGING_RDS_ENDPOINT }}
+      STAGING_DB_USER: ${{ secrets.STAGING_DB_USER }}
+      STAGING_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      EC2_STAGING_HOST: ${{ secrets.EC2_STAGING_HOST }}
+      EC2_USER: ${{ secrets.EC2_USER }}
+
+    steps:
+      - name: Checkout latest staging branch
+        uses: actions/checkout@v3
+        with:
+          ref: staging
+          fetch-depth: 0  # Ensures full history is available (important if you're rebasing or using submodules)
+
+      - name: Pull latest code from staging
+        run: |
+          git checkout staging
+          git pull origin staging
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: zip, intl, mbstring, curl, bcmath, xml
+
+      - name: Set .env file
+        run: |
+          cp .env.staging .env
+          envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD' < .env > .env.tmp
+          mv .env.tmp .env
+
+      - name: Install PHP Dependencies
+        env:
+          SKIP_CACHE_CLEAR: "1"
+        run: |
+          composer install --no-dev --optimize-autoloader
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Node.js Dependencies
+        run: yarn install
+
+      - name: Build Frontend Assets
+        run: yarn build
+
+      - name: Deploy to Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_STAGING_HOST:/var/www/staging.cleanwhiskers.com
+
+      - name: Run Migrations on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console --no-interaction doctrine:migrations:migrate"
+
+      - name: Clear Cache on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console cache:clear"
+
+      - name: Run Asset Map Compile on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && bin/console asset-map:compile"
