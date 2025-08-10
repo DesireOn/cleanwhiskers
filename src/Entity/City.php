@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use App\Entity\Traits\Timestampable;
+use App\Repository\CityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Doctrine\DBAL\Types\Types;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: CityRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'city', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_city_slug', columns: ['slug'])

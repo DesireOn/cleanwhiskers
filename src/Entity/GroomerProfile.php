@@ -3,20 +3,19 @@
 namespace App\Entity;
 
 use App\Entity\Traits\Timestampable;
+use App\Repository\GroomerProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: GroomerProfileRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'groomer_profile', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_groomer_slug', columns: ['slug'])
 ], indexes: [
-    new ORM\Index(name: 'idx_groomer_primary_city', columns: ['primary_city_id']),
-    new ORM\Index(name: 'idx_groomer_rating_avg', columns: ['rating_avg']),
-    new ORM\Index(name: 'idx_groomer_is_verified', columns: ['is_verified'])
+    new ORM\Index(name: 'idx_groomer_search', columns: ['primary_city_id', 'is_verified', 'rating_avg', 'rating_count'])
 ])]
 class GroomerProfile
 {

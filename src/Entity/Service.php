@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use App\Entity\Traits\Timestampable;
+use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ServiceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'service', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_service_slug', columns: ['slug'])
