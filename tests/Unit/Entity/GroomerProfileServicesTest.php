@@ -18,12 +18,13 @@ final class GroomerProfileServicesTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
+        $city = new City('Sofia');
 
-        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'best-groomers', 'About');
+        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'About');
+        $profile->refreshSlugFrom($profile->getBusinessName());
         $service = (new Service())
-            ->setName('Bath')
-            ->setSlug('bath');
+            ->setName('Bath');
+        $service->refreshSlugFrom($service->getName());
 
         $profile->addService($service);
         self::assertTrue($profile->getServices()->contains($service));

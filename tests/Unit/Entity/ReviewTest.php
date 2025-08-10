@@ -18,8 +18,8 @@ final class ReviewTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
-        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'biz', 'About');
+        $city = new City('Sofia');
+        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'About');
 
         $author = (new User())
             ->setEmail('owner@example.com')
@@ -41,8 +41,8 @@ final class ReviewTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
-        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'biz', 'About');
+        $city = new City('Sofia');
+        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'About');
 
         $author = (new User())
             ->setEmail('owner@example.com')

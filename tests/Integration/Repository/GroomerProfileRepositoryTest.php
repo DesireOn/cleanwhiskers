@@ -34,13 +34,13 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
             ->setEmail('groomer@example.com')
             ->setPassword('hash')
             ->setRoles([User::ROLE_GROOMER]);
-        $city = new City('Sofia', 'sofia');
+        $city = new City('Sofia');
 
         $this->em->persist($user);
         $this->em->persist($city);
         $this->em->flush();
 
-        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'best-groomers', 'About us');
+        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'About us');
         $this->em->persist($profile);
         $this->em->flush();
         $this->em->clear();

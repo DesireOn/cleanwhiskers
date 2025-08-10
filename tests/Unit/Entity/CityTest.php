@@ -11,7 +11,8 @@ class CityTest extends TestCase
 {
     public function testConstructSetsProperties(): void
     {
-        $city = new City('Sofia', 'sofia');
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
 
         self::assertSame('Sofia', $city->getName());
         self::assertSame('sofia', $city->getSlug());
