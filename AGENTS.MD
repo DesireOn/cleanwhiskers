@@ -223,7 +223,6 @@ Definition of Done (DoD)
 
  PR template completed
 
- PROJECT_CONTEXT.md updated (autogen sections refreshed).
 
 Useful Commands
 bash
