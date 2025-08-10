@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\GroomerProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GroomerProfileRepository::class)]
@@ -35,6 +37,11 @@ class GroomerProfile
     #[ORM\Column(type: 'text')]
     private string $about;
 
+    /** @var Collection<int, Service> */
+    #[ORM\ManyToMany(targetEntity: Service::class)]
+    #[ORM\JoinTable(name: 'groomer_profile_service')]
+    private Collection $services;
+
     public function __construct(User $user, City $city, string $businessName, string $slug, string $about)
     {
         if (!in_array(User::ROLE_GROOMER, $user->getRoles(), true)) {
@@ -46,6 +53,7 @@ class GroomerProfile
         $this->businessName = $businessName;
         $this->slug = $slug;
         $this->about = $about;
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,5 +84,29 @@ class GroomerProfile
     public function getAbout(): string
     {
         return $this->about;
+    }
+
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services->add($service);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        $this->services->removeElement($service);
+
+        return $this;
     }
 }
