@@ -72,6 +72,13 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && php bin/console --no-interaction --allow-no-migration doctrine:migrations:migrate"
 
+      - name: Install Importmap on Production Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && php bin/console importmap:install"
+
       - name: Clear Cache on Production Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
