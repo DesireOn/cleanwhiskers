@@ -7,10 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'groomer_profile', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_groomer_slug', columns: ['slug'])
 ], indexes: [
@@ -117,14 +115,6 @@ class GroomerProfile
     {
         $this->slug = $slug;
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function ensureSlug(): void
-    {
-        if (!$this->slug) {
-            $this->slug = (new AsciiSlugger())->slug($this->name)->lower()->toString();
-        }
     }
 
     public function getBio(): ?string
