@@ -12,7 +12,7 @@ CleanWhiskers is an early-stage Symfony application. The codebase currently expo
 
 ## Current Features
 - `HomepageController` maps `/` to `templates/homepage/index.html.twig`, rendering a welcome message.
-- No domain entities or repositories have been defined yet.
+- `City` entity stores a city's name, unique slug, and creation timestamp, accessed via `CityRepository::findOneBySlug()`.
 - `AppFixtures` class exists but loads no data.
 
 ## Development Setup
@@ -23,7 +23,7 @@ CleanWhiskers is an early-stage Symfony application. The codebase currently expo
 
 ## Testing & QA
 - Quality scripts are expected: `composer lint:php`, `composer stan`, and `composer test`
-- Unit tests bootstrap via `tests/bootstrap.php`; no test cases implemented yet
+- Unit and integration tests cover the `City` entity and repository
 
 ## Notes
 - `PROJECT_CONTEXT.md` should be updated whenever project state changes
