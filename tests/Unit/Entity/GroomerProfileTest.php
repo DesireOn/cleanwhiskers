@@ -17,9 +17,9 @@ final class GroomerProfileTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
+        $city = new City('Sofia');
 
-        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'best-groomers', 'About us');
+        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'About us', 'best-groomers');
 
         self::assertSame($user, $profile->getUser());
         self::assertSame($city, $profile->getCity());
@@ -34,9 +34,9 @@ final class GroomerProfileTest extends TestCase
             ->setEmail('owner@example.com')
             ->setRoles([User::ROLE_PET_OWNER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
+        $city = new City('Sofia');
 
         $this->expectException(\InvalidArgumentException::class);
-        new GroomerProfile($user, $city, 'Biz', 'biz', 'About');
+        new GroomerProfile($user, $city, 'Biz', 'About');
     }
 }

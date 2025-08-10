@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Domain\Shared\SluggerTrait;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'service')]
 class Service
 {
+    use SluggerTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -21,7 +23,7 @@ class Service
     private string $name;
 
     #[ORM\Column(length: 255, unique: true)]
-    private string $slug;
+    private string $slug = '';
 
     public function getId(): ?int
     {

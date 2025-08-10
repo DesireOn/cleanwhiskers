@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Domain\Shared\SluggerTrait;
 use App\Repository\CityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_city_slug', fields: ['slug'])]
 class City
 {
+    use SluggerTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,12 +25,12 @@ class City
     private string $name;
 
     #[ORM\Column(length: 255, unique: true)]
-    private string $slug;
+    private string $slug = '';
 
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
-    public function __construct(string $name, string $slug)
+    public function __construct(string $name, string $slug = '')
     {
         $this->name = $name;
         $this->slug = $slug;
@@ -48,6 +50,13 @@ class City
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
