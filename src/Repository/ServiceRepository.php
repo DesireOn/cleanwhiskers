@@ -22,4 +22,14 @@ class ServiceRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['slug' => $slug]);
     }
+
+    public function existsBySlug(string $slug): bool
+    {
+        return null !== $this->createQueryBuilder('s')
+            ->select('1')
+            ->where('s.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

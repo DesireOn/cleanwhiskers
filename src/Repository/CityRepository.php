@@ -22,4 +22,14 @@ class CityRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['slug' => $slug]);
     }
+
+    public function existsBySlug(string $slug): bool
+    {
+        return null !== $this->createQueryBuilder('c')
+            ->select('1')
+            ->where('c.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

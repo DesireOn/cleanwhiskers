@@ -22,4 +22,14 @@ class GroomerProfileRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['slug' => $slug]);
     }
+
+    public function existsBySlug(string $slug): bool
+    {
+        return null !== $this->createQueryBuilder('g')
+            ->select('1')
+            ->where('g.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

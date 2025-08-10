@@ -29,8 +29,7 @@ final class ServiceRepositoryTest extends KernelTestCase
     public function testFindOneBySlug(): void
     {
         $service = (new Service())
-            ->setName('Grooming')
-            ->setSlug('grooming');
+            ->setName('Grooming');
 
         $this->em->persist($service);
         $this->em->flush();

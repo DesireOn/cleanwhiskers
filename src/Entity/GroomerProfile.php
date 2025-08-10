@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Domain\Shared\SluggerTrait;
 use App\Repository\GroomerProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_groomer_profile_slug', fields: ['slug'])]
 class GroomerProfile
 {
+    use SluggerTrait;
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,9 +33,6 @@ class GroomerProfile
     #[ORM\Column(name: 'business_name', length: 255)]
     private string $businessName;
 
-    #[ORM\Column(length: 255, unique: true)]
-    private string $slug;
-
     #[ORM\Column(type: 'text')]
     private string $about;
 
@@ -42,7 +41,7 @@ class GroomerProfile
     #[ORM\JoinTable(name: 'groomer_profile_service')]
     private Collection $services;
 
-    public function __construct(User $user, City $city, string $businessName, string $slug, string $about)
+    public function __construct(User $user, City $city, string $businessName, string $about, string $slug = '')
     {
         if (!in_array(User::ROLE_GROOMER, $user->getRoles(), true)) {
             throw new \InvalidArgumentException('User must have groomer role.');
@@ -51,8 +50,8 @@ class GroomerProfile
         $this->user = $user;
         $this->city = $city;
         $this->businessName = $businessName;
-        $this->slug = $slug;
         $this->about = $about;
+        $this->slug = $slug;
         $this->services = new ArrayCollection();
     }
 
@@ -74,11 +73,6 @@ class GroomerProfile
     public function getBusinessName(): string
     {
         return $this->businessName;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
     }
 
     public function getAbout(): string

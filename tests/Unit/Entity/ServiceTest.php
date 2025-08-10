@@ -13,7 +13,7 @@ final class ServiceTest extends TestCase
     {
         $service = new Service();
         $service->setName('Bath');
-        $service->setSlug('bath');
+        $service->refreshSlugFrom($service->getName());
 
         self::assertSame('Bath', $service->getName());
         self::assertSame('bath', $service->getSlug());

@@ -19,8 +19,8 @@ final class BookingRequestTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
-        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'biz', 'About');
+        $city = new City('Sofia');
+        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'About');
 
         $owner = (new User())
             ->setEmail('owner@example.com')
@@ -35,8 +35,8 @@ final class BookingRequestTest extends TestCase
         self::assertInstanceOf(\DateTimeImmutable::class, $request->getRequestedAt());
 
         $service = (new Service())
-            ->setName('Bath')
-            ->setSlug('bath');
+            ->setName('Bath');
+        $service->refreshSlugFrom($service->getName());
         $request->setService($service);
         $request->setNotes('Please be gentle');
         $request->setStatus(BookingRequest::STATUS_ACCEPTED);
@@ -52,8 +52,8 @@ final class BookingRequestTest extends TestCase
             ->setEmail('groomer@example.com')
             ->setRoles([User::ROLE_GROOMER])
             ->setPassword('hash');
-        $city = new City('Sofia', 'sofia');
-        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'biz', 'About');
+        $city = new City('Sofia');
+        $groomer = new GroomerProfile($groomerUser, $city, 'Biz', 'About');
 
         $owner = (new User())
             ->setEmail('owner@example.com')
