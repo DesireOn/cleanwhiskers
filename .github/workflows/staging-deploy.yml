@@ -87,3 +87,10 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
           "cd /var/www/staging.cleanwhiskers.com && php bin/console cache:clear"
+
+      - name: Set Cache Directory Permissions on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && sudo chown -R www-data:www-data var/cache/prod && sudo chmod -R 775 var/cache/prod/"
