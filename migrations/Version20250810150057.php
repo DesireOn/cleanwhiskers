@@ -16,7 +16,7 @@ final class Version20250810150057 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        if ($this->connection->getDatabasePlatform()->getName() === 'sqlite') {
+        if ('sqlite' === $this->connection->getDatabasePlatform()->getName()) {
             $this->addSql('CREATE TABLE "user" (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles CLOB NOT NULL, password VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL)');
             $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
 
@@ -28,7 +28,7 @@ final class Version20250810150057 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        if ($this->connection->getDatabasePlatform()->getName() === 'sqlite') {
+        if ('sqlite' === $this->connection->getDatabasePlatform()->getName()) {
             $this->addSql('DROP TABLE "user"');
         } else {
             $this->addSql('DROP TABLE `user`');

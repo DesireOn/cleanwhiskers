@@ -38,7 +38,8 @@ parameters:
 
 includes:
   # Load extensions automatically if you add them later
-  - vendor/phpstan/phpstan-doctrine/extension.neon
-  - vendor/phpstan/phpstan-doctrine/rules.neon
-  - vendor/phpstan/phpstan-symfony/extension.neon
-  - vendor/phpstan/phpstan-symfony/rules.neon
+  # (commented out because extensions are not installed by default)
+  #- vendor/phpstan/phpstan-doctrine/extension.neon
+  #- vendor/phpstan/phpstan-doctrine/rules.neon
+  #- vendor/phpstan/phpstan-symfony/extension.neon
+  #- vendor/phpstan/phpstan-symfony/rules.neon
