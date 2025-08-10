@@ -202,6 +202,8 @@ composer stan
 
 composer test
 
+./vendor/bin/phpunit
+
 If tests fail: iterate until green; do not open PR with failing CI.
 
 If DB change is required: generate a migration and include it in the PR.
