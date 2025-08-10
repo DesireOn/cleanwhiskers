@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Entity\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'city', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_city_slug', columns: ['slug'])
 ], indexes: [
@@ -68,6 +70,14 @@ class City
     {
         $this->slug = $slug;
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function ensureSlug(): void
+    {
+        if (!$this->slug) {
+            $this->slug = (new AsciiSlugger())->slug($this->name)->lower()->toString();
+        }
     }
 
     public function getState(): ?string
