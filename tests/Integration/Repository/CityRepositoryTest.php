@@ -4,18 +4,30 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Repository;
 
+use App\Entity\City;
 use App\Repository\CityRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class CityRepositoryTest extends KernelTestCase
 {
-    public function testFindOneBySlugReturnsNullWhenNoCityExists(): void
+    private CityRepository $repository;
+    private EntityManagerInterface $em;
+
+    protected function setUp(): void
     {
         self::bootKernel();
+        $container = self::getContainer();
+        $this->em = $container->get('doctrine')->getManager();
+        $schemaTool = new SchemaTool($this->em);
+        $schemaTool->dropSchema($this->em->getMetadataFactory()->getAllMetadata());
+        $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
+        $this->repository = $this->em->getRepository(City::class);
+    }
 
-        /** @var CityRepository $repository */
-        $repository = self::getContainer()->get(CityRepository::class);
-
-        self::assertNull($repository->findOneBySlug('sofia'));
+    public function testFindOneBySlugReturnsNullWhenNoCityExists(): void
+    {
+        self::assertNull($this->repository->findOneBySlug('sofia'));
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
@@ -19,12 +20,17 @@ final class Version20250810150028 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE city (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(255) NOT NULL, slug VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_2D5B0234989D9B62 ON city (slug)');
+        $table = $schema->createTable('city');
+        $table->addColumn('id', Types::INTEGER, ['autoincrement' => true]);
+        $table->addColumn('name', Types::STRING, ['length' => 255]);
+        $table->addColumn('slug', Types::STRING, ['length' => 255]);
+        $table->addColumn('created_at', Types::DATETIME_IMMUTABLE);
+        $table->setPrimaryKey(['id']);
+        $table->addUniqueIndex(['slug'], 'UNIQ_2D5B0234989D9B62');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('DROP TABLE city');
+        $schema->dropTable('city');
     }
 }
