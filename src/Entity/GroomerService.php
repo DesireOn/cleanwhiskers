@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 #[ORM\Entity]
 #[ORM\Table(name: 'groomer_service', uniqueConstraints: [
     new ORM\UniqueConstraint(name: 'uniq_groomer_service', columns: ['groomer_id', 'service_id'])
+], indexes: [
+    new ORM\Index(name: 'idx_service_groomer', columns: ['service_id', 'groomer_id'])
 ])]
 class GroomerService
 {
