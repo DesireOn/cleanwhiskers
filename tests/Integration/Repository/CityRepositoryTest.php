@@ -30,4 +30,17 @@ class CityRepositoryTest extends KernelTestCase
     {
         self::assertNull($this->repository->findOneBySlug('sofia'));
     }
+
+    public function testFindOneBySlugReturnsCityWhenExists(): void
+    {
+        $city = new City('Sofia');
+        $this->em->persist($city);
+        $this->em->flush();
+        $this->em->clear();
+
+        $found = $this->repository->findOneBySlug('sofia');
+
+        self::assertNotNull($found);
+        self::assertSame('Sofia', $found->getName());
+    }
 }
