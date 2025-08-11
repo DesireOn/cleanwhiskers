@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ groomer.businessName }}{% endblock %}
+
+{% block body %}
+    <h1>{{ groomer.businessName }}</h1>
+    {% if groomer.city is not null %}
+        <p>{{ groomer.city.name }}</p>
+    {% endif %}
+    <p>{{ groomer.about }}</p>
+    <div id="reviews">Reviews coming soon...</div>
+{% endblock %}
