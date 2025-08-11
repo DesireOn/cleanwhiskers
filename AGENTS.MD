@@ -1,6 +1,8 @@
 Purpose
 This file tells any assistant (and humans!) exactly how to build, run, test, and contribute to this Symfony MVC + MySQL app. Follow it to keep the codebase clean, readable, and consistent.
 
+Before making any code change, you MUST load full project context just like the default behavior when no AGENTS.md is present. Do not rely solely on this document’s summaries—always scan the entire repository.
+
 Environment
 PHP: 8.2+
 
