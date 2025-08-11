@@ -11,9 +11,10 @@ use App\Entity\Review;
 use App\Entity\Service;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class AppFixtures extends Fixture
+class AppFixtures extends Fixture implements FixtureGroupInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -53,5 +54,10 @@ class AppFixtures extends Fixture
         $manager->persist($booking);
 
         $manager->flush();
+    }
+
+    public static function getGroups(): array
+    {
+        return ['test'];
     }
 }
