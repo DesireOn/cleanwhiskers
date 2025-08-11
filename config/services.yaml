@@ -16,5 +16,13 @@ services:
     App\:
         resource: '../src/'
 
+    App\Infrastructure\Doctrine\SlugListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
+    App\Seed\Seeder:
+        public: true
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

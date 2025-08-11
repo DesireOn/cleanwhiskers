@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Groomers in {{ city.name }} for {{ service.name }}{% endblock %}
+
+{% block body %}
+    <h1>Groomers in {{ city.name }} for {{ service.name }}</h1>
+    {% if groomers %}
+        <ul>
+        {% for groomer in groomers %}
+            <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results yet.</p>
+    {% endif %}
+{% endblock %}

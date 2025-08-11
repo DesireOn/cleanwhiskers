@@ -1,6 +1,8 @@
 Purpose
 This file tells any assistant (and humans!) exactly how to build, run, test, and contribute to this Symfony MVC + MySQL app. Follow it to keep the codebase clean, readable, and consistent.
 
+Before making any code change, you MUST load full project context just like the default behavior when no AGENTS.md is present. Do not rely solely on this document’s summaries—always scan the entire repository.
+
 Environment
 PHP: 8.2+
 
@@ -202,6 +204,8 @@ composer stan
 
 composer test
 
+./vendor/bin/phpunit
+
 If tests fail: iterate until green; do not open PR with failing CI.
 
 If DB change is required: generate a migration and include it in the PR.
@@ -220,6 +224,7 @@ Definition of Done (DoD)
  Security, perf, and error handling considered
 
  PR template completed
+
 
 Useful Commands
 bash
