@@ -1,11 +1,10 @@
 parameters:
-  seed:
-    packs:
-      staging:
-        entities:
-          - default
-        withSamples: true
-      production:
-        entities:
-          - default
-        withSamples: false
+  seed.packs:
+    staging:
+      entities:
+        - default
+      withSamples: true
+    production:
+      entities:
+        - default
+      withSamples: false
