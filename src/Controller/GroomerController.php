@@ -42,4 +42,17 @@ final class GroomerController extends AbstractController
             'service' => $service,
         ]);
     }
+
+    #[Route('/groomers/{slug}', name: 'app_groomer_show', methods: ['GET'])]
+    public function show(string $slug, GroomerProfileRepository $groomerProfileRepository): Response
+    {
+        $groomer = $groomerProfileRepository->findOneBySlug($slug);
+        if (null === $groomer) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('groomer/show.html.twig', [
+            'groomer' => $groomer,
+        ]);
+    }
 }
