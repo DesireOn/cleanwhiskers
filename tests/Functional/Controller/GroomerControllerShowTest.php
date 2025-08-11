@@ -55,4 +55,25 @@ final class GroomerControllerShowTest extends WebTestCase
         $this->client->request('GET', '/groomers/unknown');
         self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
+
+    public function testShowRedirectsTrailingSlash(): void
+    {
+        $user = (new User())
+            ->setEmail('groomer@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
+        $profile = new GroomerProfile($user, $city, 'Best Groomers', 'About us');
+        $profile->refreshSlugFrom($profile->getBusinessName());
+
+        $this->em->persist($user);
+        $this->em->persist($city);
+        $this->em->persist($profile);
+        $this->em->flush();
+
+        $this->client->request('GET', '/groomers/'.$profile->getSlug().'/');
+
+        self::assertResponseRedirects('/groomers/'.$profile->getSlug(), Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

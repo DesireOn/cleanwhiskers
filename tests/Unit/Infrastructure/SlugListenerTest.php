@@ -13,6 +13,7 @@ use App\Repository\GroomerProfileRepository;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use PHPUnit\Framework\TestCase;
 
 final class SlugListenerTest extends TestCase
@@ -58,6 +59,21 @@ final class SlugListenerTest extends TestCase
 
         $this->expectException(SlugCollisionException::class);
         $this->listener->prePersist($args);
+    }
+
+    public function testPreUpdateThrowsSlugCollisionExceptionIfSlugExists(): void
+    {
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
+        $city->refreshSlugFrom('Varna');
+        $em = $this->createMock(EntityManagerInterface::class);
+        $changeSet = ['slug' => ['sofia', 'varna']];
+        $args = new PreUpdateEventArgs($city, $em, $changeSet);
+
+        $this->cityRepository->method('existsBySlug')->willReturn(true);
+
+        $this->expectException(SlugCollisionException::class);
+        $this->listener->preUpdate($args);
     }
 
     public function testThrowsInvalidSlugSourceExceptionForEmptySource(): void
