@@ -19,6 +19,8 @@ class FixturesSmokeTest extends WebTestCase
         $application->run(new ArrayInput([
             'command' => 'doctrine:fixtures:load',
             '--no-interaction' => true,
+            '--group' => ['test'],
+            '--purge-with-truncate' => true,
         ]));
         $client->request('GET', '/cities/sofia');
         self::assertResponseIsSuccessful();
