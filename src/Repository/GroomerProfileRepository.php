@@ -8,6 +8,7 @@ use App\Entity\City;
 use App\Entity\GroomerProfile;
 use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -54,5 +55,27 @@ class GroomerProfileRepository extends ServiceEntityRepository
         $result = $query->getResult();
 
         return $result;
+    }
+
+    /**
+     * @return Paginator<GroomerProfile>
+     */
+    public function findByCitySlug(string $slug, int $page = 1): Paginator
+    {
+        $limit = 20;
+        $offset = max(0, ($page - 1) * $limit);
+
+        $query = $this->createQueryBuilder('g')
+            ->innerJoin('g.city', 'c')
+            ->where('c.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        /** @var Paginator<GroomerProfile> $paginator */
+        $paginator = new Paginator($query);
+
+        return $paginator;
     }
 }
