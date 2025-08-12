@@ -4,6 +4,10 @@
 
 {% block body %}
     <h1>{{ groomer.businessName }}</h1>
+    {% if groomer.user is null %}
+        <span class="badge bg-secondary">Unclaimed profile</span>
+        <p><small>Is this you? <a href="/register">Sign up to claim this profile</a>.</small></p>
+    {% endif %}
     {% if groomer.city %}
         <p>{{ groomer.city.name }}</p>
     {% endif %}
