@@ -66,7 +66,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -75,6 +78,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function isGroomer(): bool
+    {
+        return \in_array(self::ROLE_GROOMER, $this->roles, true);
+    }
+
+    public function isOwner(): bool
+    {
+        if (\in_array(self::ROLE_PET_OWNER, $this->roles, true)) {
+            return true;
+        }
+
+        return !\in_array(self::ROLE_GROOMER, $this->roles, true);
+    }
+
+    public function withGroomerRole(): self
+    {
+        if (!$this->isGroomer()) {
+            $this->roles[] = self::ROLE_GROOMER;
+        }
 
         return $this;
     }
