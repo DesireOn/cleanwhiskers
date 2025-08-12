@@ -36,6 +36,18 @@ class GroomerProfile
     #[ORM\Column(type: 'text')]
     private string $about;
 
+    #[ORM\Column(name: 'service_area', length: 120, nullable: true)]
+    private ?string $serviceArea = null;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(name: 'services_offered', type: 'text', nullable: true)]
+    private ?string $servicesOffered = null;
+
+    #[ORM\Column(name: 'price_range', length: 64, nullable: true)]
+    private ?string $priceRange = null;
+
     /** @var Collection<int, Service> */
     #[ORM\ManyToMany(targetEntity: Service::class)]
     #[ORM\JoinTable(name: 'groomer_profile_service')]
@@ -78,6 +90,54 @@ class GroomerProfile
     public function getAbout(): string
     {
         return $this->about;
+    }
+
+    public function getServiceArea(): ?string
+    {
+        return $this->serviceArea;
+    }
+
+    public function setServiceArea(?string $serviceArea): self
+    {
+        $this->serviceArea = $serviceArea;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getServicesOffered(): ?string
+    {
+        return $this->servicesOffered;
+    }
+
+    public function setServicesOffered(?string $servicesOffered): self
+    {
+        $this->servicesOffered = $servicesOffered;
+
+        return $this;
+    }
+
+    public function getPriceRange(): ?string
+    {
+        return $this->priceRange;
+    }
+
+    public function setPriceRange(?string $priceRange): self
+    {
+        $this->priceRange = $priceRange;
+
+        return $this;
     }
 
     /**
