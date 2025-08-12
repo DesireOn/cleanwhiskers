@@ -9,10 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-    public function testNewUserHasEmptyRoles(): void
+    public function testNewUserHasDefaultUserRole(): void
     {
         $user = new User();
-        self::assertSame([], $user->getRoles());
+        self::assertSame(['ROLE_USER'], $user->getRoles());
     }
 
     public function testCreatedAtIsInitialized(): void
