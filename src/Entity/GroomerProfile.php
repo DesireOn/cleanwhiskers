@@ -23,8 +23,8 @@ class GroomerProfile
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $user;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: City::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -53,9 +53,9 @@ class GroomerProfile
     #[ORM\JoinTable(name: 'groomer_profile_service')]
     private Collection $services;
 
-    public function __construct(User $user, City $city, string $businessName, string $about, string $slug = '')
+    public function __construct(?User $user, City $city, string $businessName, string $about, string $slug = '')
     {
-        if (!in_array(User::ROLE_GROOMER, $user->getRoles(), true)) {
+        if (null !== $user && !in_array(User::ROLE_GROOMER, $user->getRoles(), true)) {
             throw new \InvalidArgumentException('User must have groomer role.');
         }
 
@@ -72,7 +72,7 @@ class GroomerProfile
         return $this->id;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
