@@ -4,6 +4,9 @@
 
 {% block body %}
     <h1>{{ city.name }}</h1>
+    {% if city.seoIntro %}
+        <p>{{ city.seoIntro|split(' ')|slice(0,200)|join(' ') }}</p>
+    {% endif %}
     <p>Grooming options coming soon.</p>
 {% endblock %}
 

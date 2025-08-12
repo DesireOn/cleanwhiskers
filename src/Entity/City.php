@@ -24,6 +24,9 @@ class City
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\Column(name: 'seo_intro', type: Types::TEXT, nullable: true)]
+    private ?string $seoIntro = null;
+
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
@@ -41,6 +44,16 @@ class City
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getSeoIntro(): ?string
+    {
+        return $this->seoIntro;
+    }
+
+    public function setSeoIntro(?string $seoIntro): void
+    {
+        $this->seoIntro = $seoIntro;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
