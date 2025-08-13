@@ -26,7 +26,7 @@ class SeoHeadPartialTest extends KernelTestCase
     public function testHomepageSeoTags(): void
     {
         $this->requestStack->push(Request::create('/'));
-        $html = $this->twig->render('homepage/index.html.twig');
+        $html = $this->twig->render('home/index.html.twig');
         $this->requestStack->pop();
 
         self::assertStringContainsString('<link rel="canonical" href="http://localhost/">', $html);
