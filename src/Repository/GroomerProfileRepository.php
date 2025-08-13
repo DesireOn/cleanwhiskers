@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\City;
 use App\Entity\GroomerProfile;
+use App\Entity\Review;
 use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -77,5 +78,36 @@ class GroomerProfileRepository extends ServiceEntityRepository
         $paginator = new Paginator($query);
 
         return $paginator;
+    }
+
+    /**
+     * @return array<int, array{profile: GroomerProfile, rating: float, reviewCount: int}>
+     */
+    public function findFeatured(int $limit): array
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->select('g', 'AVG(r.rating) AS avgRating', 'COUNT(r.id) AS reviewCount')
+            ->leftJoin(Review::class, 'r', 'WITH', 'r.groomer = g')
+            ->where('g.user IS NOT NULL')
+            ->groupBy('g.id')
+            ->having('COUNT(r.id) > 0')
+            ->orderBy('avgRating', 'DESC')
+            ->addOrderBy('reviewCount', 'DESC')
+            ->setMaxResults($limit);
+
+        /** @var array<int, array{0: GroomerProfile, avgRating: string, reviewCount: string}> $rows */
+        $rows = $qb->getQuery()->getResult();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $profile = $row[0];
+            $result[] = [
+                'profile' => $profile,
+                'rating' => (float) $row['avgRating'],
+                'reviewCount' => (int) $row['reviewCount'],
+            ];
+        }
+
+        return $result;
     }
 }
