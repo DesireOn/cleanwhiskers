@@ -3,7 +3,7 @@
 {% block body %}
 <section class="hero">
     <div class="hero-content">
-        <form class="search-form" method="get" action="{{ ctaLinks.find.url }}">
+        <form id="search-form" class="search-form" method="get" action="{{ ctaLinks.find.url }}">
             <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
             <select id="service" name="service">
                 <option value="">Any service</option>
@@ -15,6 +15,7 @@
         <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
     </div>
 </section>
+{% include 'home/_cta_banner.html.twig' %}
 {% include 'home/_how_it_works.html.twig' %}
 <script>
     (function () {
