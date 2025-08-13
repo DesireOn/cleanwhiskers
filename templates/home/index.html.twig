@@ -3,6 +3,8 @@
 {% block body %}
 <section class="hero">
     <div class="hero-content">
+        <h1 class="hero-title">Pamper Your Pet with Ease</h1>
+        <p class="hero-subtitle">Discover trusted groomers and services near you.</p>
         <form id="search-form" class="search-form" method="get" action="/search">
             <div data-controller="autocomplete" data-autocomplete-url-value="/api/autocomplete/cities">
                 <input type="text" id="city" placeholder="Where's your pet?" data-autocomplete-target="input" data-action="input->autocomplete#fetch" required>
