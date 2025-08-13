@@ -1,7 +1,21 @@
 <header>
     <div class="container">
-        <nav class="grid" aria-label="Main navigation">
+        <nav data-controller="menu" class="nav" aria-label="Main navigation">
             <a href="{{ path('app_homepage') }}" class="logo">CleanWhiskers</a>
+            <button
+                class="menu-toggle"
+                type="button"
+                data-menu-target="button"
+                data-action="menu#toggle"
+                aria-controls="primary-menu"
+                aria-expanded="false"
+            >
+                <span class="visually-hidden">Menu</span>
+                &#9776;
+            </button>
+            <ul id="primary-menu" data-menu-target="list">
+                <li><a href="{{ path('app_register') }}">Register</a></li>
+            </ul>
         </nav>
     </div>
 </header>

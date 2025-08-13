@@ -77,3 +77,59 @@ footer {
     text-align: center;
     font-size: 0.875rem;
 }
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: 0;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav ul {
+        display: block;
+        margin-top: var(--spacing-md);
+    }
+
+    .nav.has-js ul {
+        display: none;
+    }
+
+    .nav.has-js.is-open ul {
+        display: block;
+    }
+
+    .nav ul li {
+        margin: var(--spacing-sm) 0;
+    }
+}
