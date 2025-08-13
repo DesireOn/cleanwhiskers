@@ -77,3 +77,22 @@ footer {
     text-align: center;
     font-size: 0.875rem;
 }
+
+/* Home search form */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+@media (min-width: 40rem) {
+    .search-form {
+        flex-direction: row;
+    }
+}
+
+.search-form select,
+.search-form button {
+    padding: var(--spacing-sm);
+    font-size: 1rem;
+}
