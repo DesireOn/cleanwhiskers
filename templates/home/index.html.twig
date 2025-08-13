@@ -1,33 +1,118 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}CleanWhiskers{% endblock %}
-{% block meta_description %}Discover trusted pet groomers across cities with CleanWhiskers.{% endblock %}
+{% block title %}Book Trusted Pet Groomers | CleanWhiskers{% endblock %}
+{% block meta_description %}Book trusted pet groomers in your city with CleanWhiskers. Compare services, read reviews and schedule appointments with ease.{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .hero {
+            background: url('https://images.unsplash.com/photo-1601758174301-7202db7a5601?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
+            color: #fff;
+            text-align: center;
+            padding: 6rem var(--spacing-md);
+            border-radius: 8px;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .hero .search-form {
+            margin-top: var(--spacing-lg);
+        }
+
+        .features {
+            padding: var(--spacing-lg) 0;
+        }
+
+        .features__grid {
+            display: grid;
+            gap: var(--spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
 <section class="hero">
-    <div class="container">
-        <h1>Find your pet's groomer</h1>
-        <p>Search by city and service to discover trusted professionals.</p>
-        <form method="get" class="search-form">
-            <div class="grid">
-                <select name="city" aria-label="City" {% if cities is empty or services is empty %}disabled{% endif %}>
+    <h1>Find trusted groomers for every pet</h1>
+    <p>Search top-rated professionals near you and book with confidence.</p>
+    <form method="get" class="search-form">
+        <div class="grid">
+            <div>
+                <label for="city" class="visually-hidden">City</label>
+                <select id="city" name="city" aria-label="City" {% if cities is empty or services is empty %}disabled{% endif %}>
                     <option value="">Select city</option>
                     {% for city in cities %}
                         <option value="{{ city.slug }}">{{ city.name }}</option>
                     {% endfor %}
                 </select>
-                <select name="service" aria-label="Service" {% if cities is empty or services is empty %}disabled{% endif %}>
+            </div>
+            <div>
+                <label for="service" class="visually-hidden">Service</label>
+                <select id="service" name="service" aria-label="Service" {% if cities is empty or services is empty %}disabled{% endif %}>
                     <option value="">Select service</option>
                     {% for service in services %}
                         <option value="{{ service.slug }}">{{ service.name }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn" {% if cities is empty or services is empty %}disabled{% endif %}>Search</button>
             </div>
-        </form>
-        {% if cities is empty or services is empty %}
-            <p class="hint">Add cities and services to enable search.</p>
-        {% endif %}
+            <div>
+                <button type="submit" class="btn" {% if cities is empty or services is empty %}disabled{% endif %}>Search groomers</button>
+            </div>
+        </div>
+    </form>
+    {% if cities is empty or services is empty %}
+        <p class="hint">Add cities and services to enable search.</p>
+    {% endif %}
+</section>
+
+<section class="features">
+    <h2>Why pet owners choose CleanWhiskers</h2>
+    <div class="features__grid">
+        <article class="feature">
+            <img src="https://images.unsplash.com/photo-1558944351-703a1a6a9ca3?auto=format&fit=crop&w=80&q=60" alt="Verified groomers">
+            <h3>Verified groomers</h3>
+            <p>Professionals vetted for quality and safety.</p>
+        </article>
+        <article class="feature">
+            <img src="https://images.unsplash.com/photo-1583511655927-3b04e8a2ca04?auto=format&fit=crop&w=80&q=60" alt="Easy scheduling">
+            <h3>Easy scheduling</h3>
+            <p>Book appointments in just a few clicks.</p>
+        </article>
+        <article class="feature">
+            <img src="https://images.unsplash.com/photo-1583511655781-6f19f17addfa?auto=format&fit=crop&w=80&q=60" alt="Real reviews">
+            <h3>Real reviews</h3>
+            <p>Read honest feedback from pet owners like you.</p>
+        </article>
     </div>
 </section>
 {% endblock %}
