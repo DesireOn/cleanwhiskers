@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ city.name }}{% endblock %}
+{% block meta_description %}{{ city.seoIntro ?: 'Find pet groomers in ' ~ city.name }}{% endblock %}
 
 {% block body %}
     <h1>{{ city.name }}</h1>
