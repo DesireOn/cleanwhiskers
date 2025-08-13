@@ -1,32 +1,15 @@
 body {
-    background-color: #f8f9fa;
+    background-color: skyblue;
 }
-
 .hero {
-    position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('/images/hero-bg.jpg') center/cover no-repeat;
-    color: #fff;
-    padding: 8rem 1rem;
-    text-align: center;
+    background: #eee no-repeat center/cover;
+    padding: 4rem 1rem;
 }
 
 .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
-}
-
-.hero-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-}
-
-.hero-subtitle {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    color: #f1f1f1;
+    text-align: center;
 }
 
 .search-form {
@@ -44,22 +27,6 @@ body {
     .search-form select {
         flex: 1;
     }
-}
-
-.cta-list {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    background-color: #ff6a00;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 0.25rem;
-    font-weight: 600;
-}
-
-.cta-list:focus,
-.cta-list:hover {
-    background-color: #e25900;
 }
 
 .cta-banner {
