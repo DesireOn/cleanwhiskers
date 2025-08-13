@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Repository\CityRepository;
+use App\Repository\GroomerProfileRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ class HomepageController extends AbstractController
     public function __construct(
         private readonly CityRepository $cityRepository,
         private readonly ServiceRepository $serviceRepository,
+        private readonly GroomerProfileRepository $groomerProfileRepository,
     ) {
     }
 
@@ -37,6 +39,7 @@ class HomepageController extends AbstractController
 
         $popularCities = $this->cityRepository->findTop(6);
         $popularServices = $this->serviceRepository->findTop(6);
+        $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
 
         return $this->render('home/index.html.twig', [
             'ctaLinks' => $ctaLinks,
@@ -44,6 +47,7 @@ class HomepageController extends AbstractController
             'footerServices' => $footerServices,
             'popularCities' => $popularCities,
             'popularServices' => $popularServices,
+            'featuredGroomers' => $featuredGroomers,
         ]);
     }
 }

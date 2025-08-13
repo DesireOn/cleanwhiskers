@@ -1,0 +1,20 @@
+{% if featuredGroomers|length %}
+<section id="featured-groomers">
+    <h2>Featured Groomers</h2>
+    <div class="featured-groomers-grid">
+        {% for item in featuredGroomers %}
+            {% set g = item.profile %}
+            <div class="featured-groomer-card">
+                <img src="{{ g.logo ?? 'https://via.placeholder.com/64' }}" alt="{{ g.businessName }} logo">
+                <h3><a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a></h3>
+                <p class="city">{{ g.city.name }}</p>
+                <p class="rating">{{ item.rating|number_format(1) }} ({{ item.reviewCount }})</p>
+                {% if g.priceRange %}
+                    <p class="price">{{ g.priceRange }}</p>
+                {% endif %}
+                <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">View Profile</a>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
