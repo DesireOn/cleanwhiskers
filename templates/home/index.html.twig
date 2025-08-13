@@ -4,15 +4,12 @@
 <section class="hero">
     <div class="hero-content">
         <form id="search-form" class="search-form" method="get" action="/search">
-            <input type="text" id="city-input" name="city" placeholder="Where's your pet?" required data-autocomplete="city" list="city-datalist">
-            <input type="hidden" id="citySlug" name="citySlug">
-            <datalist id="city-datalist">
-                {% for city in popularCities %}
-                    <option value="{{ city.name }}"></option>
-                {% endfor %}
-            </datalist>
-            <input type="text" id="service-input" name="service" placeholder="Any service" data-autocomplete="service">
-            <input type="hidden" id="serviceSlug" name="serviceSlug">
+            <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
+            <select id="service" name="service">
+                <option value="">Any service</option>
+                <option value="grooming">Grooming</option>
+                <option value="boarding">Boarding</option>
+            </select>
             <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
         </form>
         <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
@@ -24,12 +21,11 @@
 {% include 'home/_popular.html.twig' %}
 <script>
     (function () {
-        const city = document.getElementById('city-input');
+        const city = document.getElementById('city');
         const submit = document.getElementById('search-submit');
         city.addEventListener('input', function () {
             submit.disabled = city.value.trim() === '';
         });
     })();
 </script>
-<script type="module" src="{{ asset('js/autocomplete.js') }}"></script>
 {% endblock %}

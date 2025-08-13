@@ -48,27 +48,4 @@ class ServiceRepository extends ServiceEntityRepository
 
         return $services;
     }
-
-    /**
-     * @return array<int, array{name: string, slug: string}>
-     */
-    public function findByNameLike(string $q, int $limit = 8): array
-    {
-        $q = trim(mb_strtolower($q));
-        if ('' === $q) {
-            return [];
-        }
-
-        /** @var array<int, array{name: string, slug: string}> $rows */
-        $rows = $this->createQueryBuilder('s')
-            ->select('s.name', 's.slug')
-            ->where('LOWER(s.name) LIKE :q')
-            ->setParameter('q', '%'.$q.'%')
-            ->orderBy('s.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getArrayResult();
-
-        return $rows;
-    }
 }
