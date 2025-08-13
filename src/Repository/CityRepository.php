@@ -48,4 +48,27 @@ class CityRepository extends ServiceEntityRepository
 
         return $cities;
     }
+
+    /**
+     * @return array<int, array{name: string, slug: string}>
+     */
+    public function findByNameLike(string $q, int $limit = 8): array
+    {
+        $q = trim(mb_strtolower($q));
+        if ('' === $q) {
+            return [];
+        }
+
+        /** @var array<int, array{name: string, slug: string}> $rows */
+        $rows = $this->createQueryBuilder('c')
+            ->select('c.name', 'c.slug')
+            ->where('LOWER(c.name) LIKE :q')
+            ->setParameter('q', '%'.$q.'%')
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getArrayResult();
+
+        return $rows;
+    }
 }
