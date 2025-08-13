@@ -96,3 +96,11 @@ footer {
     padding: var(--spacing-sm);
     font-size: 1rem;
 }
+
+/* Groomer card images */
+.groomer-card__image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
