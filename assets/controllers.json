@@ -9,6 +9,18 @@
                 "enabled": false,
                 "fetch": "eager"
             }
+        },
+        "controllers/autocomplete_controller": {
+            "enabled": true,
+            "fetch": "eager"
+        },
+        "controllers/csrf_protection_controller": {
+            "enabled": true,
+            "fetch": "eager"
+        },
+        "controllers/hello_controller": {
+            "enabled": true,
+            "fetch": "eager"
         }
     },
     "entrypoints": []

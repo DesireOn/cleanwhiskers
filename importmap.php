@@ -25,4 +25,16 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'controllers' => [
+        'path' => './assets/controllers',
+    ],
+    'controllers/autocomplete_controller' => [
+        'path' => './assets/controllers/autocomplete_controller.js',
+    ],
+    'controllers/csrf_protection_controller' => [
+        'path' => './assets/controllers/csrf_protection_controller.js',
+    ],
+    'controllers/hello_controller' => [
+        'path' => './assets/controllers/hello_controller.js',
+    ],
 ];
