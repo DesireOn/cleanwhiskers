@@ -4,16 +4,12 @@
 <section class="hero">
     <div class="hero-content">
         <form id="search-form" class="search-form" method="get" action="/search">
-            <div data-controller="autocomplete" data-autocomplete-url-value="/api/autocomplete/cities">
-                <input type="text" id="city" placeholder="Where's your pet?" data-autocomplete-target="input" data-action="input->autocomplete#fetch" required>
-                <input type="hidden" name="city" data-autocomplete-target="hidden">
-                <ul class="suggestions" data-autocomplete-target="list"></ul>
-            </div>
-            <div data-controller="autocomplete" data-autocomplete-url-value="/api/autocomplete/services">
-                <input type="text" id="service" placeholder="Any service" data-autocomplete-target="input" data-action="input->autocomplete#fetch">
-                <input type="hidden" name="service" data-autocomplete-target="hidden">
-                <ul class="suggestions" data-autocomplete-target="list"></ul>
-            </div>
+            <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
+            <select id="service" name="service">
+                <option value="">Any service</option>
+                <option value="grooming">Grooming</option>
+                <option value="boarding">Boarding</option>
+            </select>
             <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
         </form>
         <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
@@ -25,13 +21,11 @@
 {% include 'home/_popular.html.twig' %}
 <script>
     (function () {
-        const citySlug = document.querySelector('input[name="city"]');
+        const city = document.getElementById('city');
         const submit = document.getElementById('search-submit');
-        function toggle() {
-            submit.disabled = citySlug.value.trim() === '';
-        }
-        citySlug.addEventListener('change', toggle);
-        toggle();
+        city.addEventListener('input', function () {
+            submit.disabled = city.value.trim() === '';
+        });
     })();
 </script>
 {% endblock %}

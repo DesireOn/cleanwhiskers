@@ -56,34 +56,4 @@ final class ServiceRepositoryTest extends KernelTestCase
 
         self::assertCount(6, $services);
     }
-
-    public function testFindByNameLikeReturnsMatchingServices(): void
-    {
-        $grooming = (new Service())->setName('Grooming');
-        $grooming->refreshSlugFrom('Grooming');
-        $boarding = (new Service())->setName('Boarding');
-        $boarding->refreshSlugFrom('Boarding');
-        $this->em->persist($grooming);
-        $this->em->persist($boarding);
-        $this->em->flush();
-
-        $results = $this->repository->findByNameLike('Gro', 8);
-
-        self::assertCount(1, $results);
-        self::assertSame('Grooming', $results[0]->getName());
-    }
-
-    public function testFindByNameLikeHonorsLimit(): void
-    {
-        for ($i = 1; $i <= 9; ++$i) {
-            $service = (new Service())->setName('Test '.$i);
-            $service->refreshSlugFrom('Test '.$i);
-            $this->em->persist($service);
-        }
-        $this->em->flush();
-
-        $results = $this->repository->findByNameLike('Test', 8);
-
-        self::assertCount(8, $results);
-    }
 }

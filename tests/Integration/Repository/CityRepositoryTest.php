@@ -58,34 +58,4 @@ class CityRepositoryTest extends KernelTestCase
 
         self::assertCount(6, $cities);
     }
-
-    public function testFindByNameLikeReturnsMatchingCities(): void
-    {
-        $ruse = new City('Ruse');
-        $ruse->refreshSlugFrom('Ruse');
-        $sofia = new City('Sofia');
-        $sofia->refreshSlugFrom('Sofia');
-        $this->em->persist($ruse);
-        $this->em->persist($sofia);
-        $this->em->flush();
-
-        $results = $this->repository->findByNameLike('Ru', 8);
-
-        self::assertCount(1, $results);
-        self::assertSame('Ruse', $results[0]->getName());
-    }
-
-    public function testFindByNameLikeHonorsLimit(): void
-    {
-        for ($i = 1; $i <= 9; ++$i) {
-            $city = new City('Test '.$i);
-            $city->refreshSlugFrom('Test '.$i);
-            $this->em->persist($city);
-        }
-        $this->em->flush();
-
-        $results = $this->repository->findByNameLike('Test', 8);
-
-        self::assertCount(8, $results);
-    }
 }

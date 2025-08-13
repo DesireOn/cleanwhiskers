@@ -48,22 +48,4 @@ class ServiceRepository extends ServiceEntityRepository
 
         return $services;
     }
-
-    /**
-     * @return Service[]
-     */
-    public function findByNameLike(string $q, int $limit = 8): array
-    {
-        /** @var Service[] $services */
-        $services = $this->createQueryBuilder('s')
-            ->select('partial s.{id, name, slug}')
-            ->where('s.name LIKE :q')
-            ->setParameter('q', $q.'%')
-            ->orderBy('s.name', 'ASC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
-
-        return $services;
-    }
 }
