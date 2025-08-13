@@ -1,0 +1,16 @@
+{% set search_target = url('app_groomer_list_by_city_service', {citySlug: '{city}', serviceSlug: '{service}'})|replace({'%7B': '{', '%7D': '}'}) %}
+<script type="application/ld+json">
+{{ {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    'url': url('app_homepage'),
+    'potentialAction': {
+        '@type': 'SearchAction',
+        'target': search_target,
+        'query-input': [
+            'required name=city',
+            'required name=service'
+        ]
+    }
+}|json_encode(constant('JSON_UNESCAPED_SLASHES'))|raw }}
+</script>
