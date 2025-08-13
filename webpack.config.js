@@ -8,6 +8,7 @@ Encore
   .setOutputPath('public/build/')
   .setPublicPath('/build')
   .addEntry('main', './assets/app.js') // <- make sure this exists
+  .enableStimulusBridge('./assets/controllers.json')
   .splitEntryChunks()
   .enableSingleRuntimeChunk()
   .cleanupOutputBeforeBuild()
