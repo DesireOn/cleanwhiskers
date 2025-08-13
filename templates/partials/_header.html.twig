@@ -1,0 +1,11 @@
+<header class="topbar">
+    <a href="{{ path('app_homepage') }}" class="topbar__logo">CleanWhiskers</a>
+    <button class="topbar__burger" type="button" data-controller="menu" data-action="click->menu#toggle" aria-expanded="false" aria-controls="main-nav">
+        <span class="sr-only">Menu</span>
+        ☰
+    </button>
+    <nav id="main-nav" class="topbar__nav" data-menu-target="menu">
+        <a href="{{ path('app_homepage') }}">Home</a>
+        <a href="{{ path('app_register') }}">Register</a>
+    </nav>
+</header>
