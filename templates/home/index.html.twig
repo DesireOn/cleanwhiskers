@@ -6,15 +6,15 @@
         <h1 class="hero-title">Pamper Your Pet with Ease</h1>
         <p class="hero-subtitle">Discover trusted groomers and services near you.</p>
         <form id="search-form" class="search-form" method="get" action="/search">
-            <div data-controller="autocomplete" data-autocomplete-url-value="/api/autocomplete/cities">
-                <input type="text" id="city" placeholder="Where's your pet?" data-autocomplete-target="input" data-action="input->autocomplete#fetch" required>
-                <input type="hidden" name="city" data-autocomplete-target="hidden">
-                <ul class="suggestions" data-autocomplete-target="list"></ul>
+            <div class="autocomplete" data-url="/api/autocomplete/cities">
+                <input type="text" id="city" placeholder="Where's your pet?" required>
+                <input type="hidden" name="city">
+                <ul class="suggestions"></ul>
             </div>
-            <div data-controller="autocomplete" data-autocomplete-url-value="/api/autocomplete/services">
-                <input type="text" id="service" placeholder="Any service" data-autocomplete-target="input" data-action="input->autocomplete#fetch">
-                <input type="hidden" name="service" data-autocomplete-target="hidden">
-                <ul class="suggestions" data-autocomplete-target="list"></ul>
+            <div class="autocomplete" data-url="/api/autocomplete/services">
+                <input type="text" id="service" placeholder="Any service">
+                <input type="hidden" name="service">
+                <ul class="suggestions"></ul>
             </div>
             <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
         </form>
@@ -25,15 +25,52 @@
 {% include 'home/_how_it_works.html.twig' %}
 {% include 'home/_featured_groomers.html.twig' %}
 {% include 'home/_popular.html.twig' %}
-<script>
-    (function () {
-        const citySlug = document.querySelector('input[name="city"]');
-        const submit = document.getElementById('search-submit');
-        function toggle() {
-            submit.disabled = citySlug.value.trim() === '';
-        }
-        citySlug.addEventListener('change', toggle);
-        toggle();
-    })();
-</script>
+  <script>
+      (function () {
+          function setupAutocomplete(container) {
+              const input = container.querySelector('input[type="text"]');
+              const hidden = container.querySelector('input[type="hidden"]');
+              const list = container.querySelector('ul');
+              let timer;
+              input.addEventListener('input', () => {
+                  const q = input.value.trim();
+                  clearTimeout(timer);
+                  if (q.length < 2) {
+                      list.innerHTML = '';
+                      hidden.value = '';
+                      input.dispatchEvent(new Event('change'));
+                      return;
+                  }
+                  timer = setTimeout(() => {
+                      fetch(container.dataset.url + '?q=' + encodeURIComponent(q))
+                          .then(r => r.json())
+                          .then(data => {
+                              list.innerHTML = '';
+                              data.forEach(item => {
+                                  const li = document.createElement('li');
+                                  li.textContent = item.name;
+                                  li.addEventListener('click', () => {
+                                      input.value = item.name;
+                                      hidden.value = item.slug;
+                                      list.innerHTML = '';
+                                      input.dispatchEvent(new Event('change'));
+                                  });
+                                  list.appendChild(li);
+                              });
+                          });
+                  }, 300);
+              });
+          }
+
+          document.querySelectorAll('.autocomplete').forEach(setupAutocomplete);
+
+          const citySlug = document.querySelector('input[name="city"]');
+          const submit = document.getElementById('search-submit');
+          function toggle() {
+              submit.disabled = citySlug.value.trim() === '';
+          }
+          citySlug.addEventListener('change', toggle);
+          toggle();
+      })();
+  </script>
 {% endblock %}
