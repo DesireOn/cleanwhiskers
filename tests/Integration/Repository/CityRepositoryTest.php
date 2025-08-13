@@ -43,4 +43,19 @@ class CityRepositoryTest extends KernelTestCase
         self::assertNotNull($found);
         self::assertSame('Sofia', $found->getName());
     }
+
+    public function testFindTopReturnsLimitedNumberOfCities(): void
+    {
+        for ($i = 1; $i <= 8; ++$i) {
+            $city = new City('City '.$i);
+            $city->refreshSlugFrom('City '.$i);
+            $this->em->persist($city);
+        }
+
+        $this->em->flush();
+
+        $cities = $this->repository->findTop(6);
+
+        self::assertCount(6, $cities);
+    }
 }

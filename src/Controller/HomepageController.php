@@ -35,10 +35,15 @@ class HomepageController extends AbstractController
         $footerCities = $this->cityRepository->findBy([], ['name' => 'ASC'], 5);
         $footerServices = $this->serviceRepository->findBy([], ['name' => 'ASC'], 5);
 
+        $popularCities = $this->cityRepository->findTop(6);
+        $popularServices = $this->serviceRepository->findTop(6);
+
         return $this->render('home/index.html.twig', [
             'ctaLinks' => $ctaLinks,
             'footerCities' => $footerCities,
             'footerServices' => $footerServices,
+            'popularCities' => $popularCities,
+            'popularServices' => $popularServices,
         ]);
     }
 }

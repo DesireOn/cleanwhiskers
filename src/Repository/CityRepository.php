@@ -32,4 +32,20 @@ class CityRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return City[]
+     */
+    public function findTop(int $limit = 6): array
+    {
+        /** @var City[] $cities */
+        $cities = $this->createQueryBuilder('c')
+            ->select('partial c.{id, name, slug, seoIntro}')
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $cities;
+    }
 }

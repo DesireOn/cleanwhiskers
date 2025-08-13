@@ -1,0 +1,43 @@
+<section id="popular">
+    <h2>Popular Cities</h2>
+    <div class="popular-grid">
+        {% for city in popularCities %}
+            <div class="popular-item">
+                <a href="{{ path('app_city_show', {slug: city.slug}) }}">{{ city.name }}</a>
+                {% if city.seoIntro %}
+                    <p>{{ city.seoIntro }}</p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="popular-item">City coming soon</div>
+        {% endfor %}
+    </div>
+
+    <h2>Popular Services</h2>
+    <div class="popular-grid">
+        {% set defaultCity = popularCities|first %}
+        {% for service in popularServices %}
+            <div class="popular-item">
+                {% if defaultCity %}
+                    <a href="{{ path('app_groomer_list_by_city_service', {citySlug: defaultCity.slug, serviceSlug: service.slug}) }}">{{ service.name }} in {{ defaultCity.name }}</a>
+                {% else %}
+                    {{ service.name }}
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="popular-item">Service coming soon</div>
+        {% endfor %}
+    </div>
+</section>
+<style>
+#popular .popular-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+#popular .popular-item {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+}
+</style>
+

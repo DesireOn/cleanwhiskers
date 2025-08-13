@@ -32,4 +32,20 @@ class ServiceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return Service[]
+     */
+    public function findTop(int $limit = 6): array
+    {
+        /** @var Service[] $services */
+        $services = $this->createQueryBuilder('s')
+            ->select('partial s.{id, name, slug}')
+            ->orderBy('s.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $services;
+    }
 }

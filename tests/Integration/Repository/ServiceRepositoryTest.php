@@ -40,4 +40,20 @@ final class ServiceRepositoryTest extends KernelTestCase
         self::assertNotNull($found);
         self::assertSame('Grooming', $found->getName());
     }
+
+    public function testFindTopReturnsLimitedNumberOfServices(): void
+    {
+        for ($i = 1; $i <= 8; ++$i) {
+            $service = (new Service())
+                ->setName('Service '.$i);
+            $service->refreshSlugFrom('Service '.$i);
+            $this->em->persist($service);
+        }
+
+        $this->em->flush();
+
+        $services = $this->repository->findTop(6);
+
+        self::assertCount(6, $services);
+    }
 }
