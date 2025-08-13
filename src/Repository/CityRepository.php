@@ -48,4 +48,22 @@ class CityRepository extends ServiceEntityRepository
 
         return $cities;
     }
+
+    /**
+     * @return City[]
+     */
+    public function findByNameLike(string $q, int $limit = 8): array
+    {
+        /** @var City[] $cities */
+        $cities = $this->createQueryBuilder('c')
+            ->select('partial c.{id, name, slug}')
+            ->where('c.name LIKE :q')
+            ->setParameter('q', $q.'%')
+            ->orderBy('c.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $cities;
+    }
 }
