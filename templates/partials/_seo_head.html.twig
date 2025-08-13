@@ -1,0 +1,12 @@
+{% block seo_head %}
+    {% set default_title = 'CleanWhiskers' %}
+    {% set default_description = 'Find the best pet groomers near you.' %}
+    <title>{% block title %}{{ default_title }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ default_description }}{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}{{ app.request.uri }}{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ block('title') }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ block('meta_description') }}{% endblock %}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ block('og_title') }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ block('og_description') }}{% endblock %}">
+{% endblock %}

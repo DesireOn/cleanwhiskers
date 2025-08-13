@@ -33,6 +33,9 @@
         <testsuite name="e2e">
             <directory>tests/E2E</directory>
         </testsuite>
+        <testsuite name="twig">
+            <directory>tests/Twig</directory>
+        </testsuite>
     </testsuites>
 
     <source ignoreSuppressionOfDeprecations="true"
