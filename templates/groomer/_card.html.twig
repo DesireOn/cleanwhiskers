@@ -1,0 +1,14 @@
+{% set placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23e5e5e5'/%3E%3C/svg%3E" %}
+<li class="groomer-card">
+    <img
+        src="{{ groomer.imageUrl is defined and groomer.imageUrl ? groomer.imageUrl : placeholder }}"
+        alt="{{ groomer.businessName }}"
+        class="groomer-card__image"
+        loading="lazy"
+        decoding="async"
+        width="200"
+        height="200"
+        sizes="(max-width: 600px) 50vw, 200px"
+    >
+    <a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a>
+</li>
