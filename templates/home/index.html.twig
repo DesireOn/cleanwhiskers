@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<section class="hero">
+    <div class="hero-content">
+        <form class="search-form" method="get" action="{{ ctaLinks.find.url }}">
+            <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
+            <select id="service" name="service">
+                <option value="">Any service</option>
+                <option value="grooming">Grooming</option>
+                <option value="boarding">Boarding</option>
+            </select>
+            <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
+        </form>
+        <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
+    </div>
+</section>
+<script>
+    (function () {
+        const city = document.getElementById('city');
+        const submit = document.getElementById('search-submit');
+        city.addEventListener('input', function () {
+            submit.disabled = city.value.trim() === '';
+        });
+    })();
+</script>
+{% endblock %}
