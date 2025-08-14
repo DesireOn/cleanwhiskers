@@ -15,10 +15,8 @@
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets/*
+/public/assets/
 /assets/vendor/
-!/public/assets/illustrations/
-!/public/assets/illustrations/*
 ###< symfony/asset-mapper ###
 
 /node_modules

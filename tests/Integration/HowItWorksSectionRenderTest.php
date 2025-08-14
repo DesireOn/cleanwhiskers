@@ -12,7 +12,10 @@ final class HowItWorksSectionRenderTest extends WebTestCase
     {
         $client = static::createClient();
         $client->request('GET', '/');
-        self::assertSelectorTextContains('#how-it-works h2', 'How It Works');
-        self::assertSelectorCount(3, '#how-it-works .how-it-works__card');
+
+        self::assertSelectorTextContains('#how-it-works .owner-steps h3', 'For Owners');
+        self::assertSelectorCount(3, '#how-it-works .owner-steps li');
+        self::assertSelectorTextContains('#how-it-works .groomer-steps h3', 'For Groomers');
+        self::assertSelectorCount(3, '#how-it-works .groomer-steps li');
     }
 }
