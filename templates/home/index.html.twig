@@ -1,31 +1,42 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module" src="{{ asset('js/home-hero.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 <section class="hero">
-    <div class="hero__content">
-        <form id="search-form" class="search-form" method="get" action="/search">
-            <input class="search-form__input" type="text" id="city" name="city" placeholder="Where's your pet?" required>
-            <select class="search-form__select" id="service" name="service">
-                <option value="">Any service</option>
-                <option value="grooming">Grooming</option>
-                <option value="boarding">Boarding</option>
-            </select>
-            <button class="search-form__button btn btn--accent" type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
-        </form>
-        <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
+    <video id="hero-video" class="hero__media" autoplay muted loop playsinline poster="{{ asset('images/hero-poster.jpg') }}">
+        <source src="{{ asset('media/hero.mp4') }}" type="video/mp4">
+    </video>
+    <div class="hero__overlay">
+        <div class="hero__card">
+            <h1>Find trusted pet care</h1>
+            <p class="hero__subtext">Book top-rated services near you.</p>
+            <form id="search-form" class="search-form" method="get" action="/search">
+                <label for="city">City</label>
+                <input class="search-form__input" type="text" id="city" name="city" placeholder="Where's your pet?" required>
+                <label for="service">Service</label>
+                <select class="search-form__select" id="service" name="service">
+                    <option value="">Any service</option>
+                    <option value="grooming">Grooming</option>
+                    <option value="boarding">Boarding</option>
+                </select>
+                <button class="search-form__button btn btn--accent" type="submit" id="search-submit">{{ ctaLinks.find.label }}</button>
+            </form>
+            <button id="hero-video-toggle" class="hero__video-toggle" type="button">Pause</button>
+            <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
+        </div>
     </div>
 </section>
 {% include 'home/_cta_banner.html.twig' %}
 {% include 'home/_how_it_works.html.twig' %}
 {% include 'home/_featured_groomers.html.twig' %}
 {% include 'home/_popular.html.twig' %}
-<script>
-    (function () {
-        const city = document.getElementById('city');
-        const submit = document.getElementById('search-submit');
-        city.addEventListener('input', function () {
-            submit.disabled = city.value.trim() === '';
-        });
-    })();
-</script>
 {% endblock %}
