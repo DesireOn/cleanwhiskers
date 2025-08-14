@@ -140,6 +140,7 @@
     width: 80px;
     height: 80px;
     margin-bottom: var(--space-2);
+    aspect-ratio: 1 / 1;
 }
 
 .how-it-works__card:focus,
@@ -186,6 +187,10 @@
     box-shadow: var(--shadow-sm);
     padding: var(--space-3);
     text-align: center;
+}
+
+.carousel__card img {
+    aspect-ratio: 1 / 1;
 }
 
 .carousel__button {
@@ -259,6 +264,9 @@
     color: inherit;
     text-decoration: none;
     overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    aspect-ratio: 16 / 9;
 }
 
 .popular-card__overlay {
