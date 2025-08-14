@@ -8,23 +8,9 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('js/home-hero.js') }}"></script>
-    <script type="module" src="{{ asset('js/sticky-search.js') }}"></script>
 {% endblock %}
 
 {% block body %}
-<div id="sticky-search" class="sticky-search">
-    <form id="sticky-search-form" class="search-form" method="get" action="/search">
-        <label for="sticky-city">City</label>
-        <input class="search-form__input" type="text" id="sticky-city" name="city" placeholder="Where's your pet?" required>
-        <label for="sticky-service">Service</label>
-        <select class="search-form__select" id="sticky-service" name="service">
-            <option value="">Any service</option>
-            <option value="grooming">Grooming</option>
-            <option value="boarding">Boarding</option>
-        </select>
-        <button class="search-form__button btn btn--accent" type="submit">{{ ctaLinks.find.label }}</button>
-    </form>
-</div>
 <section class="hero">
     <video id="hero-video" class="hero__media" autoplay muted loop playsinline poster="{{ asset('images/hero-poster.jpg') }}">
         <source src="{{ asset('media/hero.mp4') }}" type="video/mp4">
