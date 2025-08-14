@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\Table(name: 'review')]
 #[ORM\Index(name: 'idx_review_groomer_created_at', columns: ['groomer_id', 'created_at'])]
+#[ORM\Index(name: 'idx_review_rating', columns: ['rating'])]
 class Review
 {
     #[ORM\Id]

@@ -7,6 +7,7 @@ namespace App\Tests\Controller;
 use App\Entity\City;
 use App\Entity\GroomerProfile;
 use App\Entity\Review;
+use App\Entity\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -57,5 +58,52 @@ final class GroomerControllerTest extends WebTestCase
         self::assertStringContainsString('User '.$author->getId(), $content);
         self::assertStringContainsString('★', $content);
         self::assertStringContainsString('Verified', $content);
+    }
+
+    public function testListByCityServiceFiltersByRating(): void
+    {
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Bath');
+        $service->refreshSlugFrom($service->getName());
+
+        $highUser = (new User())
+            ->setEmail('high@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $high = new GroomerProfile($highUser, $city, 'High', 'About');
+        $high->refreshSlugFrom($high->getBusinessName());
+        $high->addService($service);
+
+        $lowUser = (new User())
+            ->setEmail('low@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $low = new GroomerProfile($lowUser, $city, 'Low', 'About');
+        $low->refreshSlugFrom($low->getBusinessName());
+        $low->addService($service);
+
+        $author = (new User())
+            ->setEmail('author@example.com')
+            ->setPassword('hash');
+
+        $this->em->persist($city);
+        $this->em->persist($service);
+        $this->em->persist($highUser);
+        $this->em->persist($high);
+        $this->em->persist($lowUser);
+        $this->em->persist($low);
+        $this->em->persist($author);
+        $this->em->flush();
+
+        $this->em->persist(new Review($high, $author, 5, 'Great'));
+        $this->em->persist(new Review($low, $author, 3, 'Ok'));
+        $this->em->flush();
+
+        $this->client->request('GET', '/groomers/'.$city->getSlug().'/'.$service->getSlug().'?rating=4');
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertStringContainsString('High', $content);
+        self::assertStringNotContainsString('Low', $content);
     }
 }

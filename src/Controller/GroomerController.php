@@ -33,14 +33,23 @@ final class GroomerController extends AbstractController
         if (null === $service) {
             throw $this->createNotFoundException();
         }
-
+        $limit = 20;
         $offset = max(0, $request->query->getInt('offset', 0));
-        $groomers = $groomerProfileRepository->findByCityAndService($city, $service, 20, $offset);
+        $minRating = $request->query->getInt('rating');
+        $minRating = $minRating > 0 ? $minRating : null;
+
+        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset);
+
+        $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
+        $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;
 
         return $this->render('groomer/list.html.twig', [
             'groomers' => $groomers,
             'city' => $city,
             'service' => $service,
+            'rating' => $minRating,
+            'nextOffset' => $nextOffset,
+            'previousOffset' => $previousOffset,
         ]);
     }
 
