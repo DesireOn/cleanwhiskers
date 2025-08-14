@@ -19,55 +19,10 @@
 {% endblock %}
 
 {% block body %}
-<div id="sticky-search" class="sticky-search">
-    <form id="sticky-search-form" class="search-form" method="get" action="/search" role="search">
-        <label for="sticky-city">City</label>
-        <input class="search-form__input search-form__input--city" type="text" id="sticky-city" name="city" placeholder="Where's your pet?" aria-describedby="sticky-city-error" required>
-        <span id="sticky-city-error" class="form-error" aria-live="polite"></span>
-        <label for="sticky-service">Service</label>
-        <select class="search-form__select search-form__select--service" id="sticky-service" name="service" aria-describedby="sticky-service-error">
-            <option value="">Any service</option>
-            <option value="grooming">Grooming</option>
-            <option value="boarding">Boarding</option>
-        </select>
-        <span id="sticky-service-error" class="form-error" aria-live="polite"></span>
-        <button class="search-form__button btn btn--accent" type="submit">
-            {{ ctaLinks.find.label }}
-            <span class="spinner" hidden role="status" aria-live="polite" aria-label="Loading"></span>
-        </button>
-    </form>
-</div>
-<section class="hero">
-    <video id="hero-video" class="hero__media" autoplay muted loop playsinline poster="{{ asset('images/hero-poster.jpg') }}">
-        <source src="{{ asset('media/hero.mp4') }}" type="video/mp4">
-    </video>
-    <div class="hero__overlay">
-        <div class="hero__card">
-            <h1>Find trusted pet care</h1>
-            <p class="hero__subtext">Book top-rated services near you.</p>
-            <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
-            <form id="search-form" class="search-form" method="get" action="/search" role="search">
-                <label for="city">City</label>
-                <input class="search-form__input search-form__input--city" type="text" id="city" name="city" placeholder="Where's your pet?" aria-describedby="city-error" required>
-                <span id="city-error" class="form-error" aria-live="polite"></span>
-                <label for="service">Service</label>
-                <select class="search-form__select search-form__select--service" id="service" name="service" aria-describedby="service-error">
-                    <option value="">Any service</option>
-                    <option value="grooming">Grooming</option>
-                    <option value="boarding">Boarding</option>
-                </select>
-                <span id="service-error" class="form-error" aria-live="polite"></span>
-                <button class="search-form__button btn btn--accent" type="submit" id="search-submit">
-                    {{ ctaLinks.find.label }}
-                    <span class="spinner" hidden role="status" aria-live="polite" aria-label="Loading"></span>
-                </button>
-            </form>
-            <button id="hero-video-toggle" class="hero__video-toggle" type="button" aria-controls="hero-video" aria-pressed="false" aria-label="Pause video">Pause</button>
-        </div>
-    </div>
-</section>
-{% include 'home/_cta_banner.html.twig' %}
-{% include 'home/_how_it_works.html.twig' %}
-{% include 'home/_featured_groomers.html.twig' %}
-{% include 'home/_popular.html.twig' %}
+    {% include 'home/partials/_sticky_search.html.twig' %}
+    {% include 'home/partials/_hero.html.twig' %}
+    {% include 'home/partials/_cta_banner.html.twig' %}
+    {% include 'home/partials/_how_it_works.html.twig' %}
+    {% include 'home/partials/_featured_groomers.html.twig' %}
+    {% include 'home/partials/_popular.html.twig' %}
 {% endblock %}
