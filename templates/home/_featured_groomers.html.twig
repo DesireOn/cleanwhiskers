@@ -1,14 +1,14 @@
 {% if featuredGroomers|length %}
 <section id="featured-groomers" class="featured-carousel">
     <h2 class="featured-carousel__title">Featured Groomers</h2>
-    <div class="carousel" data-carousel>
-        <button class="carousel__button carousel__button--prev" aria-label="Previous" data-carousel-prev>
+    <div class="carousel" data-carousel role="region" aria-roledescription="carousel" aria-label="Featured groomers">
+        <button class="carousel__button carousel__button--prev" aria-label="Previous slide" data-carousel-prev aria-controls="featured-carousel-track">
             &#9664;
         </button>
-        <div class="carousel__track" tabindex="0">
+        <div id="featured-carousel-track" class="carousel__track" tabindex="0" role="list">
             {% for item in featuredGroomers %}
                 {% set g = item.profile %}
-                <article class="carousel__card">
+                <article class="carousel__card" role="listitem">
                     <picture>
                         <source
                             srcset="{{ g.logo|default('https://placehold.co/120x120.avif') }} 120w, {{ g.logo|default('https://placehold.co/160x160.avif') }} 160w"
@@ -35,7 +35,7 @@
                 </article>
             {% endfor %}
         </div>
-        <button class="carousel__button carousel__button--next" aria-label="Next" data-carousel-next>
+        <button class="carousel__button carousel__button--next" aria-label="Next slide" data-carousel-next aria-controls="featured-carousel-track">
             &#9654;
         </button>
     </div>
