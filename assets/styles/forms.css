@@ -1,0 +1,35 @@
+/* Form styling for search and signup inputs */
+
+.search-form__input,
+.search-form__select {
+    min-height: 44px;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    background-color: #fff;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Icons */
+.search-form__input--city {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2'%3E%3Cpath d='M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z'/%3E%3Ccircle cx='12' cy='9' r='2.5'/%3E%3C/svg%3E") no-repeat var(--space-2) center / 1rem 1rem;
+    padding-left: calc(var(--space-2) * 5 + 1rem);
+}
+
+.search-form__select--service {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23222222' stroke-width='2'%3E%3Cpath d='M4 7l5 5-5 5M20 7l-5 5 5 5'/%3E%3C/svg%3E") no-repeat var(--space-2) center / 1rem 1rem;
+    padding-left: calc(var(--space-2) * 5 + 1rem);
+}
+
+/* Focus glow */
+.search-form__input:focus,
+.search-form__select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent), 0 0 6px rgba(255, 152, 0, 0.5);
+}
+
+.form-error {
+    color: #c00;
+    font-size: 0.875rem;
+    min-height: 1.25rem;
+}
