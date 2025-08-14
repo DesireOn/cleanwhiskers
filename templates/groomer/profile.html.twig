@@ -27,5 +27,23 @@
     {% endif %}
 
     <h2>Reviews</h2>
-    <p>Reviews coming soon.</p>
+    {% if reviews is empty %}
+        <p>No reviews yet.</p>
+    {% else %}
+        {% for review in reviews %}
+            <div class="mb-3">
+                <div>
+                    {% for i in 1..5 %}
+                        {% if i <= review.rating %}
+                            <span class="text-warning">★</span>
+                        {% else %}
+                            <span class="text-secondary">☆</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p>{{ review.comment }}</p>
+                <p><small>by User {{ review.author.id }} on {{ review.createdAt|date('Y-m-d') }}</small></p>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
