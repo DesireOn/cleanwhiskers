@@ -4,12 +4,30 @@
 
 {% block body %}
     <h1>Groomers in {{ city.name }} for {{ service.name }}</h1>
+    <form method="get">
+        <label for="rating">Minimum rating:</label>
+        <select id="rating" name="rating">
+            <option value="">Any</option>
+            {% for i in 5..1 %}
+                <option value="{{ i }}"{% if rating == i %} selected{% endif %}>{{ i }}+</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filter</button>
+    </form>
     {% if groomers %}
         <ul>
         {% for groomer in groomers %}
             <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
         {% endfor %}
         </ul>
+        <div class="pagination">
+            {% if previousOffset is not null %}
+                <a href="?offset={{ previousOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Previous</a>
+            {% endif %}
+            {% if nextOffset is not null %}
+                <a href="?offset={{ nextOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Next</a>
+            {% endif %}
+        </div>
     {% else %}
         <p>No results yet.</p>
     {% endif %}

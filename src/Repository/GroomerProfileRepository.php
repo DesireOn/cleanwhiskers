@@ -59,6 +59,38 @@ class GroomerProfileRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return array<int, GroomerProfile>
+     */
+    public function findByFilters(
+        City $city,
+        Service $service,
+        ?int $minRating = null,
+        int $limit = 20,
+        int $offset = 0,
+    ): array {
+        $qb = $this->createQueryBuilder('g')
+            ->innerJoin('g.services', 's')
+            ->where('g.city = :city')
+            ->andWhere('s = :service')
+            ->setParameter('city', $city)
+            ->setParameter('service', $service)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        if (null !== $minRating) {
+            $qb->leftJoin(Review::class, 'r', 'WITH', 'r.groomer = g')
+                ->groupBy('g.id')
+                ->having('AVG(r.rating) >= :minRating')
+                ->setParameter('minRating', $minRating);
+        }
+
+        /** @var array<int, GroomerProfile> $result */
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
+    }
+
+    /**
      * @return Paginator<GroomerProfile>
      */
     public function findByCitySlug(string $slug, int $page = 1): Paginator

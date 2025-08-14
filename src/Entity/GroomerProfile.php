@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: GroomerProfileRepository::class)]
 #[ORM\Table(name: 'groomer_profile')]
 #[ORM\Index(name: 'idx_groomer_profile_slug', fields: ['slug'])]
+#[ORM\Index(name: 'idx_groomer_profile_city', fields: ['city'])]
 class GroomerProfile
 {
     use SluggerTrait;
