@@ -1,0 +1,72 @@
+.hero {
+    position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+}
+
+.hero__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero__overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: var(--space-4);
+}
+
+.hero__card {
+    background-color: rgba(253, 250, 245, 0.9);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.hero__subtext {
+    margin-bottom: var(--space-3);
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.search-form__input,
+.search-form__select {
+    padding: var(--space-1);
+}
+
+.search-form__button {
+    align-self: center;
+}
+
+@media (min-width: 600px) {
+    .search-form {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+    .search-form label {
+        flex-basis: 100%;
+        text-align: left;
+    }
+    .search-form__input,
+    .search-form__select {
+        flex: 1;
+    }
+}
+
+.hero__video-toggle {
+    margin-top: var(--space-2);
+}
