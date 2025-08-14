@@ -27,6 +27,12 @@
         <testsuite name="integration">
             <directory>tests/Integration</directory>
         </testsuite>
+        <testsuite name="controller">
+            <directory>tests/Controller</directory>
+        </testsuite>
+        <testsuite name="form">
+            <directory>tests/Form</directory>
+        </testsuite>
         <testsuite name="command">
             <directory>tests/Command</directory>
         </testsuite>
