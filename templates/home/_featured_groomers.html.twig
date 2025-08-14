@@ -1,20 +1,31 @@
 {% if featuredGroomers|length %}
-<section id="featured-groomers">
-    <h2>Featured Groomers</h2>
-    <div class="featured-groomers-grid">
-        {% for item in featuredGroomers %}
-            {% set g = item.profile %}
-            <div class="featured-groomer-card">
-                <img src="{{ g.logo ?? 'https://via.placeholder.com/64' }}" alt="{{ g.businessName }} logo">
-                <h3><a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a></h3>
-                <p class="city">{{ g.city.name }}</p>
-                <p class="rating">{{ item.rating|number_format(1) }} ({{ item.reviewCount }})</p>
-                {% if g.priceRange %}
-                    <p class="price">{{ g.priceRange }}</p>
-                {% endif %}
-                <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">View Profile</a>
-            </div>
-        {% endfor %}
+<section id="featured-groomers" class="featured-carousel">
+    <h2 class="featured-carousel__title">Featured Groomers</h2>
+    <div class="carousel" data-carousel>
+        <button class="carousel__button carousel__button--prev" aria-label="Previous" data-carousel-prev>
+            &#9664;
+        </button>
+        <div class="carousel__track" tabindex="0">
+            {% for item in featuredGroomers %}
+                {% set g = item.profile %}
+                <article class="carousel__card">
+                    <picture>
+                        <source srcset="{{ g.logo|default('https://placehold.co/160x160.avif') }}" type="image/avif">
+                        <source srcset="{{ g.logo|default('https://placehold.co/160x160.webp') }}" type="image/webp">
+                        <img src="{{ g.logo|default('https://placehold.co/160x160.jpg') }}" alt="{{ g.businessName }} logo" loading="lazy" width="160" height="160">
+                    </picture>
+                    <h3 class="carousel__name"><a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a></h3>
+                    {% set aboutSnippet = g.about|slice(0, 40) %}
+                    <p class="carousel__tagline">{{ aboutSnippet }}{% if g.about|length > 40 %}…{% endif %}</p>
+                    <a class="carousel__link" href="{{ path('app_groomer_show', {slug: g.slug}) }}">View Profile</a>
+                </article>
+            {% endfor %}
+        </div>
+        <button class="carousel__button carousel__button--next" aria-label="Next" data-carousel-next>
+            &#9654;
+        </button>
     </div>
+    <script type="module" src="{{ asset('js/carousel.js') }}"></script>
 </section>
 {% endif %}
+

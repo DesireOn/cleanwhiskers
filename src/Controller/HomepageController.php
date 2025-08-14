@@ -39,7 +39,7 @@ class HomepageController extends AbstractController
 
         $popularCities = $this->cityRepository->findTop(6);
         $popularServices = $this->serviceRepository->findTop(6);
-        $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
+        $featuredGroomers = $this->groomerProfileRepository->findFeatured(8);
 
         return $this->render('home/index.html.twig', [
             'ctaLinks' => $ctaLinks,
