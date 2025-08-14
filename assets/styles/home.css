@@ -70,3 +70,48 @@
 .hero__video-toggle {
     margin-top: var(--space-2);
 }
+
+.sticky-search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgba(253, 250, 245, 0.9);
+    padding: var(--space-2);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sticky-search.is-sticky {
+    transform: translateY(0);
+}
+
+.sticky-search .search-form {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+}
+
+.sticky-search .search-form label {
+    display: none;
+}
+
+.sticky-search .search-form__input,
+.sticky-search .search-form__select,
+.sticky-search .search-form__button {
+    flex: 1;
+    min-height: 44px;
+}
+
+.sticky-search .search-form__button {
+    flex: 0 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sticky-search {
+        transition: none;
+    }
+}
