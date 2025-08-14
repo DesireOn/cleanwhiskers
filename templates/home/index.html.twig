@@ -2,16 +2,24 @@
 
 {% block body %}
 <section class="hero">
+    <div class="hero-overlay"></div>
     <div class="hero-content">
+        <h1>Find the Best for Your Pet</h1>
+        <p>Search local groomers and services near you</p>
         <form id="search-form" class="search-form" method="get" action="/search">
-            <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
+            <input type="text" id="city" name="city" placeholder="City" required>
             <select id="service" name="service">
-                <option value="">Any service</option>
+                <option value="">Select Service</option>
                 <option value="grooming">Grooming</option>
                 <option value="boarding">Boarding</option>
             </select>
             <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
         </form>
+        <ul class="hero-menu">
+            {% for service in popularServices %}
+                <li><a href="#">{{ service.name }}</a></li>
+            {% endfor %}
+        </ul>
         <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
     </div>
 </section>
