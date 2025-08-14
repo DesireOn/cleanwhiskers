@@ -17,19 +17,6 @@
         {% endblock %}
     </head>
     <body>
-        <header class="site-header">
-            <nav class="main-nav">
-                <a href="{{ path('app_homepage') }}" class="logo">CleanWhiskers</a>
-                <ul>
-                    <li><a href="{{ path('app_homepage') }}">Home</a></li>
-                    <li><a href="#listings">Listings</a></li>
-                    <li><a href="#blog">Blog</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li class="nav-cta"><a href="{{ path('app_register', {role: 'groomer'}) }}">Add Listing</a></li>
-                </ul>
-            </nav>
-        </header>
-
         {% block body %}{% endblock %}
 
         <footer class="site-footer">
