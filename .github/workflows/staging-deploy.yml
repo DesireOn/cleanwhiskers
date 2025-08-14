@@ -63,10 +63,10 @@ jobs:
         run: yarn install
           # If you need to unblock temporarily, swap to:
           # run: yarn install --ignore-engines
-  
 
-      - name: Build Frontend Assets
-        run: yarn build
+
+      - name: Compile Asset Map
+        run: php bin/console asset-map:compile
 
       - name: Deploy to Staging Server
         run: |
