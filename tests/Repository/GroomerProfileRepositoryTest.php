@@ -76,4 +76,52 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
         self::assertCount(1, $result);
         self::assertSame('High', $result[0]->getBusinessName());
     }
+
+    public function testFindFeaturedReturnsTopRatedProfiles(): void
+    {
+        $city = new City('Plovdiv');
+        $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Clipping');
+        $service->refreshSlugFrom($service->getName());
+
+        $topUser = (new User())
+            ->setEmail('top@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $topProfile = new GroomerProfile($topUser, $city, 'Top', 'About top');
+        $topProfile->refreshSlugFrom($topProfile->getBusinessName());
+        $topProfile->addService($service);
+
+        $midUser = (new User())
+            ->setEmail('mid@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $midProfile = new GroomerProfile($midUser, $city, 'Mid', 'About mid');
+        $midProfile->refreshSlugFrom($midProfile->getBusinessName());
+        $midProfile->addService($service);
+
+        $author = (new User())
+            ->setEmail('rater@example.com')
+            ->setPassword('hash');
+
+        $this->em->persist($city);
+        $this->em->persist($service);
+        $this->em->persist($topUser);
+        $this->em->persist($topProfile);
+        $this->em->persist($midUser);
+        $this->em->persist($midProfile);
+        $this->em->persist($author);
+        $this->em->flush();
+
+        $this->em->persist(new Review($topProfile, $author, 5, 'Great'));
+        $this->em->persist(new Review($midProfile, $author, 4, 'Good'));
+        $this->em->flush();
+        $this->em->clear();
+
+        $result = $this->repository->findFeatured(1);
+        self::assertCount(1, $result);
+        self::assertSame('Top', $result[0]['profile']->getBusinessName());
+        self::assertSame(5.0, $result[0]['rating']);
+        self::assertSame(1, $result[0]['reviewCount']);
+    }
 }

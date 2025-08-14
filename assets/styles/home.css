@@ -155,6 +155,68 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
+#featured-groomers {
+    padding: var(--space-5) var(--space-3);
+}
+
+.carousel {
+    position: relative;
+}
+
+.carousel__track {
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: var(--space-2);
+}
+
+.carousel__track:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: var(--space-1);
+}
+
+.carousel__card {
+    flex: 0 0 80%;
+    max-width: 300px;
+    scroll-snap-align: start;
+    background-color: var(--color-cream);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-3);
+    text-align: center;
+}
+
+.carousel__button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--color-cream);
+    border: 1px solid var(--color-ink);
+    border-radius: var(--radius-round);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.carousel__button--prev {
+    left: 0;
+}
+
+.carousel__button--next {
+    right: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .carousel__track {
+        scroll-behavior: auto;
+    }
+}
+
 .reveal-in {
     opacity: 1;
     transform: none;
