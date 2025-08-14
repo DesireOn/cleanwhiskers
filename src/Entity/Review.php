@@ -33,6 +33,9 @@ class Review
     #[ORM\Column(type: Types::TEXT)]
     private string $comment;
 
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $verified = false;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: 'created_at')]
     private \DateTimeImmutable $createdAt;
 
@@ -72,6 +75,18 @@ class Review
     public function getComment(): string
     {
         return $this->comment;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+
+    public function markVerified(): self
+    {
+        $this->verified = true;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
