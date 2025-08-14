@@ -48,6 +48,8 @@ class HomepageController extends AbstractController
             'popularCities' => $popularCities,
             'popularServices' => $popularServices,
             'featuredGroomers' => $featuredGroomers,
+            'seo_title' => 'Book local pet care | CleanWhiskers',
+            'seo_description' => 'Discover trusted groomers and pet boarding near you. CleanWhiskers makes booking easy.',
         ]);
     }
 }

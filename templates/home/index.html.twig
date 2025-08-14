@@ -40,6 +40,7 @@
         <div class="hero__card">
             <h1>Find trusted pet care</h1>
             <p class="hero__subtext">Book top-rated services near you.</p>
+            <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
             <form id="search-form" class="search-form" method="get" action="/search" role="search">
                 <label for="city">City</label>
                 <input class="search-form__input search-form__input--city" type="text" id="city" name="city" placeholder="Where's your pet?" aria-describedby="city-error" required>
@@ -54,7 +55,6 @@
                 <button class="search-form__button btn btn--accent" type="submit" id="search-submit">{{ ctaLinks.find.label }}</button>
             </form>
             <button id="hero-video-toggle" class="hero__video-toggle" type="button" aria-controls="hero-video" aria-pressed="false" aria-label="Pause video">Pause</button>
-            <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
         </div>
     </div>
 </section>
