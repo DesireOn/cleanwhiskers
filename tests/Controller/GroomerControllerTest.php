@@ -41,6 +41,7 @@ final class GroomerControllerTest extends WebTestCase
             ->setEmail('owner@example.com')
             ->setPassword('hash');
         $review = new Review($groomer, $author, 5, 'Excellent service!');
+        $review->markVerified();
 
         $this->em->persist($groomerUser);
         $this->em->persist($city);
@@ -55,5 +56,6 @@ final class GroomerControllerTest extends WebTestCase
         self::assertStringContainsString('Excellent service!', $content);
         self::assertStringContainsString('User '.$author->getId(), $content);
         self::assertStringContainsString('★', $content);
+        self::assertStringContainsString('Verified', $content);
     }
 }

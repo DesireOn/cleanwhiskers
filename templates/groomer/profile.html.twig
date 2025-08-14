@@ -42,7 +42,11 @@
                     {% endfor %}
                 </div>
                 <p>{{ review.comment }}</p>
-                <p><small>by User {{ review.author.id }} on {{ review.createdAt|date('Y-m-d') }}</small></p>
+                <p><small>by User {{ review.author.id }} on {{ review.createdAt|date('Y-m-d') }}
+                    {% if review.isVerified %}
+                        <span class="badge bg-success">Verified</span>
+                    {% endif %}
+                </small></p>
             </div>
         {% endfor %}
     {% endif %}

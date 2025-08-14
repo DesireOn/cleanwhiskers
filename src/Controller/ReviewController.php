@@ -8,6 +8,7 @@ use App\Entity\Review;
 use App\Entity\User;
 use App\Form\ReviewFormType;
 use App\Repository\GroomerProfileRepository;
+use App\Security\ReviewIntegrityVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,8 @@ final class ReviewController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessGranted(ReviewIntegrityVoter::CREATE, $groomer);
+
         $form = $this->createForm(ReviewFormType::class);
         $form->handleRequest($request);
 
@@ -49,6 +52,11 @@ final class ReviewController extends AbstractController
             }
 
             $review = new Review($groomer, $user, $ratingData, $comment);
+            // TODO: determine if the user booked via the platform
+            // @phpstan-ignore-next-line
+            if (false) {
+                $review->markVerified();
+            }
             $entityManager->persist($review);
             $entityManager->flush();
 
