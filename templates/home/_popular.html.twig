@@ -1,45 +1,49 @@
 <section id="popular">
     <h2>Popular Cities</h2>
-    <div class="popular-grid">
+    <ul class="popular-grid" role="list">
         {% for city in popularCities %}
-            <a class="popular-card" href="{{ path('app_city_show', {slug: city.slug}) }}">
-                <span class="popular-card__title">{{ city.name }}</span>
-                <span class="popular-card__overlay">
-                    {% if city.groomerCount is defined and city.groomerCount is not null %}
-                        {{ city.groomerCount }} groomers
-                    {% else %}
-                        Browse
-                    {% endif %}
-                </span>
-            </a>
-        {% else %}
-            <div class="popular-card">City coming soon</div>
-        {% endfor %}
-    </div>
-
-    <h2>Popular Services</h2>
-    <div class="popular-grid">
-        {% set defaultCity = popularCities|first %}
-        {% for service in popularServices %}
-            {% if defaultCity %}
-                <a class="popular-card" href="{{ path('app_groomer_list_by_city_service', {citySlug: defaultCity.slug, serviceSlug: service.slug}) }}">
-                    <span class="popular-card__title">{{ service.name }}</span>
+            <li class="popular-card">
+                <a href="{{ path('app_city_show', {slug: city.slug}) }}">
+                    <span class="popular-card__title">{{ city.name }}</span>
                     <span class="popular-card__overlay">
-                        {% if service.groomerCount is defined and service.groomerCount is not null %}
-                            {{ service.groomerCount }} groomers
+                        {% if city.groomerCount is defined and city.groomerCount is not null %}
+                            {{ city.groomerCount }} groomers
                         {% else %}
                             Browse
                         {% endif %}
                     </span>
                 </a>
+            </li>
+        {% else %}
+            <li class="popular-card">City coming soon</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Popular Services</h2>
+    <ul class="popular-grid" role="list">
+        {% set defaultCity = popularCities|first %}
+        {% for service in popularServices %}
+            {% if defaultCity %}
+                <li class="popular-card">
+                    <a href="{{ path('app_groomer_list_by_city_service', {citySlug: defaultCity.slug, serviceSlug: service.slug}) }}">
+                        <span class="popular-card__title">{{ service.name }}</span>
+                        <span class="popular-card__overlay">
+                            {% if service.groomerCount is defined and service.groomerCount is not null %}
+                                {{ service.groomerCount }} groomers
+                            {% else %}
+                                Browse
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
             {% else %}
-                <div class="popular-card">
+                <li class="popular-card">
                     <span class="popular-card__title">{{ service.name }}</span>
-                </div>
+                </li>
             {% endif %}
         {% else %}
-            <div class="popular-card">Service coming soon</div>
+            <li class="popular-card">Service coming soon</li>
         {% endfor %}
-    </div>
+    </ul>
 </section>
 
