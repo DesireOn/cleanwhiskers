@@ -2,16 +2,18 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="preload" as="image" href="{{ asset('images/hero-poster.avif') }}" imagesrcset="{{ asset('images/hero-poster.avif') }} 1x, {{ asset('images/hero-poster.webp') }} 1x, {{ asset('images/hero-poster.jpg') }} 1x" imagesizes="100vw">
+    <link rel="preload" as="video" href="{{ asset('media/hero.mp4') }}" type="video/mp4">
     <link rel="stylesheet" href="{{ asset('styles/forms.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="module" src="{{ asset('js/form-enhance.js') }}"></script>
-    <script type="module" src="{{ asset('js/home-hero.js') }}"></script>
-    <script type="module" src="{{ asset('js/sticky-search.js') }}"></script>
-    <script type="module" src="{{ asset('js/section-reveal.js') }}"></script>
+    <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/home-hero.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/sticky-search.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}

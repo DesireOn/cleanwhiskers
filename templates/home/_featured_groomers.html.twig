@@ -10,9 +10,23 @@
                 {% set g = item.profile %}
                 <article class="carousel__card">
                     <picture>
-                        <source srcset="{{ g.logo|default('https://placehold.co/160x160.avif') }}" type="image/avif">
-                        <source srcset="{{ g.logo|default('https://placehold.co/160x160.webp') }}" type="image/webp">
-                        <img src="{{ g.logo|default('https://placehold.co/160x160.jpg') }}" alt="{{ g.businessName }} logo" loading="lazy" width="160" height="160">
+                        <source
+                            srcset="{{ g.logo|default('https://placehold.co/120x120.avif') }} 120w, {{ g.logo|default('https://placehold.co/160x160.avif') }} 160w"
+                            sizes="(min-width: 600px) 160px, 120px"
+                            type="image/avif">
+                        <source
+                            srcset="{{ g.logo|default('https://placehold.co/120x120.webp') }} 120w, {{ g.logo|default('https://placehold.co/160x160.webp') }} 160w"
+                            sizes="(min-width: 600px) 160px, 120px"
+                            type="image/webp">
+                        <img
+                            src="{{ g.logo|default('https://placehold.co/160x160.jpg') }}"
+                            srcset="{{ g.logo|default('https://placehold.co/120x120.jpg') }} 120w, {{ g.logo|default('https://placehold.co/160x160.jpg') }} 160w"
+                            sizes="(min-width: 600px) 160px, 120px"
+                            alt="{{ g.businessName }} logo"
+                            loading="lazy"
+                            decoding="async"
+                            width="160"
+                            height="160">
                     </picture>
                     <h3 class="carousel__name"><a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a></h3>
                     {% set aboutSnippet = g.about|slice(0, 40) %}
