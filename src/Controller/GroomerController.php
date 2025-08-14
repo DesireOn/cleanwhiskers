@@ -43,6 +43,19 @@ final class GroomerController extends AbstractController
         $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
         $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;
 
+        $seoTitle = sprintf(
+            'Mobile Dog Groomers in %s for %s – CleanWhiskers',
+            $city->getName(),
+            $service->getName()
+        );
+        $seoDescription = $this->truncate(
+            sprintf(
+                'Find mobile dog groomers in %s for %s. Book experienced groomers on CleanWhiskers.',
+                $city->getName(),
+                $service->getName()
+            )
+        );
+
         return $this->render('groomer/list.html.twig', [
             'groomers' => $groomers,
             'city' => $city,
@@ -50,6 +63,8 @@ final class GroomerController extends AbstractController
             'rating' => $minRating,
             'nextOffset' => $nextOffset,
             'previousOffset' => $previousOffset,
+            'seo_title' => $seoTitle,
+            'seo_description' => $seoDescription,
         ]);
     }
 
@@ -73,9 +88,19 @@ final class GroomerController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $groomers = $groomerProfileRepository->findByCitySlug($citySlug, $page);
 
+        $seoTitle = sprintf('Mobile Dog Groomers in %s – CleanWhiskers', $city->getName());
+        $seoDescription = $this->truncate(
+            sprintf(
+                'Browse mobile dog groomers serving %s. Read reviews and schedule your pet\'s groom today.',
+                $city->getName()
+            )
+        );
+
         return $this->render('groomer/list_by_city.html.twig', [
             'groomers' => $groomers,
             'city' => $city,
+            'seo_title' => $seoTitle,
+            'seo_description' => $seoDescription,
         ]);
     }
 
@@ -99,5 +124,10 @@ final class GroomerController extends AbstractController
     public function profileTrailingSlash(string $slug): Response
     {
         return $this->redirectToRoute('app_groomer_show', ['slug' => $slug], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
+    private function truncate(string $text, int $max = 160): string
+    {
+        return mb_strlen($text) > $max ? mb_substr($text, 0, $max - 3).'...' : $text;
     }
 }
