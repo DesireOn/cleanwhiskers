@@ -2,17 +2,17 @@
 
 {% block body %}
 <section class="hero">
-    <div class="hero__content">
+    <div class="hero-content">
         <form id="search-form" class="search-form" method="get" action="/search">
-            <input class="search-form__input" type="text" id="city" name="city" placeholder="Where's your pet?" required>
-            <select class="search-form__select" id="service" name="service">
+            <input type="text" id="city" name="city" placeholder="Where's your pet?" required>
+            <select id="service" name="service">
                 <option value="">Any service</option>
                 <option value="grooming">Grooming</option>
                 <option value="boarding">Boarding</option>
             </select>
-            <button class="search-form__button btn btn--accent" type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
+            <button type="submit" id="search-submit" disabled>{{ ctaLinks.find.label }}</button>
         </form>
-        <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
+        <a href="{{ ctaLinks.list.url }}" class="cta-list">{{ ctaLinks.list.label }}</a>
     </div>
 </section>
 {% include 'home/_cta_banner.html.twig' %}
