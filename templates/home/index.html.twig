@@ -6,6 +6,7 @@
     <link rel="preload" as="video" href="{{ asset('media/hero.mp4') }}" type="video/mp4">
     <link rel="stylesheet" href="{{ asset('styles/forms.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/components/loading.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -14,6 +15,7 @@
     <script type="module" src="{{ asset('js/home-hero.js') }}" defer></script>
     <script type="module" src="{{ asset('js/sticky-search.js') }}" defer></script>
     <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/loading.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -29,7 +31,10 @@
             <option value="boarding">Boarding</option>
         </select>
         <span id="sticky-service-error" class="form-error" aria-live="polite"></span>
-        <button class="search-form__button btn btn--accent" type="submit">{{ ctaLinks.find.label }}</button>
+        <button class="search-form__button btn btn--accent" type="submit">
+            {{ ctaLinks.find.label }}
+            <span class="spinner" hidden role="status" aria-live="polite" aria-label="Loading"></span>
+        </button>
     </form>
 </div>
 <section class="hero">
@@ -52,7 +57,10 @@
                     <option value="boarding">Boarding</option>
                 </select>
                 <span id="service-error" class="form-error" aria-live="polite"></span>
-                <button class="search-form__button btn btn--accent" type="submit" id="search-submit">{{ ctaLinks.find.label }}</button>
+                <button class="search-form__button btn btn--accent" type="submit" id="search-submit">
+                    {{ ctaLinks.find.label }}
+                    <span class="spinner" hidden role="status" aria-live="polite" aria-label="Loading"></span>
+                </button>
             </form>
             <button id="hero-video-toggle" class="hero__video-toggle" type="button" aria-controls="hero-video" aria-pressed="false" aria-label="Pause video">Pause</button>
         </div>
