@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
+use App\Repository\ReviewRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,20 +71,23 @@ final class GroomerController extends AbstractController
     }
 
     #[Route('/groomers/{slug}', name: 'app_groomer_show', methods: ['GET'], requirements: ['slug' => '[^/]+-[^/]+'])]
-    public function show(string $slug, GroomerProfileRepository $groomerProfileRepository): Response
+    public function profile(string $slug, GroomerProfileRepository $groomerProfileRepository, ReviewRepository $reviewRepository): Response
     {
         $groomer = $groomerProfileRepository->findOneBySlug($slug);
         if (null === $groomer) {
             throw $this->createNotFoundException();
         }
 
-        return $this->render('groomer/show.html.twig', [
+        $reviews = $reviewRepository->findByGroomerProfileOrderedByDate($groomer);
+
+        return $this->render('groomer/profile.html.twig', [
             'groomer' => $groomer,
+            'reviews' => $reviews,
         ]);
     }
 
     #[Route('/groomers/{slug}/', name: 'app_groomer_show_trailing', methods: ['GET'], requirements: ['slug' => '[^/]+-[^/]+'])]
-    public function showTrailingSlash(string $slug): Response
+    public function profileTrailingSlash(string $slug): Response
     {
         return $this->redirectToRoute('app_groomer_show', ['slug' => $slug], Response::HTTP_MOVED_PERMANENTLY);
     }
