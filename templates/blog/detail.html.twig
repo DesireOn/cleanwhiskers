@@ -16,6 +16,9 @@
         <h1>{{ post.title }}</h1>
         {% if post.publishedAt %}
             <time datetime="{{ post.publishedAt|date('Y-m-d') }}">{{ post.publishedAt|date('F j, Y') }}</time>
+            {% if post.readingMinutes %}
+                <span class="reading-minutes">{{ post.readingMinutes }} min read</span>
+            {% endif %}
         {% endif %}
     </header>
     {% if post.coverImagePath %}
