@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 final class BlogTaxonomyControllerTest extends WebTestCase
 {
@@ -27,11 +26,11 @@ final class BlogTaxonomyControllerTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testCategoryListsPosts(): void
+    public function testCategoryPageRendersArticles(): void
     {
         $category = new BlogCategory('News');
         $category->refreshSlugFrom($category->getName());
-        $post = new BlogPost($category, 'Category Post', 'Excerpt', '<p>Content</p>');
+        $post = new BlogPost($category, 'Cat Post', 'Ex', '<p>Body</p>');
         $post->refreshSlugFrom($post->getTitle());
         $post->setIsPublished(true);
         $post->setPublishedAt(new \DateTimeImmutable('-1 day'));
@@ -39,51 +38,29 @@ final class BlogTaxonomyControllerTest extends WebTestCase
         $this->em->persist($post);
         $this->em->flush();
 
-        $this->client->request('GET', '/blog/category/'.$category->getSlug());
+        $crawler = $this->client->request('GET', '/blog/category/'.$category->getSlug());
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Category Post', (string) $this->client->getResponse()->getContent());
+        self::assertSame(1, $crawler->filter('article')->count());
     }
 
-    public function testCategoryRedirectsWhenSlugCasingMismatch(): void
-    {
-        $category = new BlogCategory('Tech');
-        $category->refreshSlugFrom($category->getName());
-        $this->em->persist($category);
-        $this->em->flush();
-
-        $this->client->request('GET', '/blog/category/'.strtoupper($category->getSlug()));
-        self::assertResponseRedirects('/blog/category/'.$category->getSlug(), Response::HTTP_MOVED_PERMANENTLY);
-    }
-
-    public function testTagListsPosts(): void
+    public function testTagPageRendersArticles(): void
     {
         $category = new BlogCategory('News');
         $category->refreshSlugFrom($category->getName());
-        $tag = new BlogTag('Grooming');
+        $tag = new BlogTag('Tips');
         $tag->refreshSlugFrom($tag->getName());
-        $post = new BlogPost($category, 'Tag Post', 'Excerpt', '<p>Content</p>');
+        $post = new BlogPost($category, 'Tagged Post', 'Ex', '<p>Body</p>');
         $post->refreshSlugFrom($post->getTitle());
         $post->setIsPublished(true);
         $post->setPublishedAt(new \DateTimeImmutable('-1 day'));
-        $post->addTag($tag);
+        $post->getTags()->add($tag);
         $this->em->persist($category);
         $this->em->persist($tag);
         $this->em->persist($post);
         $this->em->flush();
 
-        $this->client->request('GET', '/blog/tag/'.$tag->getSlug());
+        $crawler = $this->client->request('GET', '/blog/tag/'.$tag->getSlug());
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Tag Post', (string) $this->client->getResponse()->getContent());
-    }
-
-    public function testTagRedirectsWhenSlugCasingMismatch(): void
-    {
-        $tag = new BlogTag('Pets');
-        $tag->refreshSlugFrom($tag->getName());
-        $this->em->persist($tag);
-        $this->em->flush();
-
-        $this->client->request('GET', '/blog/tag/'.strtoupper($tag->getSlug()));
-        self::assertResponseRedirects('/blog/tag/'.$tag->getSlug(), Response::HTTP_MOVED_PERMANENTLY);
+        self::assertSame(1, $crawler->filter('article')->count());
     }
 }

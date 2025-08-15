@@ -49,7 +49,7 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        return $this->render('blog/show.html.twig', [
+        return $this->render('blog/detail.html.twig', [
             'post' => $post,
             'seo_title' => $post->getMetaTitle() ?? $post->getTitle().' – CleanWhiskers',
             'seo_description' => $post->getMetaDescription(),

@@ -1,0 +1,23 @@
+.blog-header {
+    margin-bottom: var(--space-3);
+}
+
+.post-list {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.post img,
+.blog-article img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.post header {
+    margin-top: var(--space-2);
+}
+
+.blog-breadcrumb {
+    margin-top: var(--space-4);
+}

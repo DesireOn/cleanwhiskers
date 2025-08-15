@@ -1,8 +1,0 @@
-{% extends 'base.html.twig' %}
-
-{% block body %}
-<article>
-    <h1>{{ post.getTitle() }}</h1>
-    <div class="content">{{ post.getContentHtml()|raw }}</div>
-</article>
-{% endblock %}
