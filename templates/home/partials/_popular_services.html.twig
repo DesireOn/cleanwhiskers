@@ -1,24 +1,4 @@
-<section id="popular">
-    <h2>Popular Cities</h2>
-    <ul class="popular-grid" role="list">
-        {% for city in popularCities %}
-            <li class="popular-card">
-                <a href="{{ path('app_city_show', {slug: city.slug}) }}">
-                    <span class="popular-card__title">{{ city.name }}</span>
-                    <span class="popular-card__overlay">
-                        {% if city.groomerCount is defined and city.groomerCount is not null %}
-                            {{ city.groomerCount }} groomers
-                        {% else %}
-                            Browse
-                        {% endif %}
-                    </span>
-                </a>
-            </li>
-        {% else %}
-            <li class="popular-card">City coming soon</li>
-        {% endfor %}
-    </ul>
-
+<section id="popular-services">
     <h2>Popular Services</h2>
     <ul class="popular-grid" role="list">
         {% set defaultCity = popularCities|first %}
@@ -46,4 +26,3 @@
         {% endfor %}
     </ul>
 </section>
-

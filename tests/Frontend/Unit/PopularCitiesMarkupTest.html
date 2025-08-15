@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popular Cities Markup Test</title>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const link = document.querySelector('.popular-cities__link');
+            console.assert(link && link.getAttribute('aria-label') === 'Groomers in Springfield', 'accessible link name');
+            const avatar = link.querySelector('.popular-cities__avatar');
+            console.assert(avatar, 'avatar element present');
+            const name = link.querySelector('.popular-cities__name');
+            console.assert(name && name.textContent.trim() === 'Springfield', 'name displayed');
+            console.log('Popular cities markup tests passed');
+        });
+    </script>
+</head>
+<body>
+<section class="popular-cities">
+    <ul class="popular-cities__grid" role="list">
+        <li class="popular-cities__item">
+            <a class="popular-cities__link" href="/city/springfield" aria-label="Groomers in Springfield">
+                <span class="popular-cities__avatar" aria-hidden="true">S</span>
+                <span class="popular-cities__name">Springfield</span>
+            </a>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

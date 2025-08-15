@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/button.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sections/hero.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/sections/popular-cities.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -27,5 +28,6 @@
     {% include 'home/partials/_cta_banner.html.twig' %}
     {% include 'home/partials/_how_it_works.html.twig' %}
     {% include 'home/_featured_groomers.html.twig' %}
-    {% include 'home/partials/_popular.html.twig' %}
+    {% include 'home/_popular_cities.html.twig' %}
+    {% include 'home/partials/_popular_services.html.twig' %}
 {% endblock %}
