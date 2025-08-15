@@ -13,6 +13,7 @@
             <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('styles/accessibility.css') }}">
             <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/components/footer.css') }}">
         {% endblock %}
 
         {% block javascripts %}
@@ -20,49 +21,13 @@
             <script src="{{ asset('js/nav-toggle.js') }}" defer></script>
         {% endblock %}
     </head>
-    <body data-route="{{ app.request.attributes.get('_route') }}">
+    <body id="top" data-route="{{ app.request.attributes.get('_route') }}">
         <a href="#main-content" class="skip-link">Skip to main content</a>
         {% include 'partials/_header.html.twig' %}
         <main id="main-content" tabindex="-1">
             {% block body %}{% endblock %}
         </main>
 
-        <footer class="site-footer">
-            <nav class="footer-nav">
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                    <li><a href="#blog">Blog</a></li>
-                    <li><a href="#terms">Terms</a></li>
-                    <li><a href="#privacy">Privacy</a></li>
-                </ul>
-            </nav>
-            <div class="footer-social">
-                <a href="#facebook">Facebook</a>
-                <a href="#instagram">Instagram</a>
-            </div>
-            <div class="footer-locale">
-                <span>Language</span> | <span>Currency</span>
-            </div>
-            <div class="footer-links">
-                <div class="footer-cities">
-                    <h4>Cities</h4>
-                    <ul>
-                        {% for city in footerCities|default([])|slice(0, 5) %}
-                            <li><a href="{{ path('app_city_show', {slug: city.slug}) }}">{{ city.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="footer-services">
-                    <h4>Services</h4>
-                    <ul>
-                        {% for service in footerServices|default([])|slice(0, 5) %}
-                            <li><a href="#">{{ service.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </footer>
+        {% include 'partials/_footer.html.twig' %}
     </body>
 </html>
