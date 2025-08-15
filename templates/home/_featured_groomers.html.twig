@@ -1,5 +1,6 @@
 {% if featuredGroomers|length %}
-<section id="featured-groomers" class="featured-groomers">
+<section id="featured-groomers" class="featured-groomers home-section">
+    <div class="home-section__inner">
     <h2 class="featured-groomers__title">Featured Groomers</h2>
     <div class="featured-groomers__grid">
         {% for item in featuredGroomers %}
@@ -38,6 +39,7 @@
                 </div>
             </article>
         {% endfor %}
+    </div>
     </div>
 </section>
 {% endif %}
