@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Repository;
 use App\Entity\Blog\BlogCategory;
 use App\Entity\Blog\BlogPost;
 use App\Entity\Blog\BlogTag;
-use App\Repository\BlogPostRepository;
+use App\Repository\Blog\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -27,34 +27,41 @@ final class BlogPostRepositoryTest extends KernelTestCase
         $this->repository = $this->em->getRepository(BlogPost::class);
     }
 
-    public function testFindPublishedExcludesDraftsAndFuture(): void
+    public function testFindPublishedPaginatesAndExcludesFuture(): void
     {
         $category = new BlogCategory('General');
-        $post1 = new BlogPost($category, 'Published', 'Ex', '<p>Published</p>');
-        $post1->setIsPublished(true);
-        $post1->setPublishedAt(new \DateTimeImmutable('-1 day'));
-
-        $post2 = new BlogPost($category, 'Draft', 'Ex', '<p>Draft</p>');
-        $post2->setIsPublished(false);
-        $post2->setPublishedAt(new \DateTimeImmutable('-1 day'));
-
-        $post3 = new BlogPost($category, 'Future', 'Ex', '<p>Future</p>');
-        $post3->setIsPublished(true);
-        $post3->setPublishedAt(new \DateTimeImmutable('+1 day'));
+        $posts = [];
+        for ($i = 1; $i <= 3; ++$i) {
+            $post = new BlogPost($category, 'Post'.$i, 'Ex', '<p>'.$i.'</p>');
+            $post->setIsPublished(true);
+            $post->setPublishedAt(new \DateTimeImmutable(sprintf('-%d day', 4 - $i)));
+            $posts[] = $post;
+        }
+        $draft = new BlogPost($category, 'Draft', 'Ex', '<p>Draft</p>');
+        $draft->setIsPublished(false);
+        $draft->setPublishedAt(new \DateTimeImmutable('-1 day'));
+        $future = new BlogPost($category, 'Future', 'Ex', '<p>Future</p>');
+        $future->setIsPublished(true);
+        $future->setPublishedAt(new \DateTimeImmutable('+1 day'));
 
         $this->em->persist($category);
-        $this->em->persist($post1);
-        $this->em->persist($post2);
-        $this->em->persist($post3);
+        foreach (array_merge($posts, [$draft, $future]) as $post) {
+            $this->em->persist($post);
+        }
         $this->em->flush();
         $this->em->clear();
 
-        $result = $this->repository->findPublished();
-        self::assertCount(1, $result);
-        self::assertSame('Published', $result[0]->getTitle());
+        $page1 = $this->repository->findPublished(1, 2);
+        self::assertCount(2, $page1);
+        self::assertSame('Post3', $page1[0]['title']);
+        self::assertSame('Post2', $page1[1]['title']);
+
+        $page2 = $this->repository->findPublished(2, 2);
+        self::assertCount(1, $page2);
+        self::assertSame('Post1', $page2[0]['title']);
     }
 
-    public function testFindByCategory(): void
+    public function testFindByCategorySlug(): void
     {
         $catA = new BlogCategory('CatA');
         $catB = new BlogCategory('CatB');
@@ -74,13 +81,13 @@ final class BlogPostRepositoryTest extends KernelTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $catA = $this->em->getRepository(BlogCategory::class)->findOneBy(['name' => 'CatA']);
-        $result = $this->repository->findPublishedByCategory($catA);
+        $result = $this->repository->findByCategorySlug($catA->getSlug(), 1, 10);
         self::assertCount(1, $result);
-        self::assertSame('PostA', $result[0]->getTitle());
+        self::assertSame('PostA', $result[0]['title']);
+        self::assertSame($catA->getSlug(), $result[0]['category_slug']);
     }
 
-    public function testFindByTag(): void
+    public function testFindByTagSlug(): void
     {
         $category = new BlogCategory('Cat');
         $tagA = new BlogTag('TagA');
@@ -104,9 +111,27 @@ final class BlogPostRepositoryTest extends KernelTestCase
         $this->em->flush();
         $this->em->clear();
 
-        $tagA = $this->em->getRepository(BlogTag::class)->findOneBy(['name' => 'TagA']);
-        $result = $this->repository->findPublishedByTag($tagA);
+        $result = $this->repository->findByTagSlug($tagA->getSlug(), 1, 10);
         self::assertCount(1, $result);
-        self::assertSame('Post1', $result[0]->getTitle());
+        self::assertSame('Post1', $result[0]['title']);
+    }
+
+    public function testFindLatest(): void
+    {
+        $category = new BlogCategory('General');
+        for ($i = 1; $i <= 3; ++$i) {
+            $post = new BlogPost($category, 'P'.$i, 'Ex', '<p>'.$i.'</p>');
+            $post->setIsPublished(true);
+            $post->setPublishedAt(new \DateTimeImmutable(sprintf('-%d day', 3 - $i)));
+            $this->em->persist($post);
+        }
+        $this->em->persist($category);
+        $this->em->flush();
+        $this->em->clear();
+
+        $latest = $this->repository->findLatest(2);
+        self::assertCount(2, $latest);
+        self::assertSame('P3', $latest[0]['title']);
+        self::assertSame('P2', $latest[1]['title']);
     }
 }

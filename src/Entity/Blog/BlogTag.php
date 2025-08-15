@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Blog;
 
 use App\Domain\Shared\SluggerTrait;
-use App\Repository\BlogTagRepository;
+use App\Repository\Blog\BlogTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

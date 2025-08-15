@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Blog;
 
 use App\Domain\Shared\SluggerTrait;
-use App\Repository\BlogPostRepository;
+use App\Repository\Blog\BlogPostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Blog;
 
 use App\Domain\Shared\SluggerTrait;
-use App\Repository\BlogCategoryRepository;
+use App\Repository\Blog\BlogCategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BlogCategoryRepository::class)]
