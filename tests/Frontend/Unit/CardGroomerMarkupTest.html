@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Card Groomer Markup Test</title>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const card = document.querySelector('.card-groomer');
+            console.assert(card, 'card exists');
+            const img = card.querySelector('img');
+            console.assert(img && img.loading === 'lazy', 'image lazy loads');
+            console.assert(img.getAttribute('alt'), 'image has alt text');
+            const name = card.querySelector('.card-groomer__name a');
+            console.assert(name && name.textContent.trim().length > 0, 'name link present');
+            const rating = card.querySelector('.card-groomer__rating');
+            console.assert(rating && rating.getAttribute('aria-label'), 'rating aria-label present');
+            console.assert(card.querySelector('.card-groomer__services li'), 'service tag present');
+            const cta = card.querySelector('.card-groomer__cta');
+            console.assert(cta && cta.textContent.includes('View profile'), 'CTA present');
+            console.log('Card groomer markup tests passed');
+        });
+    </script>
+</head>
+<body>
+<section class="featured-groomers">
+    <div class="featured-groomers__grid">
+        <article class="card-groomer">
+            <div class="card-groomer__image-wrapper">
+                <img src="https://placehold.co/320x240" alt="Fluffy Groomers logo" loading="lazy">
+            </div>
+            <div class="card-groomer__body">
+                <h3 class="card-groomer__name"><a href="#">Fluffy Groomers</a></h3>
+                <p class="card-groomer__city">Springfield</p>
+                <div class="card-groomer__rating" aria-label="Rating 4.8 out of 5">
+                    <span class="card-groomer__stars" style="--rating:4.8" aria-hidden="true"></span>
+                    <span class="card-groomer__rating-number">4.8</span>
+                </div>
+                <ul class="card-groomer__services">
+                    <li>Baths</li>
+                </ul>
+                <a class="card-groomer__cta" href="#">View profile</a>
+            </div>
+        </article>
+    </div>
+</section>
+</body>
+</html>

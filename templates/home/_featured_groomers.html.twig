@@ -1,0 +1,43 @@
+{% if featuredGroomers|length %}
+<section id="featured-groomers" class="featured-groomers">
+    <h2 class="featured-groomers__title">Featured Groomers</h2>
+    <div class="featured-groomers__grid">
+        {% for item in featuredGroomers %}
+            {% set g = item.profile %}
+            <article class="card-groomer">
+                <div class="card-groomer__image-wrapper">
+                    <img
+                        src="{{ g.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
+                        alt="{{ g.businessName }} logo"
+                        loading="lazy"
+                        decoding="async"
+                        width="320"
+                        height="240"
+                        data-skeleton
+                    >
+                </div>
+                <div class="card-groomer__body">
+                    <h3 class="card-groomer__name">
+                        <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a>
+                    </h3>
+                    <p class="card-groomer__city">{{ g.city.name }}</p>
+                    <div class="card-groomer__rating" aria-label="Rating {{ item.rating|number_format(1) }} out of 5">
+                        <span class="card-groomer__stars" style="--rating: {{ item.rating|number_format(1, '.', '') }}" aria-hidden="true"></span>
+                        <span class="card-groomer__rating-number">{{ item.rating|number_format(1) }}</span>
+                        <span class="card-groomer__review-count">({{ item.reviewCount }})</span>
+                    </div>
+                    {% set tags = g.services|slice(0,3) %}
+                    {% if tags|length %}
+                        <ul class="card-groomer__services">
+                            {% for service in tags %}
+                                <li>{{ service.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <a class="card-groomer__cta" href="{{ path('app_groomer_show', {slug: g.slug}) }}">View profile</a>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
