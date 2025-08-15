@@ -6,7 +6,7 @@
                 <a class="popular-cities__link" href="{{ path('app_city_show', {slug: city.slug}) }}" aria-label="Groomers in {{ city.name }}">
                     <span class="popular-cities__avatar" aria-hidden="true">
                         {% if city.image is defined and city.image %}
-                            <img src="{{ city.image }}" alt="" loading="lazy">
+                            <img src="{{ city.image }}" alt="" loading="lazy" decoding="async" width="32" height="32">
                         {% else %}
                             {{ city.name|slice(0,1) }}
                         {% endif %}

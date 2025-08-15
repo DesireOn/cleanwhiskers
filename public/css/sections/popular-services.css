@@ -14,12 +14,12 @@
 }
 
 .popular-services__spotlight:hover,
-.popular-services__spotlight:focus {
-    border-color: var(--color-accent, #2563eb);
-    box-shadow: 0 0 0 2px var(--color-accent, #2563eb);
+.popular-services__spotlight:focus-visible {
+    border-color: var(--color-accent, #1d4ed8);
+    box-shadow: 0 0 0 2px var(--color-accent, #1d4ed8);
 }
 
-.popular-services__spotlight:focus {
+.popular-services__spotlight:focus-visible {
     outline: none;
 }
 

@@ -37,12 +37,12 @@
 }
 
 .popular-cities__link:hover,
-.popular-cities__link:focus {
-    border-color: var(--color-accent, #2563eb);
-    box-shadow: 0 0 0 2px var(--color-accent, #2563eb);
+.popular-cities__link:focus-visible {
+    border-color: var(--color-accent, #1d4ed8);
+    box-shadow: 0 0 0 2px var(--color-accent, #1d4ed8);
 }
 
-.popular-cities__link:focus {
+.popular-cities__link:focus-visible {
     outline: none;
 }
 
