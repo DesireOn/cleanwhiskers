@@ -32,10 +32,8 @@ final class PopularNavTest extends WebTestCase
             $this->em->persist($city);
         }
 
-        foreach (['Dog', 'Cat', 'Mobile'] as $name) {
-            $service = (new Service())->setName($name);
-            $this->em->persist($service);
-        }
+        $service = (new Service())->setName('Grooming');
+        $this->em->persist($service);
 
         $this->em->flush();
 
@@ -54,20 +52,14 @@ final class PopularNavTest extends WebTestCase
         }
 
         $firstCity = 'bucharest';
-        $serviceSlugs = ['dog', 'cat', 'mobile'];
-        foreach ($serviceSlugs as $serviceSlug) {
-            $href = sprintf('/groomers/%s/%s', $firstCity, $serviceSlug);
-            self::assertSame(1, $crawler->filter(sprintf('#popular-services a[href="%s"]', $href))->count());
-        }
+        $href = sprintf('/groomers/%s/grooming', $firstCity);
+        self::assertSame(1, $crawler->filter(sprintf('#popular-services a[href="%s"]', $href))->count());
 
-        foreach ($serviceSlugs as $serviceSlug) {
-            $href = sprintf('/groomers/%s/%s', $firstCity, $serviceSlug);
-            $this->client->request('GET', $href);
-            self::assertResponseIsSuccessful();
-        }
+        $this->client->request('GET', $href);
+        self::assertResponseIsSuccessful();
 
-        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/public/css/sections/popular-cities.css';
+        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/public/css/sections/popular-services.css';
         $css = file_get_contents($cssPath);
-        self::assertStringContainsString('.popular-cities__link:focus', $css);
+        self::assertStringContainsString('.popular-services__spotlight:focus', $css);
     }
 }
