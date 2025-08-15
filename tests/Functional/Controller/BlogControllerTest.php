@@ -62,6 +62,20 @@ final class BlogControllerTest extends WebTestCase
         self::assertSame(1, $crawler->filter('article')->count());
     }
 
+    public function testDetailRendersJsonLd(): void
+    {
+        $post = $this->createPublishedPost('Schema Post');
+        $path = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug());
+
+        $crawler = $this->client->request('GET', $path);
+        self::assertResponseIsSuccessful();
+        $script = $crawler->filter('script[type="application/ld+json"]');
+        self::assertSame(1, $script->count());
+        $data = json_decode($script->text(), true);
+        self::assertSame('Article', $data[0]['@type']);
+        self::assertSame('BreadcrumbList', $data[1]['@type']);
+    }
+
     public function testDetailReturns404ForFuturePost(): void
     {
         $category = new BlogCategory('News');

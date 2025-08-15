@@ -1,0 +1,36 @@
+{% macro render(data) %}
+    {% set items = [] %}
+    {% if data.article is defined %}
+        {% set article = {
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            'headline': data.article.headline,
+            'author': data.article.author,
+            'datePublished': data.article.datePublished,
+        } %}
+        {% if data.article.imagePath is defined %}
+            {% set article = article|merge({'image': absolute_url(asset(data.article.imagePath))}) %}
+        {% endif %}
+        {% set items = items|merge([article]) %}
+    {% endif %}
+    {% if data.breadcrumbs is defined %}
+        {% set list = [] %}
+        {% for crumb in data.breadcrumbs %}
+            {% set list = list|merge([{
+                '@type': 'ListItem',
+                'position': loop.index,
+                'name': crumb.name,
+                'item': crumb.item
+            }]) %}
+        {% endfor %}
+        {% set breadcrumb = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            'itemListElement': list
+        } %}
+        {% set items = items|merge([breadcrumb]) %}
+    {% endif %}
+    {% if items %}
+        <script type="application/ld+json">{{ items|json_encode|raw }}</script>
+    {% endif %}
+{% endmacro %}
