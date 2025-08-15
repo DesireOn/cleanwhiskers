@@ -7,6 +7,7 @@
         window.addEventListener('DOMContentLoaded', function () {
             const service = document.querySelector('input[name="service"]');
             console.assert(service && service.type === 'hidden' && service.value === 'grooming', 'service input preset');
+            console.assert(!document.querySelector('video'), 'no video tag present');
             const pin = document.getElementById('use-location');
             console.assert(pin, 'pin button exists');
             const city = document.getElementById('city');
