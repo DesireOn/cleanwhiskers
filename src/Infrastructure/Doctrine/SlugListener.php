@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\Infrastructure\Doctrine;
 
 use App\Domain\Shared\Exception\SlugCollisionException;
+use App\Entity\Blog\BlogCategory;
+use App\Entity\Blog\BlogPost;
+use App\Entity\Blog\BlogTag;
 use App\Entity\City;
 use App\Entity\GroomerProfile;
 use App\Entity\Service;
+use App\Repository\BlogCategoryRepository;
+use App\Repository\BlogPostRepository;
+use App\Repository\BlogTagRepository;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ServiceRepository;
@@ -21,6 +27,9 @@ class SlugListener
         private readonly CityRepository $cityRepository,
         private readonly ServiceRepository $serviceRepository,
         private readonly GroomerProfileRepository $groomerProfileRepository,
+        private readonly BlogCategoryRepository $blogCategoryRepository,
+        private readonly BlogTagRepository $blogTagRepository,
+        private readonly BlogPostRepository $blogPostRepository,
     ) {
     }
 
@@ -43,6 +52,21 @@ class SlugListener
                 $entity->refreshSlugFrom($entity->getBusinessName());
             }
             $this->ensureGroomerProfileSlugUnique($entity);
+        } elseif ($entity instanceof BlogCategory) {
+            if ('' === $entity->getSlug()) {
+                $entity->refreshSlugFrom($entity->getName());
+            }
+            $this->ensureBlogCategorySlugUnique($entity);
+        } elseif ($entity instanceof BlogTag) {
+            if ('' === $entity->getSlug()) {
+                $entity->refreshSlugFrom($entity->getName());
+            }
+            $this->ensureBlogTagSlugUnique($entity);
+        } elseif ($entity instanceof BlogPost) {
+            if ('' === $entity->getSlug()) {
+                $entity->refreshSlugFrom($entity->getTitle());
+            }
+            $this->ensureBlogPostSlugUnique($entity);
         }
     }
 
@@ -57,6 +81,12 @@ class SlugListener
             $this->handleServiceUpdate($entity, $args, $em);
         } elseif ($entity instanceof GroomerProfile) {
             $this->handleGroomerProfileUpdate($entity, $args, $em);
+        } elseif ($entity instanceof BlogCategory) {
+            $this->handleBlogCategoryUpdate($entity, $args, $em);
+        } elseif ($entity instanceof BlogTag) {
+            $this->handleBlogTagUpdate($entity, $args, $em);
+        } elseif ($entity instanceof BlogPost) {
+            $this->handleBlogPostUpdate($entity, $args, $em);
         }
     }
 
@@ -99,6 +129,45 @@ class SlugListener
         }
     }
 
+    private function handleBlogCategoryUpdate(BlogCategory $category, PreUpdateEventArgs $args, EntityManagerInterface $em): void
+    {
+        $oldSlug = $category->getSlug();
+        if ($args->hasChangedField('name')) {
+            $category->refreshSlugFrom($category->getName());
+            $this->recompute($em, $category, 'slug', $oldSlug, $category->getSlug());
+        }
+
+        if ($oldSlug !== $category->getSlug() || $args->hasChangedField('slug')) {
+            $this->ensureBlogCategorySlugUnique($category);
+        }
+    }
+
+    private function handleBlogTagUpdate(BlogTag $tag, PreUpdateEventArgs $args, EntityManagerInterface $em): void
+    {
+        $oldSlug = $tag->getSlug();
+        if ($args->hasChangedField('name')) {
+            $tag->refreshSlugFrom($tag->getName());
+            $this->recompute($em, $tag, 'slug', $oldSlug, $tag->getSlug());
+        }
+
+        if ($oldSlug !== $tag->getSlug() || $args->hasChangedField('slug')) {
+            $this->ensureBlogTagSlugUnique($tag);
+        }
+    }
+
+    private function handleBlogPostUpdate(BlogPost $post, PreUpdateEventArgs $args, EntityManagerInterface $em): void
+    {
+        $oldSlug = $post->getSlug();
+        if ($args->hasChangedField('title')) {
+            $post->refreshSlugFrom($post->getTitle());
+            $this->recompute($em, $post, 'slug', $oldSlug, $post->getSlug());
+        }
+
+        if ($oldSlug !== $post->getSlug() || $args->hasChangedField('slug')) {
+            $this->ensureBlogPostSlugUnique($post);
+        }
+    }
+
     private function recompute(EntityManagerInterface $em, object $entity, string $field, mixed $oldValue, mixed $newValue): void
     {
         $uow = $em->getUnitOfWork();
@@ -124,6 +193,27 @@ class SlugListener
     {
         if ($this->groomerProfileRepository->existsBySlug($profile->getSlug())) {
             throw new SlugCollisionException('GroomerProfile slug already exists.');
+        }
+    }
+
+    private function ensureBlogCategorySlugUnique(BlogCategory $category): void
+    {
+        if ($this->blogCategoryRepository->existsBySlug($category->getSlug())) {
+            throw new SlugCollisionException('BlogCategory slug already exists.');
+        }
+    }
+
+    private function ensureBlogTagSlugUnique(BlogTag $tag): void
+    {
+        if ($this->blogTagRepository->existsBySlug($tag->getSlug())) {
+            throw new SlugCollisionException('BlogTag slug already exists.');
+        }
+    }
+
+    private function ensureBlogPostSlugUnique(BlogPost $post): void
+    {
+        if ($this->blogPostRepository->existsBySlug($post->getSlug())) {
+            throw new SlugCollisionException('BlogPost slug already exists.');
         }
     }
 }
