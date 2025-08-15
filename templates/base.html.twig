@@ -12,23 +12,17 @@
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('styles/accessibility.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
         {% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+            <script src="{{ asset('js/nav-toggle.js') }}" defer></script>
         {% endblock %}
     </head>
-    <body>
+    <body data-route="{{ app.request.attributes.get('_route') }}">
         <a href="#main-content" class="skip-link">Skip to main content</a>
-        <header class="site-header">
-            <nav class="main-nav" aria-label="Primary">
-                <ul>
-                    <li><a href="{{ path('app_homepage') }}">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
+        {% include 'partials/_header.html.twig' %}
         <main id="main-content" tabindex="-1">
             {% block body %}{% endblock %}
         </main>
