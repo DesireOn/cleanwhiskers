@@ -39,7 +39,7 @@ final class BlogTaxonomyController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $posts = $this->posts->findByCategorySlug($canonicalSlug, $page, 10);
 
-        return $this->render('blog/index.html.twig', [
+        return $this->render('blog/category.html.twig', [
             'title' => $category->getName(),
             'posts' => $posts,
             'seo_title' => $category->getName().' – CleanWhiskers',
@@ -65,7 +65,7 @@ final class BlogTaxonomyController extends AbstractController
         $page = max(1, (int) $request->query->get('page', 1));
         $posts = $this->posts->findByTagSlug($canonicalSlug, $page, 10);
 
-        return $this->render('blog/index.html.twig', [
+        return $this->render('blog/tag.html.twig', [
             'title' => $tag->getName(),
             'posts' => $posts,
             'seo_title' => $tag->getName().' – CleanWhiskers',

@@ -45,7 +45,7 @@ final class BlogControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/blog');
 
         self::assertResponseIsSuccessful();
-        self::assertSame(2, $crawler->filter('li.post')->count());
+        self::assertSame(2, $crawler->filter('article.post')->count());
         self::assertSelectorTextContains('h1', 'Blog');
     }
 
@@ -64,12 +64,13 @@ final class BlogControllerTest extends WebTestCase
         $this->em->flush();
 
         $path = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug());
-        $this->client->request('GET', $path);
+        $crawler = $this->client->request('GET', $path);
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Welcome');
         $content = $this->client->getResponse()->getContent();
         self::assertStringContainsString('<title>Custom Title</title>', $content);
         self::assertStringContainsString('<meta name="description" content="Meta desc"', $content);
+        self::assertSame(1, $crawler->filter('article')->count());
     }
 }

@@ -45,9 +45,10 @@ final class BlogControllerTest extends WebTestCase
     {
         $this->createPublishedPost('Hello World');
 
-        $this->client->request('GET', '/blog');
+        $crawler = $this->client->request('GET', '/blog');
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Hello World', (string) $this->client->getResponse()->getContent());
+        self::assertSame(1, $crawler->filter('article')->count());
     }
 
     public function testDetailShowsPost(): void
@@ -55,9 +56,10 @@ final class BlogControllerTest extends WebTestCase
         $post = $this->createPublishedPost('Detail Post');
         $path = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug());
 
-        $this->client->request('GET', $path);
+        $crawler = $this->client->request('GET', $path);
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Detail Post', (string) $this->client->getResponse()->getContent());
+        self::assertSame(1, $crawler->filter('article')->count());
     }
 
     public function testDetailReturns404ForFuturePost(): void
