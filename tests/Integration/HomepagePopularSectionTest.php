@@ -43,12 +43,12 @@ final class HomepagePopularSectionTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         foreach (['bucharest', 'ruse', 'sofia'] as $slug) {
-            self::assertSelectorExists(sprintf('#popular a[href="/cities/%s"]', $slug));
+            self::assertSelectorExists(sprintf('.popular-cities__link[href="/cities/%s"]', $slug));
         }
 
         $firstCitySlug = 'bucharest';
         foreach (['dog', 'cat', 'mobile'] as $serviceSlug) {
-            self::assertSelectorExists(sprintf('#popular a[href="/groomers/%s/%s"]', $firstCitySlug, $serviceSlug));
+            self::assertSelectorExists(sprintf('#popular-services a[href="/groomers/%s/%s"]', $firstCitySlug, $serviceSlug));
         }
     }
 }

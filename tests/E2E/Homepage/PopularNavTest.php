@@ -44,7 +44,7 @@ final class PopularNavTest extends WebTestCase
 
         $citySlugs = ['bucharest', 'ruse', 'sofia'];
         foreach ($citySlugs as $slug) {
-            $link = sprintf('#popular a[href="/cities/%s"]', $slug);
+            $link = sprintf('.popular-cities__link[href="/cities/%s"]', $slug);
             self::assertSame(1, $crawler->filter($link)->count());
         }
 
@@ -57,7 +57,7 @@ final class PopularNavTest extends WebTestCase
         $serviceSlugs = ['dog', 'cat', 'mobile'];
         foreach ($serviceSlugs as $serviceSlug) {
             $href = sprintf('/groomers/%s/%s', $firstCity, $serviceSlug);
-            self::assertSame(1, $crawler->filter(sprintf('#popular a[href="%s"]', $href))->count());
+            self::assertSame(1, $crawler->filter(sprintf('#popular-services a[href="%s"]', $href))->count());
         }
 
         foreach ($serviceSlugs as $serviceSlug) {
@@ -66,8 +66,8 @@ final class PopularNavTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
-        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/assets/styles/home.css';
+        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/public/css/sections/popular-cities.css';
         $css = file_get_contents($cssPath);
-        self::assertStringContainsString('.popular-card:focus', $css);
+        self::assertStringContainsString('.popular-cities__link:focus', $css);
     }
 }
