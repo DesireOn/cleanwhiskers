@@ -1,0 +1,24 @@
+{% if seo is not defined %}
+    {% set seo = {
+        title: 'Find trusted pet care | CleanWhiskers',
+        meta: [
+            { name: 'description', content: 'Book top-rated grooming and boarding services near you with CleanWhiskers.'},
+            { property: 'og:title', content: 'Find trusted pet care | CleanWhiskers'},
+            { property: 'og:description', content: 'Book top-rated grooming and boarding services near you with CleanWhiskers.'},
+            { property: 'og:type', content: 'article'},
+            { property: 'og:image', content: 'https://www.cleanwhiskers.example/social-card.png'},
+            { name: 'twitter:card', content: 'summary_large_image'},
+            { name: 'twitter:title', content: 'Find trusted pet care | CleanWhiskers'},
+            { name: 'twitter:description', content: 'Book top-rated grooming and boarding services near you with CleanWhiskers.'},
+            { name: 'twitter:image', content: 'https://www.cleanwhiskers.example/social-card.png'},
+        ],
+        link: []
+    } %}
+{% endif %}
+<title>{{ seo.title }}</title>
+{% for tag in seo.meta %}
+    <meta{% if tag.name is defined %} name="{{ tag.name }}"{% endif %}{% if tag.property is defined %} property="{{ tag.property }}"{% endif %} content="{{ tag.content }}">
+{% endfor %}
+{% for link in seo.link %}
+    <link rel="{{ link.rel }}" href="{{ link.href }}">
+{% endfor %}
