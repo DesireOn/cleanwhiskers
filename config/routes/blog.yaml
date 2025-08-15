@@ -1,0 +1,22 @@
+app_blog_index:
+    path: /blog
+    controller: App\Controller\Blog\BlogController::index
+    methods: [GET]
+
+app_blog_category:
+    path: /blog/category/{slug}
+    controller: App\Controller\Blog\BlogTaxonomyController::category
+    methods: [GET]
+
+app_blog_tag:
+    path: /blog/tag/{slug}
+    controller: App\Controller\Blog\BlogTaxonomyController::tag
+    methods: [GET]
+
+app_blog_detail:
+    path: /blog/{year}/{month}/{slug}
+    controller: App\Controller\Blog\BlogController::detail
+    requirements:
+        year: '\d{4}'
+        month: '\d{2}'
+    methods: [GET]
