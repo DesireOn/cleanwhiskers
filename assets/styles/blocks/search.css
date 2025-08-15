@@ -1,0 +1,17 @@
+.search--compact {
+    padding: var(--space-1);
+}
+
+.search--compact .search-form {
+    gap: var(--space-1);
+}
+
+.search--compact label[for="sticky-service"],
+.search--compact .search-form__select--service {
+    display: none;
+}
+
+.search--compact .search-form__input,
+.search--compact .search-form__button {
+    min-height: 36px;
+}
