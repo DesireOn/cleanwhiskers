@@ -42,4 +42,18 @@ final class SeoMetaBuilderTest extends TestCase
 
         self::assertSame('https://override.example/article', $seo['link'][0]['href']);
     }
+
+    public function testPrevNextAndRobotsOptions(): void
+    {
+        $builder = $this->createBuilder('https://example.com/blog?page=2');
+        $seo = $builder->build([
+            'prev_url' => 'https://example.com/blog?page=1',
+            'next_url' => 'https://example.com/blog?page=3',
+            'robots' => 'noindex,follow',
+        ]);
+
+        self::assertContains(['rel' => 'prev', 'href' => 'https://example.com/blog?page=1'], $seo['link']);
+        self::assertContains(['rel' => 'next', 'href' => 'https://example.com/blog?page=3'], $seo['link']);
+        self::assertContains(['name' => 'robots', 'content' => 'noindex,follow'], $seo['meta']);
+    }
 }

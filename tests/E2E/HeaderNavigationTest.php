@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
 if (!class_exists(PantherTestCase::class)) {
     class HeaderNavigationTest extends TestCase
@@ -20,7 +21,6 @@ if (!class_exists(PantherTestCase::class)) {
 
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Panther\PantherTestCase;
 
 final class HeaderNavigationTest extends PantherTestCase
 {

@@ -11,9 +11,13 @@ use App\Service\SeoMetaBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class BlogTaxonomyController extends AbstractController
 {
+    private const PER_PAGE = 10;
+    private const MAX_INDEX_PAGE = 10;
+
     public function __construct(
         private BlogPostRepository $posts,
         private BlogCategoryRepository $categories,
@@ -38,15 +42,36 @@ final class BlogTaxonomyController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, (int) $request->query->get('page', 1));
-        $posts = $this->posts->findByCategorySlug($canonicalSlug, $page, 10);
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = self::PER_PAGE;
+        $posts = $this->posts->findByCategorySlug($canonicalSlug, $page, $perPage);
+
+        if ($page > 1 && [] === $posts) {
+            throw $this->createNotFoundException();
+        }
+
+        $hasNext = count($posts) === $perPage && [] !== $this->posts->findByCategorySlug($canonicalSlug, $page + 1, 1);
+
+        $options = [
+            'title' => $category->getName().' – CleanWhiskers',
+        ];
+        if ($page > 1) {
+            $options['prev_url'] = $this->generateUrl('app_blog_category', ['slug' => $canonicalSlug] + ($page > 2 ? ['page' => $page - 1] : []), UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($hasNext) {
+            $options['next_url'] = $this->generateUrl('app_blog_category', ['slug' => $canonicalSlug, 'page' => $page + 1], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($page > self::MAX_INDEX_PAGE) {
+            $options['robots'] = 'noindex,follow';
+        }
 
         return $this->render('blog/category.html.twig', [
             'title' => $category->getName(),
             'posts' => $posts,
-            'seo' => $this->seo->build([
-                'title' => $category->getName().' – CleanWhiskers',
-            ]),
+            'page' => $page,
+            'next_page' => $hasNext ? $page + 1 : null,
+            'prev_page' => $page > 1 ? $page - 1 : null,
+            'seo' => $this->seo->build($options),
         ]);
     }
 
@@ -66,15 +91,36 @@ final class BlogTaxonomyController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        $page = max(1, (int) $request->query->get('page', 1));
-        $posts = $this->posts->findByTagSlug($canonicalSlug, $page, 10);
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = self::PER_PAGE;
+        $posts = $this->posts->findByTagSlug($canonicalSlug, $page, $perPage);
+
+        if ($page > 1 && [] === $posts) {
+            throw $this->createNotFoundException();
+        }
+
+        $hasNext = count($posts) === $perPage && [] !== $this->posts->findByTagSlug($canonicalSlug, $page + 1, 1);
+
+        $options = [
+            'title' => $tag->getName().' – CleanWhiskers',
+        ];
+        if ($page > 1) {
+            $options['prev_url'] = $this->generateUrl('app_blog_tag', ['slug' => $canonicalSlug] + ($page > 2 ? ['page' => $page - 1] : []), UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($hasNext) {
+            $options['next_url'] = $this->generateUrl('app_blog_tag', ['slug' => $canonicalSlug, 'page' => $page + 1], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($page > self::MAX_INDEX_PAGE) {
+            $options['robots'] = 'noindex,follow';
+        }
 
         return $this->render('blog/tag.html.twig', [
             'title' => $tag->getName(),
             'posts' => $posts,
-            'seo' => $this->seo->build([
-                'title' => $tag->getName().' – CleanWhiskers',
-            ]),
+            'page' => $page,
+            'next_page' => $hasNext ? $page + 1 : null,
+            'prev_page' => $page > 1 ? $page - 1 : null,
+            'seo' => $this->seo->build($options),
         ]);
     }
 }

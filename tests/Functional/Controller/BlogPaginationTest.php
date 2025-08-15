@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional;
+namespace App\Tests\Functional\Controller;
 
 use App\Entity\Blog\BlogCategory;
 use App\Entity\Blog\BlogPost;
@@ -11,7 +11,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class SeoMetaBuilderTest extends WebTestCase
+final class BlogPaginationTest extends WebTestCase
 {
     private KernelBrowser $client;
     private EntityManagerInterface $em;
@@ -42,23 +42,22 @@ final class SeoMetaBuilderTest extends WebTestCase
         $this->em->flush();
     }
 
-    public function testBlogIndexCanonicalPagination(): void
+    public function testPaginationMeta(): void
     {
-        $this->seedPosts(11);
-        $crawler = $this->client->request('GET', '/blog?page=2');
+        $this->seedPosts(101);
 
-        self::assertResponseIsSuccessful();
-        self::assertSame('http://localhost/blog?page=2', $crawler->filter('link[rel="canonical"]')->attr('href'));
-        self::assertSame('Blog – CleanWhiskers', $crawler->filter('meta[property="og:title"]')->attr('content'));
-        self::assertSame('summary_large_image', $crawler->filter('meta[name="twitter:card"]')->attr('content'));
-    }
-
-    public function testBlogIndexCanonicalFirstPage(): void
-    {
-        $this->seedPosts(1);
-        $crawler = $this->client->request('GET', '/blog?page=1');
-
+        $crawler = $this->client->request('GET', '/blog');
         self::assertResponseIsSuccessful();
         self::assertSame('http://localhost/blog', $crawler->filter('link[rel="canonical"]')->attr('href'));
+        self::assertSame('http://localhost/blog?page=2', $crawler->filter('link[rel="next"]')->attr('href'));
+        self::assertSame(0, $crawler->filter('link[rel="prev"]')->count());
+        self::assertSame(0, $crawler->filter('meta[name="robots"]')->count());
+
+        $crawler = $this->client->request('GET', '/blog?page=11');
+        self::assertResponseIsSuccessful();
+        self::assertSame('http://localhost/blog?page=11', $crawler->filter('link[rel="canonical"]')->attr('href'));
+        self::assertSame('http://localhost/blog?page=10', $crawler->filter('link[rel="prev"]')->attr('href'));
+        self::assertSame(0, $crawler->filter('link[rel="next"]')->count());
+        self::assertSame('noindex,follow', $crawler->filter('meta[name="robots"]')->attr('content'));
     }
 }
