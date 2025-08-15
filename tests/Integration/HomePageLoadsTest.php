@@ -15,7 +15,7 @@ final class HomePageLoadsTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('input#city');
-        self::assertSelectorExists('select#service');
+        self::assertSelectorExists('input#service[type="hidden"][value="grooming"]');
         self::assertSelectorTextContains('button#search-submit', 'Find a Groomer');
         self::assertSelectorTextContains('a.hero__cta-link', 'List Your Business');
     }
