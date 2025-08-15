@@ -69,6 +69,11 @@
     }
 }
 
+/* Element: video toggle */
+.hero__video-toggle {
+    margin-top: var(--space-2);
+}
+
 /* Block: sticky-search */
 .sticky-search {
     position: fixed;
