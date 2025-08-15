@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\Blog;
 
 use App\Entity\Blog\BlogTag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
