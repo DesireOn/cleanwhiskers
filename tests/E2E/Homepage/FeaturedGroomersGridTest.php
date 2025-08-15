@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
-final class FeaturedCarouselTest extends WebTestCase
+final class FeaturedGroomersGridTest extends WebTestCase
 {
     private KernelBrowser $client;
     private EntityManagerInterface $em;
@@ -29,7 +29,7 @@ final class FeaturedCarouselTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testCarouselButtonsAndLinksWork(): void
+    public function testGridCardsLinkToProfiles(): void
     {
         $city = new City('Varna');
         $city->refreshSlugFrom($city->getName());
@@ -67,14 +67,9 @@ final class FeaturedCarouselTest extends WebTestCase
 
         $section = $crawler->filter('#featured-groomers');
         self::assertSame(1, $section->count());
-        self::assertSame('0', $section->filter('.carousel__track')->attr('tabindex'));
-        self::assertSame(1, $section->filter('[data-carousel-prev]')->count());
-        self::assertSame(1, $section->filter('[data-carousel-next]')->count());
+        self::assertSame(2, $section->filter('.card-groomer')->count());
 
-        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/assets/styles/home.css';
-        self::assertStringContainsString('scroll-snap-type: x mandatory', file_get_contents($cssPath));
-
-        $hrefs = $section->filter('.carousel__card a')->each(fn (Crawler $link) => $link->attr('href'));
+        $hrefs = $section->filter('.card-groomer__cta')->each(fn (Crawler $link) => $link->attr('href'));
         foreach ($hrefs as $href) {
             $this->client->request('GET', $href);
             self::assertResponseIsSuccessful();
