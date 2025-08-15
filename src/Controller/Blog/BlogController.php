@@ -9,6 +9,7 @@ use App\Service\SeoMetaBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class BlogController extends AbstractController
 {
@@ -62,9 +63,42 @@ final class BlogController extends AbstractController
             $options['canonical_url'] = $post->getCanonicalUrl();
         }
 
+        $jsonLd = null;
+        if ($post->isPublished()) {
+            $jsonLd = [
+                'article' => [
+                    'headline' => $post->getTitle(),
+                    'author' => 'CleanWhiskers',
+                    'datePublished' => $post->getPublishedAt()?->format(DATE_ATOM),
+                ],
+                'breadcrumbs' => [
+                    [
+                        'name' => 'Home',
+                        'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ],
+                    [
+                        'name' => 'Blog',
+                        'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ],
+                    [
+                        'name' => $post->getCategory()->getName(),
+                        'item' => $this->generateUrl('app_blog_category', ['slug' => $post->getCategory()->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ],
+                    [
+                        'name' => $post->getTitle(),
+                        'item' => $this->generateUrl('app_blog_detail', ['year' => $year, 'month' => sprintf('%02d', $month), 'slug' => $post->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+                    ],
+                ],
+            ];
+            if (null !== $post->getCoverImagePath()) {
+                $jsonLd['article']['imagePath'] = $post->getCoverImagePath();
+            }
+        }
+
         return $this->render('blog/detail.html.twig', [
             'post' => $post,
             'seo' => $this->seo->build($options),
+            'jsonld' => $jsonLd,
         ]);
     }
 }

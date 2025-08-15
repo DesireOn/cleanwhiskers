@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% import 'seo/_jsonld.html.twig' as seo_jsonld %}
+
+{% block jsonld %}
+    {{ seo_jsonld.render(jsonld|default({})) }}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
