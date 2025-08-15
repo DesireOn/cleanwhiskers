@@ -1,19 +1,19 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
-<header class="site-header">
-  <div class="nav-container">
-    <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
-      <span class="sr-only">Menu</span>
-      <span class="hamburger" aria-hidden="true"></span>
-    </button>
-    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
-      <ul>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>Blog</a></li>
-        <li><a href="#terms">Terms</a></li>
-        <li><a href="#privacy">Privacy</a></li>
-      </ul>
-    </nav>
-  </div>
+<header class="header">
+  <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+    <span class="sr-only">Menu</span>
+    <span class="hamburger" aria-hidden="true"></span>
+  </button>
+  <a href="{{ path('app_search_redirect') }}" class="header__cta header__cta--mobile header__cta--primary">Find a Groomer</a>
+  <nav id="primary-nav" class="header__nav" aria-label="Primary">
+    <ul class="nav--desktop">
+      <li><a class="header__cta header__cta--primary" href="{{ path('app_search_redirect') }}">Find a Groomer</a></li>
+      <li><a class="header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">List Your Business</a></li>
+      <li><a href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>Blog</a></li>
+    </ul>
+    <ul class="nav--mobile">
+      <li><a class="header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">List Your Business</a></li>
+      <li><a href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>Blog</a></li>
+    </ul>
+  </nav>
 </header>
