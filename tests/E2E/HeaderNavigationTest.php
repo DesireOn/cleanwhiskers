@@ -6,7 +6,7 @@ namespace App\Tests\E2E;
 
 use PHPUnit\Framework\TestCase;
 
-if (!class_exists(\Symfony\Component\Panther\PantherTestCase::class)) {
+if (!class_exists(PantherTestCase::class)) {
     class HeaderNavigationTest extends TestCase
     {
         public function testPantherMissing(): void
@@ -14,6 +14,7 @@ if (!class_exists(\Symfony\Component\Panther\PantherTestCase::class)) {
             $this->markTestSkipped('Panther not installed');
         }
     }
+
     return;
 }
 

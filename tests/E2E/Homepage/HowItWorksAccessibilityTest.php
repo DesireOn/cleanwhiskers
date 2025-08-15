@@ -33,7 +33,8 @@ final class HowItWorksAccessibilityTest extends WebTestCase
         self::assertGreaterThanOrEqual(3, $cards->count());
 
         $cards->each(function (Crawler $card): void {
-            self::assertSame('0', $card->attr('tabindex'));
+            self::assertNotNull($card->attr('href'));
+            self::assertNotNull($card->attr('aria-label'));
         });
 
         $crawler->filter('#how-it-works img')->each(function (Crawler $img): void {
