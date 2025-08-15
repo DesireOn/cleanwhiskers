@@ -21,6 +21,11 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
+    App\Infrastructure\Doctrine\ContentSanitizerListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
     App\Seed\Seeder:
         public: true
 
