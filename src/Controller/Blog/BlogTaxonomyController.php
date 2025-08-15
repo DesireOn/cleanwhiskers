@@ -7,6 +7,7 @@ namespace App\Controller\Blog;
 use App\Repository\Blog\BlogCategoryRepository;
 use App\Repository\Blog\BlogPostRepository;
 use App\Repository\Blog\BlogTagRepository;
+use App\Service\SeoMetaBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ final class BlogTaxonomyController extends AbstractController
         private BlogPostRepository $posts,
         private BlogCategoryRepository $categories,
         private BlogTagRepository $tags,
+        private SeoMetaBuilder $seo,
     ) {
     }
 
@@ -42,7 +44,9 @@ final class BlogTaxonomyController extends AbstractController
         return $this->render('blog/category.html.twig', [
             'title' => $category->getName(),
             'posts' => $posts,
-            'seo_title' => $category->getName().' – CleanWhiskers',
+            'seo' => $this->seo->build([
+                'title' => $category->getName().' – CleanWhiskers',
+            ]),
         ]);
     }
 
@@ -68,7 +72,9 @@ final class BlogTaxonomyController extends AbstractController
         return $this->render('blog/tag.html.twig', [
             'title' => $tag->getName(),
             'posts' => $posts,
-            'seo_title' => $tag->getName().' – CleanWhiskers',
+            'seo' => $this->seo->build([
+                'title' => $tag->getName().' – CleanWhiskers',
+            ]),
         ]);
     }
 }

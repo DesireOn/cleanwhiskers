@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Controller\Blog;
 
 use App\Repository\Blog\BlogPostRepository;
+use App\Service\SeoMetaBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class BlogController extends AbstractController
 {
-    public function __construct(private BlogPostRepository $posts)
+    public function __construct(private BlogPostRepository $posts, private SeoMetaBuilder $seo)
     {
     }
 
@@ -23,8 +24,10 @@ final class BlogController extends AbstractController
         return $this->render('blog/index.html.twig', [
             'title' => 'Blog',
             'posts' => $posts,
-            'seo_title' => 'Blog – CleanWhiskers',
-            'seo_description' => 'Insights and updates from the CleanWhiskers team.',
+            'seo' => $this->seo->build([
+                'title' => 'Blog – CleanWhiskers',
+                'description' => 'Insights and updates from the CleanWhiskers team.',
+            ]),
         ]);
     }
 
@@ -49,10 +52,19 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $options = [
+            'title' => $post->getMetaTitle() ?? $post->getTitle().' – CleanWhiskers',
+        ];
+        if (null !== $post->getMetaDescription()) {
+            $options['description'] = $post->getMetaDescription();
+        }
+        if (null !== $post->getCanonicalUrl()) {
+            $options['canonical_url'] = $post->getCanonicalUrl();
+        }
+
         return $this->render('blog/detail.html.twig', [
             'post' => $post,
-            'seo_title' => $post->getMetaTitle() ?? $post->getTitle().' – CleanWhiskers',
-            'seo_description' => $post->getMetaDescription(),
+            'seo' => $this->seo->build($options),
         ]);
     }
 }

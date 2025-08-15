@@ -2,10 +2,14 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{{ seo_title|default('Find trusted pet care | CleanWhiskers') }}{% endblock %}</title>
-        {% block meta_description %}
-            <meta name="description" content="{{ seo_description|default('Book top-rated grooming and boarding services near you with CleanWhiskers.') }}">
-        {% endblock %}
+        {% block title %}{% endblock %}
+        {% set pageTitle = block('title') %}
+        {% set legacySeo = {
+            title: pageTitle is not empty ? pageTitle : seo_title|default('Find trusted pet care | CleanWhiskers'),
+            meta: [{ name: 'description', content: seo_description|default('Book top-rated grooming and boarding services near you with CleanWhiskers.') }],
+            link: []
+        } %}
+        {% include 'seo/_head_meta.html.twig' with { seo: seo|default(legacySeo) } %}
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
             <link rel="preconnect" href="https://fonts.googleapis.com">
