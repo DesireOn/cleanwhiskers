@@ -1,0 +1,38 @@
+/* Block: how-it-works */
+.how-it-works {
+    padding: var(--space-5) var(--space-3);
+    text-align: center;
+}
+
+.how-it-works__cards {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    margin-top: var(--space-4);
+}
+
+.how-it-works__card {
+    display: block;
+    background-color: var(--color-cream);
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.how-it-works__card img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: var(--space-2);
+    aspect-ratio: 1 / 1;
+}
+
+.how-it-works__card:focus,
+.how-it-works__card:hover {
+    outline: 2px solid var(--color-primary);
+    outline-offset: var(--space-1);
+    transform: scale(1.03);
+    box-shadow: var(--shadow-md);
+}
