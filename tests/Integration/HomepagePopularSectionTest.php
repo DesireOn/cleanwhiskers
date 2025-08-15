@@ -32,10 +32,8 @@ final class HomepagePopularSectionTest extends WebTestCase
             $this->em->persist($city);
         }
 
-        foreach (['Dog', 'Cat', 'Mobile'] as $name) {
-            $service = (new Service())->setName($name);
-            $this->em->persist($service);
-        }
+        $service = (new Service())->setName('Grooming');
+        $this->em->persist($service);
 
         $this->em->flush();
 
@@ -47,8 +45,7 @@ final class HomepagePopularSectionTest extends WebTestCase
         }
 
         $firstCitySlug = 'bucharest';
-        foreach (['dog', 'cat', 'mobile'] as $serviceSlug) {
-            self::assertSelectorExists(sprintf('#popular-services a[href="/groomers/%s/%s"]', $firstCitySlug, $serviceSlug));
-        }
+        self::assertSelectorExists(sprintf('#popular-services a[href="/groomers/%s/grooming"]', $firstCitySlug));
+        self::assertSelectorNotExists('#popular-services a[href*="boarding"]');
     }
 }
