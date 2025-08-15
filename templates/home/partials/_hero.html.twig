@@ -1,28 +1,34 @@
 <section class="hero">
     <div class="hero__card">
         <div class="hero__content">
-                <h1>Find trusted pet care</h1>
-                <p class="hero__microcopy">Mobile groomers near you.</p>
-                <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
-            </div>
+            <h1>Book mobile pet grooming in minutes — trusted local professionals.</h1>
+        </div>
         <form id="search-form" class="hero__form" method="get" action="/search" role="search">
             <div class="hero__field hero__field--city">
                 <label for="city">Where is your pet?</label>
-                <div class="hero__input-wrapper">
-                    <input class="hero__input" type="text" id="city" name="city" placeholder="City or ZIP" aria-describedby="city-error" required>
-                    <button type="button" id="use-location" class="hero__pin" aria-label="Use current location">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z"/>
-                            <circle cx="12" cy="9" r="2.5"/>
-                        </svg>
-                    </button>
-                </div>
-                <span id="city-error" class="form-error" aria-live="polite"></span>
+                <input class="hero__input" type="text" id="city" name="city" list="city-list" placeholder="City or ZIP" required>
+                <datalist id="city-list">
+                    {% for city in cities %}
+                        <option value="{{ city.slug }}">{{ city.name }}</option>
+                    {% endfor %}
+                </datalist>
             </div>
-            <input type="hidden" name="service" id="service" value="grooming">
+            <div class="hero__field hero__field--service">
+                <span class="hero__label">Service</span>
+                <div class="hero__services">
+                    {% for service in services %}
+                        <button type="button" class="hero__service" data-value="{{ service.slug }}" aria-label="{{ service.name }}" aria-pressed="false">
+                            <span aria-hidden="true">{{ service.name }}</span>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+            <input type="hidden" name="service" id="service">
             <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
                 {{ ctaLinks.find.label }}
             </button>
         </form>
+        <a href="{{ ctaLinks.list.url }}" class="hero__cta-link btn btn--accent">{{ ctaLinks.list.label }}</a>
     </div>
 </section>
+
