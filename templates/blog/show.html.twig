@@ -2,7 +2,7 @@
 
 {% block body %}
 <article>
-    <h1>{{ post.title }}</h1>
-    {% include post.template %}
+    <h1>{{ post.getTitle() }}</h1>
+    <div class="content">{{ post.getContentHtml()|raw }}</div>
 </article>
 {% endblock %}

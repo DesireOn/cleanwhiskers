@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Blog</h1>
+<h1>{{ title }}</h1>
 <ul class="blog-list">
-    {% for slug, post in posts %}
+    {% for post in posts %}
         <li class="post">
-            <h2><a href="{{ path('app_blog_show', {slug: slug}) }}">{{ post.title }}</a></h2>
+            <h2><a href="{{ path('app_blog_detail', {year: post.publishedAt|date('Y'), month: post.publishedAt|date('m'), slug: post.slug}) }}">{{ post.title }}</a></h2>
             <p>{{ post.excerpt }}</p>
-            <a href="{{ path('app_blog_show', {slug: slug}) }}">Read more</a>
         </li>
+    {% else %}
+        <li>No posts found.</li>
     {% endfor %}
 </ul>
 {% endblock %}
