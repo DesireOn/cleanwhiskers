@@ -1,0 +1,26 @@
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="{{ path('app_homepage') }}" class="footer-logo">CleanWhiskers</a>
+      <p class="footer-tagline">Find trusted pet care near you.</p>
+    </div>
+    <nav class="footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="{{ path('app_blog_index') }}">Blog</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-legal" aria-label="Legal">
+      <ul>
+        <li><a href="#terms">Terms</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <a href="#top" class="back-to-top">Back to top</a>
+    <p>&copy; {{ 'now'|date('Y') }} CleanWhiskers</p>
+  </div>
+</footer>

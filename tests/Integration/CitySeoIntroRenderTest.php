@@ -35,7 +35,7 @@ final class CitySeoIntroRenderTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $content = $this->client->getResponse()->getContent();
         $this->assertStringContainsString('Amazing place for pets.', $content);
-        $this->assertSame(2, substr_count($content, '<p>'));
+        $this->assertSame(3, substr_count($content, '<p>'));
     }
 
     public function testNoSeoIntroRendersNothing(): void
@@ -48,6 +48,6 @@ final class CitySeoIntroRenderTest extends WebTestCase
         $this->client->request('GET', '/cities/'.$city->getSlug());
         self::assertResponseIsSuccessful();
         $content = $this->client->getResponse()->getContent();
-        $this->assertSame(1, substr_count($content, '<p>'));
+        $this->assertSame(2, substr_count($content, '<p>'));
     }
 }
