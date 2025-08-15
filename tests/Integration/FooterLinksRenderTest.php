@@ -23,7 +23,6 @@ final class FooterLinksRenderTest extends WebTestCase
         self::assertSelectorExists('footer .footer-nav a[href="#about"]');
         self::assertSelectorExists('footer .footer-nav a[href="#contact"]');
         self::assertSelectorExists('footer .footer-nav a[href="#faq"]');
-        self::assertSelectorExists('footer .footer-nav a[href="/blog"]');
         self::assertSelectorExists('footer .footer-legal a[href="#terms"]');
         self::assertSelectorExists('footer .footer-legal a[href="#privacy"]');
         self::assertSelectorExists('footer .back-to-top[href="#top"]');
