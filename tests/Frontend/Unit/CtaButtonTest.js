@@ -4,18 +4,10 @@ const { initCtaButton } = require(path.join(__dirname, '../../../src/public/js/c
 
 function createButton() {
   const button = {
-    classList: {
-      list: [],
-      add(cls) { this.list.push(cls); },
-      remove(cls) { this.list = this.list.filter(c => c !== cls); },
-      contains(cls) { return this.list.includes(cls); },
-    },
     attributes: {},
     setAttribute(name, value) { this.attributes[name] = value; },
     removeAttribute(name) { delete this.attributes[name]; },
     getAttribute(name) { return this.attributes[name]; },
-    querySelector() { return null; },
-    appendChild(node) { this.spinner = node; },
     after() {},
     addEventListener(event, handler) { this.eventListeners[event] = handler; },
     eventListeners: {},
@@ -30,7 +22,7 @@ function createDocument(button) {
   };
 }
 
-(function testLoadingAndDebounce() {
+(function testDebounce() {
   const button = createButton();
   const doc = createDocument(button);
   let fetchCalls = 0;
@@ -39,11 +31,10 @@ function createDocument(button) {
     return new Promise(() => {});
   }
   initCtaButton(doc, fakeFetch, {});
-  assert.strictEqual(button.classList.contains('is-loading'), false, 'initially not loading');
   button.eventListeners.click({ preventDefault() {} });
-  assert.strictEqual(button.classList.contains('is-loading'), true, 'loading after click');
   button.eventListeners.click({ preventDefault() {} });
-  assert.strictEqual(fetchCalls, 1, 'debounced double click');
+  assert.strictEqual(fetchCalls, 1, 'double click debounced');
+  assert.strictEqual(button.attributes['aria-disabled'], 'true', 'button disabled after click');
 })();
 
 console.log('CtaButton tests passed');

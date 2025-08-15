@@ -1,27 +1,4 @@
-.btn.is-loading {
-    position: relative;
-}
-
-.btn.is-loading::after {
-    content: "";
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    margin-left: var(--space-1, 0.5rem);
-    border: 2px solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.75s linear infinite;
-    vertical-align: middle;
-}
-
 .btn[aria-disabled="true"] {
     opacity: 0.6;
     pointer-events: none;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
 }
