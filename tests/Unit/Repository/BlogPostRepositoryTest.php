@@ -7,9 +7,9 @@ namespace App\Tests\Unit\Repository;
 use App\Entity\Blog\BlogPost;
 use App\Repository\Blog\BlogPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 
@@ -27,7 +27,7 @@ final class BlogPostRepositoryTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods([
                 'select', 'join', 'andWhere', 'setParameter',
-                'orderBy', 'setFirstResult', 'setMaxResults', 'getQuery'
+                'orderBy', 'setFirstResult', 'setMaxResults', 'getQuery',
             ])
             ->getMock();
         $qb->method('select')->willReturnSelf();

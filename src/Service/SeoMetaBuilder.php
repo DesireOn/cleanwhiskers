@@ -21,7 +21,15 @@ final class SeoMetaBuilder
     }
 
     /**
-     * @param array{title?: string, description?: string, image?: string, canonical_url?: string} $options
+     * @param array{
+     *     title?: string,
+     *     description?: string,
+     *     image?: string,
+     *     canonical_url?: string,
+     *     prev_url?: string,
+     *     next_url?: string,
+     *     robots?: string,
+     * } $options
      *
      * @return array{
      *     title: string,
@@ -36,22 +44,35 @@ final class SeoMetaBuilder
         $image = $options['image'] ?? self::DEFAULT_IMAGE;
         $canonical = $options['canonical_url'] ?? $this->deriveCanonical();
 
+        $meta = [
+            ['name' => 'description', 'content' => $description],
+            ['property' => 'og:title', 'content' => $title],
+            ['property' => 'og:description', 'content' => $description],
+            ['property' => 'og:type', 'content' => 'article'],
+            ['property' => 'og:image', 'content' => $image],
+            ['name' => 'twitter:card', 'content' => 'summary_large_image'],
+            ['name' => 'twitter:title', 'content' => $title],
+            ['name' => 'twitter:description', 'content' => $description],
+            ['name' => 'twitter:image', 'content' => $image],
+        ];
+        if (isset($options['robots'])) {
+            $meta[] = ['name' => 'robots', 'content' => $options['robots']];
+        }
+
+        $links = [
+            ['rel' => 'canonical', 'href' => $canonical],
+        ];
+        if (isset($options['prev_url'])) {
+            $links[] = ['rel' => 'prev', 'href' => $options['prev_url']];
+        }
+        if (isset($options['next_url'])) {
+            $links[] = ['rel' => 'next', 'href' => $options['next_url']];
+        }
+
         return [
             'title' => $title,
-            'meta' => [
-                ['name' => 'description', 'content' => $description],
-                ['property' => 'og:title', 'content' => $title],
-                ['property' => 'og:description', 'content' => $description],
-                ['property' => 'og:type', 'content' => 'article'],
-                ['property' => 'og:image', 'content' => $image],
-                ['name' => 'twitter:card', 'content' => 'summary_large_image'],
-                ['name' => 'twitter:title', 'content' => $title],
-                ['name' => 'twitter:description', 'content' => $description],
-                ['name' => 'twitter:image', 'content' => $image],
-            ],
-            'link' => [
-                ['rel' => 'canonical', 'href' => $canonical],
-            ],
+            'meta' => $meta,
+            'link' => $links,
         ];
     }
 

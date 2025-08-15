@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\E2E;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Panther\PantherTestCase;
 
-if (!class_exists(\Symfony\Component\Panther\PantherTestCase::class)) {
+if (!class_exists(PantherTestCase::class)) {
     class HeaderNavigationTest extends TestCase
     {
         public function testPantherMissing(): void
@@ -14,12 +15,12 @@ if (!class_exists(\Symfony\Component\Panther\PantherTestCase::class)) {
             $this->markTestSkipped('Panther not installed');
         }
     }
+
     return;
 }
 
 use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverKeys;
-use Symfony\Component\Panther\PantherTestCase;
 
 final class HeaderNavigationTest extends PantherTestCase
 {

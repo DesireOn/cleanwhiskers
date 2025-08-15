@@ -13,22 +13,46 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class BlogController extends AbstractController
 {
+    private const PER_PAGE = 10;
+    private const MAX_INDEX_PAGE = 10;
+
     public function __construct(private BlogPostRepository $posts, private SeoMetaBuilder $seo)
     {
     }
 
     public function index(Request $request): Response
     {
-        $page = max(1, (int) $request->query->get('page', 1));
-        $posts = $this->posts->findPublished($page, 10);
+        $page = max(1, $request->query->getInt('page', 1));
+        $perPage = self::PER_PAGE;
+        $posts = $this->posts->findPublished($page, $perPage);
+
+        if ($page > 1 && [] === $posts) {
+            throw $this->createNotFoundException();
+        }
+
+        $hasNext = count($posts) === $perPage && [] !== $this->posts->findPublished($page + 1, 1);
+
+        $options = [
+            'title' => 'Blog – CleanWhiskers',
+            'description' => 'Insights and updates from the CleanWhiskers team.',
+        ];
+        if ($page > 1) {
+            $options['prev_url'] = $this->generateUrl('app_blog_index', $page > 2 ? ['page' => $page - 1] : [], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($hasNext) {
+            $options['next_url'] = $this->generateUrl('app_blog_index', ['page' => $page + 1], UrlGeneratorInterface::ABSOLUTE_URL);
+        }
+        if ($page > self::MAX_INDEX_PAGE) {
+            $options['robots'] = 'noindex,follow';
+        }
 
         return $this->render('blog/index.html.twig', [
             'title' => 'Blog',
             'posts' => $posts,
-            'seo' => $this->seo->build([
-                'title' => 'Blog – CleanWhiskers',
-                'description' => 'Insights and updates from the CleanWhiskers team.',
-            ]),
+            'page' => $page,
+            'next_page' => $hasNext ? $page + 1 : null,
+            'prev_page' => $page > 1 ? $page - 1 : null,
+            'seo' => $this->seo->build($options),
         ]);
     }
 
