@@ -41,6 +41,9 @@ class HomepageController extends AbstractController
         $popularServices = $this->serviceRepository->findTop(6);
         $featuredGroomers = $this->groomerProfileRepository->findFeatured(8);
 
+        $cities = $this->cityRepository->findBy([], ['name' => 'ASC']);
+        $services = $this->serviceRepository->findBy([], ['name' => 'ASC']);
+
         return $this->render('home/index.html.twig', [
             'ctaLinks' => $ctaLinks,
             'footerCities' => $footerCities,
@@ -48,6 +51,8 @@ class HomepageController extends AbstractController
             'popularCities' => $popularCities,
             'popularServices' => $popularServices,
             'featuredGroomers' => $featuredGroomers,
+            'cities' => $cities,
+            'services' => $services,
             'seo_title' => 'Book local pet care | CleanWhiskers',
             'seo_description' => 'Discover trusted groomers and pet boarding near you. CleanWhiskers makes booking easy.',
         ]);
