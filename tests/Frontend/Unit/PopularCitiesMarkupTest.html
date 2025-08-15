@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Popular Cities Markup Test</title>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const grid = document.querySelector('.popular-cities__grid');
+            console.assert(grid, 'grid exists');
+            const links = grid.querySelectorAll('a.popular-cities__link');
+            console.assert(links.length === 2, 'two city links rendered');
+            const first = links[0];
+            console.assert(first.getAttribute('aria-label') === 'Groomers in Springfield', 'accessible link name');
+            const avatar = first.querySelector('.popular-cities__avatar');
+            console.assert(avatar && (avatar.querySelector('img') || avatar.textContent.trim().length > 0), 'avatar image or initial');
+            const name = first.querySelector('.popular-cities__name');
+            console.assert(name && name.textContent.trim() === 'Springfield', 'city name text');
+            console.log('Popular cities markup tests passed');
+        });
+    </script>
+</head>
+<body>
+<section class="popular-cities">
+    <ul class="popular-cities__grid" role="list">
+        <li class="popular-cities__item">
+            <a class="popular-cities__link" href="#" aria-label="Groomers in Springfield">
+                <span class="popular-cities__avatar"><img src="https://placehold.co/80" alt="" loading="lazy"></span>
+                <span class="popular-cities__name">Springfield</span>
+            </a>
+        </li>
+        <li class="popular-cities__item">
+            <a class="popular-cities__link" href="#" aria-label="Groomers in Very Long City Name Example">
+                <span class="popular-cities__avatar">V</span>
+                <span class="popular-cities__name">Very Long City Name Example</span>
+            </a>
+        </li>
+    </ul>
+</section>
+</body>
+</html>

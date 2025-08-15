@@ -1,0 +1,21 @@
+<section class="popular-cities">
+    <h2>Popular Cities</h2>
+    <ul class="popular-cities__grid" role="list">
+        {% for city in popularCities %}
+            <li class="popular-cities__item">
+                <a class="popular-cities__link" href="{{ path('app_city_show', {slug: city.slug}) }}" aria-label="Groomers in {{ city.name }}">
+                    <span class="popular-cities__avatar">
+                        {% if city.image is defined and city.image %}
+                            <img src="{{ city.image }}" alt="" loading="lazy">
+                        {% else %}
+                            {{ city.name|slice(0,1)|upper }}
+                        {% endif %}
+                    </span>
+                    <span class="popular-cities__name">{{ city.name }}</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="popular-cities__item">City coming soon</li>
+        {% endfor %}
+    </ul>
+</section>
