@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block body %}
+{% include 'partials/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs|default([])} %}
 <article class="blog-article">
     <header>
         <h1>{{ post.title }}</h1>
@@ -34,13 +35,10 @@
         {% endif %}
     </header>
     {% if post.coverImagePath %}
-        <img src="{{ asset(post.coverImagePath) }}" alt="{{ post.title }}" loading="lazy" width="800" height="450">
+        <img src="{{ asset(post.coverImagePath) }}" alt="Cover image for {{ post.title }}" loading="lazy" width="800" height="450">
     {% else %}
         <img src="{{ asset('assets/illustrations/paw.svg') }}" alt="" loading="lazy" width="800" height="450">
     {% endif %}
     <section class="content">{{ post.contentHtml|raw }}</section>
 </article>
-<nav class="blog-breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ path('app_blog_index') }}">&larr; Back to blog</a>
-</nav>
 {% endblock %}

@@ -74,6 +74,28 @@ final class BlogTaxonomyController extends AbstractController
             $options['robots'] = 'noindex,follow';
         }
 
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => $this->generateUrl('app_homepage')],
+            ['name' => 'Blog', 'url' => $this->generateUrl('app_blog_index')],
+            ['name' => $category->getName(), 'url' => $this->generateUrl('app_blog_category', ['slug' => $category->getSlug()])],
+        ];
+        $jsonLd = [
+            'breadcrumbs' => [
+                [
+                    'name' => 'Home',
+                    'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+                [
+                    'name' => 'Blog',
+                    'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+                [
+                    'name' => $category->getName(),
+                    'item' => $this->generateUrl('app_blog_category', ['slug' => $category->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+            ],
+        ];
+
         return $this->render('blog/category.html.twig', [
             'title' => $category->getName(),
             'posts' => $posts,
@@ -81,6 +103,8 @@ final class BlogTaxonomyController extends AbstractController
             'next_page' => $hasNext ? $page + 1 : null,
             'prev_page' => $page > 1 ? $page - 1 : null,
             'seo' => $this->seo->build($options),
+            'breadcrumbs' => $breadcrumbs,
+            'jsonld' => $jsonLd,
         ]);
     }
 
@@ -132,6 +156,28 @@ final class BlogTaxonomyController extends AbstractController
             $options['robots'] = 'noindex,follow';
         }
 
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => $this->generateUrl('app_homepage')],
+            ['name' => 'Blog', 'url' => $this->generateUrl('app_blog_index')],
+            ['name' => $tag->getName(), 'url' => $this->generateUrl('app_blog_tag', ['slug' => $tag->getSlug()])],
+        ];
+        $jsonLd = [
+            'breadcrumbs' => [
+                [
+                    'name' => 'Home',
+                    'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+                [
+                    'name' => 'Blog',
+                    'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+                [
+                    'name' => $tag->getName(),
+                    'item' => $this->generateUrl('app_blog_tag', ['slug' => $tag->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+            ],
+        ];
+
         return $this->render('blog/tag.html.twig', [
             'title' => $tag->getName(),
             'posts' => $posts,
@@ -139,6 +185,8 @@ final class BlogTaxonomyController extends AbstractController
             'next_page' => $hasNext ? $page + 1 : null,
             'prev_page' => $page > 1 ? $page - 1 : null,
             'seo' => $this->seo->build($options),
+            'breadcrumbs' => $breadcrumbs,
+            'jsonld' => $jsonLd,
         ]);
     }
 }

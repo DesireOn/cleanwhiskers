@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% import 'seo/_jsonld.html.twig' as seo_jsonld %}
+
+{% block jsonld %}
+    {{ seo_jsonld.render(jsonld|default({})) }}
+{% endblock %}
 
 {% block critical_css %}
     <style>
@@ -18,12 +23,10 @@
 {% endblock %}
 
 {% block body %}
+{% include 'partials/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs|default([])} %}
 <header class="blog-header">
     <h1>{{ title }}</h1>
 </header>
-<nav class="blog-breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ path('app_blog_index') }}">Blog home</a>
-</nav>
 <section class="post-list">
     {% for post in posts %}
         {% include 'blog/_post_teaser.html.twig' with {post: post} %}
