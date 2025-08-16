@@ -8,13 +8,15 @@ use App\Entity\Blog\BlogPost;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 /**
  * @extends ServiceEntityRepository<BlogPost>
  */
 class BlogPostRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private TagAwareCacheInterface $cache)
     {
         parent::__construct($registry, BlogPost::class);
     }
@@ -34,14 +36,21 @@ class BlogPostRepository extends ServiceEntityRepository
      */
     public function findPublished(int $page, int $perPage): array
     {
-        $qb = $this->basePublishedQueryBuilder()
-            ->setFirstResult(max(0, ($page - 1) * $perPage))
-            ->setMaxResults($perPage);
+        $cacheKey = sprintf('blog_published_%d_%d', $page, $perPage);
 
         /** @var array<int, array<string, mixed>> $result */
-        $result = $this->selectListFields($qb)
-            ->getQuery()
-            ->getArrayResult();
+        $result = $this->cache->get($cacheKey, function (ItemInterface $item) use ($page, $perPage) {
+            $item->expiresAfter(600);
+            $item->tag('blog_posts');
+
+            $qb = $this->basePublishedQueryBuilder()
+                ->setFirstResult(max(0, ($page - 1) * $perPage))
+                ->setMaxResults($perPage);
+
+            return $this->selectListFields($qb)
+                ->getQuery()
+                ->getArrayResult();
+        });
 
         return $result;
     }
@@ -51,16 +60,23 @@ class BlogPostRepository extends ServiceEntityRepository
      */
     public function findByCategorySlug(string $slug, int $page, int $perPage): array
     {
-        $qb = $this->basePublishedQueryBuilder()
-            ->andWhere('c.slug = :slug')
-            ->setParameter('slug', $slug)
-            ->setFirstResult(max(0, ($page - 1) * $perPage))
-            ->setMaxResults($perPage);
+        $cacheKey = sprintf('blog_category_%s_%d_%d', $slug, $page, $perPage);
 
         /** @var array<int, array<string, mixed>> $result */
-        $result = $this->selectListFields($qb)
-            ->getQuery()
-            ->getArrayResult();
+        $result = $this->cache->get($cacheKey, function (ItemInterface $item) use ($slug, $page, $perPage) {
+            $item->expiresAfter(600);
+            $item->tag('blog_posts');
+
+            $qb = $this->basePublishedQueryBuilder()
+                ->andWhere('c.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->setFirstResult(max(0, ($page - 1) * $perPage))
+                ->setMaxResults($perPage);
+
+            return $this->selectListFields($qb)
+                ->getQuery()
+                ->getArrayResult();
+        });
 
         return $result;
     }
@@ -70,17 +86,24 @@ class BlogPostRepository extends ServiceEntityRepository
      */
     public function findByTagSlug(string $slug, int $page, int $perPage): array
     {
-        $qb = $this->basePublishedQueryBuilder()
-            ->join('p.tags', 't')
-            ->andWhere('t.slug = :slug')
-            ->setParameter('slug', $slug)
-            ->setFirstResult(max(0, ($page - 1) * $perPage))
-            ->setMaxResults($perPage);
+        $cacheKey = sprintf('blog_tag_%s_%d_%d', $slug, $page, $perPage);
 
         /** @var array<int, array<string, mixed>> $result */
-        $result = $this->selectListFields($qb)
-            ->getQuery()
-            ->getArrayResult();
+        $result = $this->cache->get($cacheKey, function (ItemInterface $item) use ($slug, $page, $perPage) {
+            $item->expiresAfter(600);
+            $item->tag('blog_posts');
+
+            $qb = $this->basePublishedQueryBuilder()
+                ->join('p.tags', 't')
+                ->andWhere('t.slug = :slug')
+                ->setParameter('slug', $slug)
+                ->setFirstResult(max(0, ($page - 1) * $perPage))
+                ->setMaxResults($perPage);
+
+            return $this->selectListFields($qb)
+                ->getQuery()
+                ->getArrayResult();
+        });
 
         return $result;
     }
@@ -90,13 +113,20 @@ class BlogPostRepository extends ServiceEntityRepository
      */
     public function findLatest(int $limit): array
     {
-        $qb = $this->basePublishedQueryBuilder()
-            ->setMaxResults($limit);
+        $cacheKey = sprintf('blog_latest_%d', $limit);
 
         /** @var array<int, array<string, mixed>> $result */
-        $result = $this->selectListFields($qb)
-            ->getQuery()
-            ->getArrayResult();
+        $result = $this->cache->get($cacheKey, function (ItemInterface $item) use ($limit) {
+            $item->expiresAfter(600);
+            $item->tag('blog_posts');
+
+            $qb = $this->basePublishedQueryBuilder()
+                ->setMaxResults($limit);
+
+            return $this->selectListFields($qb)
+                ->getQuery()
+                ->getArrayResult();
+        });
 
         return $result;
     }
@@ -182,6 +212,7 @@ class BlogPostRepository extends ServiceEntityRepository
             'p.title AS title',
             'p.excerpt AS excerpt',
             'p.publishedAt AS publishedAt',
+            'p.updatedAt AS updatedAt',
             'c.slug AS category_slug',
             'c.name AS category_name'
         );

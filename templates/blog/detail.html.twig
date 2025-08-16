@@ -5,9 +5,16 @@
     {{ seo_jsonld.render(jsonld|default({})) }}
 {% endblock %}
 
+{% block critical_css %}
+    <style>
+        .blog-header { margin-bottom: var(--space-3); }
+    </style>
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('styles/blog.css') }}">
+    <link rel="preload" href="{{ asset('styles/blog.css') }}" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ asset('styles/blog.css') }}"></noscript>
 {% endblock %}
 
 {% block javascripts %}

@@ -29,6 +29,15 @@ final class BlogController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $perPage = self::PER_PAGE;
         $posts = $this->posts->findPublished($page, $perPage);
+        $latest = null;
+        foreach ($posts as $post) {
+            if (isset($post['updatedAt']) && (null === $latest || $post['updatedAt'] > $latest)) {
+                $latest = $post['updatedAt'];
+            }
+        }
+        if ($latest instanceof \DateTimeImmutable) {
+            $request->attributes->set('updated_at', $latest);
+        }
 
         if ($page > 1 && [] === $posts) {
             throw $this->createNotFoundException();
@@ -60,7 +69,7 @@ final class BlogController extends AbstractController
         ]);
     }
 
-    public function detail(int $year, int $month, string $slug): Response
+    public function detail(Request $request, int $year, int $month, string $slug): Response
     {
         $canonicalSlug = strtolower($slug);
         if ($slug !== $canonicalSlug) {
@@ -93,6 +102,7 @@ final class BlogController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $request->attributes->set('updated_at', $post->getUpdatedAt());
         $publishedAt = $post->getPublishedAt();
         if (null === $publishedAt || (int) $publishedAt->format('Y') !== $year || (int) $publishedAt->format('m') !== $month) {
             throw $this->createNotFoundException();
