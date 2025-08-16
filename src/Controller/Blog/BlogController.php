@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Blog;
 
 use App\Repository\Blog\BlogPostRepository;
+use App\Repository\Blog\BlogPostSlugHistoryRepository;
 use App\Service\SeoMetaBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +17,11 @@ final class BlogController extends AbstractController
     private const PER_PAGE = 10;
     private const MAX_INDEX_PAGE = 10;
 
-    public function __construct(private BlogPostRepository $posts, private SeoMetaBuilder $seo)
-    {
+    public function __construct(
+        private BlogPostRepository $posts,
+        private SeoMetaBuilder $seo,
+        private BlogPostSlugHistoryRepository $slugHistory,
+    ) {
     }
 
     public function index(Request $request): Response
@@ -69,6 +73,23 @@ final class BlogController extends AbstractController
 
         $post = $this->posts->findOnePublishedBySlug($canonicalSlug);
         if (null === $post) {
+            $post = $this->slugHistory->findPublishedPostBySlug($canonicalSlug);
+            if (null !== $post) {
+                $publishedAt = $post->getPublishedAt();
+                if (null === $publishedAt) {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->redirectToRoute(
+                    'app_blog_detail',
+                    [
+                        'year' => $publishedAt->format('Y'),
+                        'month' => $publishedAt->format('m'),
+                        'slug' => $post->getSlug(),
+                    ],
+                    Response::HTTP_MOVED_PERMANENTLY
+                );
+            }
             throw $this->createNotFoundException();
         }
 

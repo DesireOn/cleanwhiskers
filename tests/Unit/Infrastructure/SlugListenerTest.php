@@ -10,6 +10,7 @@ use App\Entity\City;
 use App\Infrastructure\Doctrine\SlugListener;
 use App\Repository\Blog\BlogCategoryRepository;
 use App\Repository\Blog\BlogPostRepository;
+use App\Repository\Blog\BlogPostSlugHistoryRepository;
 use App\Repository\Blog\BlogTagRepository;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
@@ -27,6 +28,7 @@ final class SlugListenerTest extends TestCase
     private BlogCategoryRepository $blogCategoryRepository;
     private BlogTagRepository $blogTagRepository;
     private BlogPostRepository $blogPostRepository;
+    private BlogPostSlugHistoryRepository $blogPostSlugHistoryRepository;
     private SlugListener $listener;
 
     protected function setUp(): void
@@ -37,6 +39,7 @@ final class SlugListenerTest extends TestCase
         $this->blogCategoryRepository = $this->createMock(BlogCategoryRepository::class);
         $this->blogTagRepository = $this->createMock(BlogTagRepository::class);
         $this->blogPostRepository = $this->createMock(BlogPostRepository::class);
+        $this->blogPostSlugHistoryRepository = $this->createMock(BlogPostSlugHistoryRepository::class);
 
         $this->listener = new SlugListener(
             $this->cityRepository,
@@ -45,6 +48,7 @@ final class SlugListenerTest extends TestCase
             $this->blogCategoryRepository,
             $this->blogTagRepository,
             $this->blogPostRepository,
+            $this->blogPostSlugHistoryRepository,
         );
     }
 

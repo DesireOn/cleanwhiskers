@@ -101,4 +101,20 @@ final class BlogControllerTest extends WebTestCase
         $this->client->request('GET', $path);
         self::assertResponseRedirects(sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug()), Response::HTTP_MOVED_PERMANENTLY);
     }
+
+    public function testDetailRedirectsFromHistoricalSlug(): void
+    {
+        $post = $this->createPublishedPost('Original Title');
+        $oldSlug = $post->getSlug();
+        $post->setTitle('Updated Title');
+        $this->em->flush();
+
+        $oldPath = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $oldSlug);
+        $newPath = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug());
+
+        $this->client->request('GET', $oldPath);
+        self::assertResponseRedirects($newPath, Response::HTTP_MOVED_PERMANENTLY);
+        $this->client->followRedirect();
+        self::assertResponseIsSuccessful();
+    }
 }

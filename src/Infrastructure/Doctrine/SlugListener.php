@@ -7,22 +7,28 @@ namespace App\Infrastructure\Doctrine;
 use App\Domain\Shared\Exception\SlugCollisionException;
 use App\Entity\Blog\BlogCategory;
 use App\Entity\Blog\BlogPost;
+use App\Entity\Blog\BlogPostSlugHistory;
 use App\Entity\Blog\BlogTag;
 use App\Entity\City;
 use App\Entity\GroomerProfile;
 use App\Entity\Service;
 use App\Repository\Blog\BlogCategoryRepository;
 use App\Repository\Blog\BlogPostRepository;
+use App\Repository\Blog\BlogPostSlugHistoryRepository;
 use App\Repository\Blog\BlogTagRepository;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 class SlugListener
 {
+    /** @var list<BlogPostSlugHistory> */
+    private array $pendingSlugHistory = [];
+
     public function __construct(
         private readonly CityRepository $cityRepository,
         private readonly ServiceRepository $serviceRepository,
@@ -30,6 +36,7 @@ class SlugListener
         private readonly BlogCategoryRepository $blogCategoryRepository,
         private readonly BlogTagRepository $blogTagRepository,
         private readonly BlogPostRepository $blogPostRepository,
+        private readonly BlogPostSlugHistoryRepository $blogPostSlugHistoryRepository,
     ) {
     }
 
@@ -164,8 +171,25 @@ class SlugListener
         }
 
         if ($oldSlug !== $post->getSlug() || $args->hasChangedField('slug')) {
+            if (!$this->blogPostSlugHistoryRepository->existsBySlug($oldSlug)) {
+                $this->pendingSlugHistory[] = new BlogPostSlugHistory($post, $oldSlug);
+            }
             $this->ensureBlogPostSlugUnique($post);
         }
+    }
+
+    public function postFlush(PostFlushEventArgs $args): void
+    {
+        if ([] === $this->pendingSlugHistory) {
+            return;
+        }
+
+        $em = $args->getObjectManager();
+        foreach ($this->pendingSlugHistory as $history) {
+            $em->persist($history);
+        }
+        $this->pendingSlugHistory = [];
+        $em->flush();
     }
 
     private function recompute(EntityManagerInterface $em, object $entity, string $field, mixed $oldValue, mixed $newValue): void
