@@ -45,6 +45,15 @@ final class BlogTaxonomyController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $perPage = self::PER_PAGE;
         $posts = $this->posts->findByCategorySlug($canonicalSlug, $page, $perPage);
+        $latest = null;
+        foreach ($posts as $post) {
+            if (isset($post['updatedAt']) && (null === $latest || $post['updatedAt'] > $latest)) {
+                $latest = $post['updatedAt'];
+            }
+        }
+        if ($latest instanceof \DateTimeImmutable) {
+            $request->attributes->set('updated_at', $latest);
+        }
 
         if ($page > 1 && [] === $posts) {
             throw $this->createNotFoundException();
@@ -94,6 +103,15 @@ final class BlogTaxonomyController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $perPage = self::PER_PAGE;
         $posts = $this->posts->findByTagSlug($canonicalSlug, $page, $perPage);
+        $latest = null;
+        foreach ($posts as $post) {
+            if (isset($post['updatedAt']) && (null === $latest || $post['updatedAt'] > $latest)) {
+                $latest = $post['updatedAt'];
+            }
+        }
+        if ($latest instanceof \DateTimeImmutable) {
+            $request->attributes->set('updated_at', $latest);
+        }
 
         if ($page > 1 && [] === $posts) {
             throw $this->createNotFoundException();

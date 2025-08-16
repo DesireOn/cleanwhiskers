@@ -12,6 +12,8 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 final class BlogPostRepositoryTest extends TestCase
 {
@@ -46,8 +48,15 @@ final class BlogPostRepositoryTest extends TestCase
         $registry = $this->createMock(ManagerRegistry::class);
         $registry->method('getManagerForClass')->with(BlogPost::class)->willReturn($em);
 
+        $cache = $this->createMock(TagAwareCacheInterface::class);
+        $cache->method('get')->willReturnCallback(function (string $key, callable $callback) {
+            $item = $this->createMock(ItemInterface::class);
+
+            return $callback($item);
+        });
+
         $repository = $this->getMockBuilder(BlogPostRepository::class)
-            ->setConstructorArgs([$registry])
+            ->setConstructorArgs([$registry, $cache])
             ->onlyMethods(['createQueryBuilder'])
             ->getMock();
 
