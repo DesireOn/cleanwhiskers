@@ -1,6 +1,6 @@
 <article class="post">
     {% if post.coverImagePath is defined and post.coverImagePath %}
-        <img src="{{ asset(post.coverImagePath) }}" alt="{{ post.title }}" loading="lazy" width="400" height="225">
+        <img src="{{ asset(post.coverImagePath) }}" alt="Cover image for {{ post.title }}" loading="lazy" width="400" height="225">
     {% else %}
         <img src="{{ asset('assets/illustrations/paw.svg') }}" alt="" loading="lazy" width="400" height="225">
     {% endif %}

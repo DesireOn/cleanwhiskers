@@ -59,6 +59,23 @@ final class BlogController extends AbstractController
             $options['robots'] = 'noindex,follow';
         }
 
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => $this->generateUrl('app_homepage')],
+            ['name' => 'Blog', 'url' => $this->generateUrl('app_blog_index')],
+        ];
+        $jsonLd = [
+            'breadcrumbs' => [
+                [
+                    'name' => 'Home',
+                    'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+                [
+                    'name' => 'Blog',
+                    'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                ],
+            ],
+        ];
+
         return $this->render('blog/index.html.twig', [
             'title' => 'Blog',
             'posts' => $posts,
@@ -66,6 +83,8 @@ final class BlogController extends AbstractController
             'next_page' => $hasNext ? $page + 1 : null,
             'prev_page' => $page > 1 ? $page - 1 : null,
             'seo' => $this->seo->build($options),
+            'breadcrumbs' => $breadcrumbs,
+            'jsonld' => $jsonLd,
         ]);
     }
 
@@ -118,6 +137,13 @@ final class BlogController extends AbstractController
             $options['canonical_url'] = $post->getCanonicalUrl();
         }
 
+        $breadcrumbs = [
+            ['name' => 'Home', 'url' => $this->generateUrl('app_homepage')],
+            ['name' => 'Blog', 'url' => $this->generateUrl('app_blog_index')],
+            ['name' => $post->getCategory()->getName(), 'url' => $this->generateUrl('app_blog_category', ['slug' => $post->getCategory()->getSlug()])],
+            ['name' => $post->getTitle(), 'url' => $this->generateUrl('app_blog_detail', ['year' => $year, 'month' => sprintf('%02d', $month), 'slug' => $post->getSlug()])],
+        ];
+
         $jsonLd = null;
         if ($post->isPublished()) {
             $jsonLd = [
@@ -154,6 +180,7 @@ final class BlogController extends AbstractController
             'post' => $post,
             'seo' => $this->seo->build($options),
             'jsonld' => $jsonLd,
+            'breadcrumbs' => $breadcrumbs,
         ]);
     }
 }
