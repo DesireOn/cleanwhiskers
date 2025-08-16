@@ -33,8 +33,8 @@ final class SitemapController extends AbstractController
             $content .= sprintf('<url><loc>%s</loc></url>', htmlspecialchars($loc, ENT_XML1));
         }
 
-        foreach ($this->categories->findAll() as $category) {
-            $loc = $this->urls->generate('app_blog_category', ['slug' => $category->getSlug()], UrlGeneratorInterface::ABSOLUTE_URL);
+        foreach ($this->categories->findAllSlugs() as $category) {
+            $loc = $this->urls->generate('app_blog_category', ['slug' => $category['slug']], UrlGeneratorInterface::ABSOLUTE_URL);
             $content .= sprintf('<url><loc>%s</loc></url>', htmlspecialchars($loc, ENT_XML1));
         }
 

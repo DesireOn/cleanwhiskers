@@ -27,4 +27,19 @@ class BlogCategoryRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return iterable<int, array{slug: string}>
+     */
+    public function findAllSlugs(): iterable
+    {
+        /** @var iterable<int, array{slug: string}> $result */
+        $result = $this->createQueryBuilder('c')
+            ->select('c.slug AS slug')
+            ->orderBy('c.slug', 'ASC')
+            ->getQuery()
+            ->toIterable();
+
+        return $result;
+    }
 }
