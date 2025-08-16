@@ -49,8 +49,9 @@ final class RssFeedControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSame('application/rss+xml; charset=UTF-8', $this->client->getResponse()->headers->get('content-type'));
 
+        $content = $this->client->getInternalResponse()->getContent();
         $dom = new \DOMDocument();
-        $dom->loadXML((string) $this->client->getResponse()->getContent());
+        $dom->loadXML($content);
         $items = $dom->getElementsByTagName('item');
         self::assertSame(50, $items->length);
     }
