@@ -41,6 +41,17 @@ final class BlogTaxonomyControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/blog/category/'.$category->getSlug());
         self::assertResponseIsSuccessful();
         self::assertSame(1, $crawler->filter('article')->count());
+
+        $levels = $crawler->filter('h1, h2, h3, h4, h5, h6')->each(
+            static fn ($node) => (int) substr($node->nodeName(), 1)
+        );
+
+        self::assertSame(1, $crawler->filter('h1')->count());
+        $prev = array_shift($levels);
+        foreach ($levels as $level) {
+            self::assertLessThanOrEqual($prev + 1, $level);
+            $prev = $level;
+        }
     }
 
     public function testTagPageRendersArticles(): void
@@ -62,5 +73,16 @@ final class BlogTaxonomyControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/blog/tag/'.$tag->getSlug());
         self::assertResponseIsSuccessful();
         self::assertSame(1, $crawler->filter('article')->count());
+
+        $levels = $crawler->filter('h1, h2, h3, h4, h5, h6')->each(
+            static fn ($node) => (int) substr($node->nodeName(), 1)
+        );
+
+        self::assertSame(1, $crawler->filter('h1')->count());
+        $prev = array_shift($levels);
+        foreach ($levels as $level) {
+            self::assertLessThanOrEqual($prev + 1, $level);
+            $prev = $level;
+        }
     }
 }

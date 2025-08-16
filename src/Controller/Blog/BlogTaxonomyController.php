@@ -74,12 +74,33 @@ final class BlogTaxonomyController extends AbstractController
             $options['robots'] = 'noindex,follow';
         }
 
+        $breadcrumbs = [
+            [
+                'name' => 'Home',
+                'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+            [
+                'name' => 'Blog',
+                'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+            [
+                'name' => $category->getName(),
+                'item' => $this->generateUrl('app_blog_category', ['slug' => $canonicalSlug], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+        ];
+
+        $jsonLd = [
+            'breadcrumbs' => $breadcrumbs,
+        ];
+
         return $this->render('blog/category.html.twig', [
             'title' => $category->getName(),
             'posts' => $posts,
             'page' => $page,
             'next_page' => $hasNext ? $page + 1 : null,
             'prev_page' => $page > 1 ? $page - 1 : null,
+            'breadcrumbs' => $breadcrumbs,
+            'jsonld' => $jsonLd,
             'seo' => $this->seo->build($options),
         ]);
     }
@@ -132,12 +153,33 @@ final class BlogTaxonomyController extends AbstractController
             $options['robots'] = 'noindex,follow';
         }
 
+        $breadcrumbs = [
+            [
+                'name' => 'Home',
+                'item' => $this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+            [
+                'name' => 'Blog',
+                'item' => $this->generateUrl('app_blog_index', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+            [
+                'name' => $tag->getName(),
+                'item' => $this->generateUrl('app_blog_tag', ['slug' => $canonicalSlug], UrlGeneratorInterface::ABSOLUTE_URL),
+            ],
+        ];
+
+        $jsonLd = [
+            'breadcrumbs' => $breadcrumbs,
+        ];
+
         return $this->render('blog/tag.html.twig', [
             'title' => $tag->getName(),
             'posts' => $posts,
             'page' => $page,
             'next_page' => $hasNext ? $page + 1 : null,
             'prev_page' => $page > 1 ? $page - 1 : null,
+            'breadcrumbs' => $breadcrumbs,
+            'jsonld' => $jsonLd,
             'seo' => $this->seo->build($options),
         ]);
     }

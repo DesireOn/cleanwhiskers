@@ -40,7 +40,5 @@
     {% endif %}
     <section class="content">{{ post.contentHtml|raw }}</section>
 </article>
-<nav class="blog-breadcrumb" aria-label="Breadcrumb">
-    <a href="{{ path('app_blog_index') }}">&larr; Back to blog</a>
-</nav>
+{% include 'blog/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs} %}
 {% endblock %}

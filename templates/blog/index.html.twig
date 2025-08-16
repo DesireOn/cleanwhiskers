@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% import 'seo/_jsonld.html.twig' as seo_jsonld %}
+
+{% block jsonld %}
+    {{ seo_jsonld.render(jsonld|default({})) }}
+{% endblock %}
 
 {% block critical_css %}
     <style>
@@ -21,6 +26,7 @@
 <header class="blog-header">
     <h1>{{ title }}</h1>
 </header>
+{% include 'blog/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs} %}
 <section class="post-list">
     {% for post in posts %}
         {% include 'blog/_post_teaser.html.twig' with {post: post} %}

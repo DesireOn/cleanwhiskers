@@ -21,3 +21,19 @@
 .blog-breadcrumb {
     margin-top: var(--space-4);
 }
+
+.blog-breadcrumb ol {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.blog-breadcrumb li + li::before {
+    content: '/';
+    margin: 0 var(--space-1);
+}
+
+.blog-breadcrumb a {
+    text-decoration: none;
+}

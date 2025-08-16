@@ -117,4 +117,45 @@ final class BlogControllerTest extends WebTestCase
         $this->client->followRedirect();
         self::assertResponseIsSuccessful();
     }
+
+    public function testIndexHeadingHierarchy(): void
+    {
+        $this->createPublishedPost('Hierarchy Post');
+
+        $crawler = $this->client->request('GET', '/blog');
+        self::assertResponseIsSuccessful();
+
+        $levels = $crawler->filter('h1, h2, h3, h4, h5, h6')->each(
+            static fn ($node) => (int) substr($node->nodeName(), 1)
+        );
+
+        self::assertSame(1, $crawler->filter('h1')->count());
+        self::assertNotEmpty($levels);
+        $previous = array_shift($levels);
+        foreach ($levels as $level) {
+            self::assertLessThanOrEqual($previous + 1, $level);
+            $previous = $level;
+        }
+    }
+
+    public function testDetailHeadingHierarchy(): void
+    {
+        $post = $this->createPublishedPost('Heading Post');
+        $path = sprintf('/blog/%s/%s/%s', $post->getPublishedAt()->format('Y'), $post->getPublishedAt()->format('m'), $post->getSlug());
+
+        $crawler = $this->client->request('GET', $path);
+        self::assertResponseIsSuccessful();
+
+        $levels = $crawler->filter('h1, h2, h3, h4, h5, h6')->each(
+            static fn ($node) => (int) substr($node->nodeName(), 1)
+        );
+
+        self::assertSame(1, $crawler->filter('h1')->count());
+        self::assertNotEmpty($levels);
+        $previous = array_shift($levels);
+        foreach ($levels as $level) {
+            self::assertLessThanOrEqual($previous + 1, $level);
+            $previous = $level;
+        }
+    }
 }
