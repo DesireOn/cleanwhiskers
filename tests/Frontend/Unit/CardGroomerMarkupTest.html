@@ -14,9 +14,11 @@
             console.assert(name && name.textContent.trim().length > 0, 'name link present');
             const rating = card.querySelector('.card-groomer__rating');
             console.assert(rating && rating.getAttribute('aria-label'), 'rating aria-label present');
+            console.assert(card.querySelector('.card-groomer__review-count'), 'review count present');
+            console.assert(card.querySelector('.card-groomer__price'), 'price present');
             console.assert(card.querySelector('.card-groomer__services li'), 'service tag present');
             const cta = card.querySelector('.card-groomer__cta');
-            console.assert(cta && cta.textContent.includes('View profile'), 'CTA present');
+            console.assert(cta && cta.textContent.includes('Book Now'), 'CTA present');
             console.log('Card groomer markup tests passed');
         });
     </script>
@@ -34,11 +36,13 @@
                 <div class="card-groomer__rating" aria-label="Rating 4.8 out of 5">
                     <span class="card-groomer__stars" style="--rating:4.8" aria-hidden="true"></span>
                     <span class="card-groomer__rating-number">4.8</span>
+                    <span class="card-groomer__review-count">(10)</span>
                 </div>
+                <p class="card-groomer__price">Starting at $20</p>
                 <ul class="card-groomer__services">
-                    <li>Baths</li>
+                    <li aria-label="Baths">🛁</li>
                 </ul>
-                <a class="card-groomer__cta" href="#">View profile</a>
+                <a class="card-groomer__cta" href="#">Book Now</a>
             </div>
         </article>
     </div>

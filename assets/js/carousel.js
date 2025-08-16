@@ -16,6 +16,33 @@ carousels.forEach((carousel) => {
         track.scrollBy({ left: offset, behavior: 'smooth' });
     }
 
+    let isDragging = false;
+    let startX;
+    let scrollStart;
+
+    track.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        startX = e.clientX;
+        scrollStart = track.scrollLeft;
+        track.setPointerCapture(e.pointerId);
+    });
+
+    track.addEventListener('pointermove', (e) => {
+        if (!isDragging) {
+            return;
+        }
+        const dx = e.clientX - startX;
+        track.scrollLeft = scrollStart - dx;
+    });
+
+    track.addEventListener('pointerup', () => {
+        isDragging = false;
+    });
+
+    track.addEventListener('pointerleave', () => {
+        isDragging = false;
+    });
+
     prev.addEventListener('click', () => {
         if (track.scrollLeft <= 0) {
             track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
