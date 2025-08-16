@@ -10,6 +10,7 @@ use App\Entity\Blog\BlogTag;
 use App\Infrastructure\Doctrine\SlugListener;
 use App\Repository\Blog\BlogCategoryRepository;
 use App\Repository\Blog\BlogPostRepository;
+use App\Repository\Blog\BlogPostSlugHistoryRepository;
 use App\Repository\Blog\BlogTagRepository;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
@@ -42,6 +43,7 @@ final class BlogPostTest extends TestCase
             $this->createMock(BlogCategoryRepository::class),
             $this->createMock(BlogTagRepository::class),
             $this->createMock(BlogPostRepository::class),
+            $this->createMock(BlogPostSlugHistoryRepository::class),
         );
         $em = $this->createMock(EntityManagerInterface::class);
         $listener->prePersist(new PrePersistEventArgs($post, $em));
