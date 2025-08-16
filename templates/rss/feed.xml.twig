@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>CleanWhiskers Blog</title>
+    <link>{{ absolute_url(path('app_blog_index')) }}</link>
+    <description>Latest posts from the CleanWhiskers blog</description>
+    <lastBuildDate>{{ lastBuildDate|date('r') }}</lastBuildDate>
+    {% for post in posts %}
+      <item>
+        <title>{{ post.title }}</title>
+        <link>{{ absolute_url(path('app_blog_detail', {
+          year: post.publishedAt|date('Y'),
+          month: post.publishedAt|date('m'),
+          slug: post.slug
+        })) }}</link>
+        <guid>{{ absolute_url(path('app_blog_detail', {
+          year: post.publishedAt|date('Y'),
+          month: post.publishedAt|date('m'),
+          slug: post.slug
+        })) }}</guid>
+        <pubDate>{{ post.publishedAt|date('r') }}</pubDate>
+        {% if post.excerpt %}
+        <description><![CDATA[{{ post.excerpt }}]]></description>
+        {% endif %}
+      </item>
+    {% endfor %}
+  </channel>
+</rss>

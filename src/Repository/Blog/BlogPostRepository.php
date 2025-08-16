@@ -101,6 +101,51 @@ class BlogPostRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return iterable<int, array{slug: string, publishedAt: \DateTimeImmutable, updatedAt: \DateTimeImmutable}>
+     */
+    public function findAllForSitemap(): iterable
+    {
+        /** @var iterable<int, array{slug: string, publishedAt: \DateTimeImmutable, updatedAt: \DateTimeImmutable}> $result */
+        $result = $this->createQueryBuilder('p')
+            ->select('p.slug AS slug', 'p.publishedAt AS publishedAt', 'p.updatedAt AS updatedAt')
+            ->andWhere('p.isPublished = 1')
+            ->andWhere('p.publishedAt <= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('p.publishedAt', 'DESC')
+            ->getQuery()
+            ->toIterable();
+
+        return $result;
+    }
+
+    /**
+     * @return iterable<int, array{slug: string, title: string, excerpt: ?string, publishedAt: \DateTimeImmutable, updatedAt: \DateTimeImmutable}>
+     */
+    public function findLatestForFeed(int $limit): iterable
+    {
+        /**
+         * @var iterable<int, array{slug: string, title: string, excerpt: ?string, publishedAt: \DateTimeImmutable, updatedAt: \DateTimeImmutable}> $result
+         */
+        $result = $this->createQueryBuilder('p')
+            ->select(
+                'p.slug AS slug',
+                'p.title AS title',
+                'p.excerpt AS excerpt',
+                'p.publishedAt AS publishedAt',
+                'p.updatedAt AS updatedAt'
+            )
+            ->andWhere('p.isPublished = 1')
+            ->andWhere('p.publishedAt <= :now')
+            ->setParameter('now', new \DateTimeImmutable())
+            ->orderBy('p.publishedAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->toIterable();
+
+        return $result;
+    }
+
     public function findOnePublishedBySlug(string $slug): ?BlogPost
     {
         /** @var BlogPost|null $result */
