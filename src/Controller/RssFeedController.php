@@ -19,8 +19,13 @@ final class RssFeedController extends AbstractController
     #[Route('/feed.xml', name: 'app_rss_feed', methods: ['GET'])]
     public function __invoke(): Response
     {
+        $lastBuildDate = new \DateTimeImmutable();
+        foreach ($this->posts->findLatestForFeed(1) as $latest) {
+            $lastBuildDate = $latest['updatedAt'];
+            break;
+        }
+
         $posts = iterator_to_array($this->posts->findLatestForFeed(50));
-        $lastBuildDate = $posts[0]['updatedAt'] ?? new \DateTimeImmutable();
 
         $content = $this->twig->render('rss/feed.xml.twig', [
             'posts' => $posts,
