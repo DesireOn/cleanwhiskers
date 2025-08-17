@@ -6,6 +6,9 @@ on:
 
 jobs:
   next-task:
+    permissions:
+      contents: write
+      pull-requests: write
     if: |
       github.event.pull_request.merged == true &&
       contains(github.event.pull_request.labels.*.name, 'codex-automation') &&
