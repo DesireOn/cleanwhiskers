@@ -18,6 +18,7 @@ BRANCH="codex/task-${TASK_ID}-${SLUG}"
 git fetch origin
 git checkout "$BASE_BRANCH"
 git pull origin "$BASE_BRANCH"
+git rm --cached .task_status.json
 
 # Prepare feature branch
 if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
