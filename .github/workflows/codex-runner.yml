@@ -38,7 +38,8 @@ jobs:
 
       - name: Install Codex CLI
         run: |
-          pipx install "codex-cli"
+          pip install --upgrade pip
+          pip install codex-cli
           codex-cli --version
           echo "CODEX_CMD=codex-cli" >> "$GITHUB_ENV"
 
