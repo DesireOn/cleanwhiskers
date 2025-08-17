@@ -59,52 +59,46 @@ jobs:
           max_attempts=3
           while [ $attempt -le $max_attempts ]; do
             echo "Attempt $attempt"
-            python scripts/status.py --begin-attempt $TASK_ID
+            python scripts/status.py --begin-attempt "$TASK_ID"
+
             set +e
             bash scripts/run_codex_task.sh "$TASK_ID" "$TASK_TITLE" "$attempt"
             status=$?
             set -e
+
             BRANCH=$(git rev-parse --abbrev-ref HEAD)
             if [[ "$BRANCH" != codex/* ]]; then
               echo "Branch $BRANCH is not automation-managed; exiting"
               exit 0
             fi
             export BRANCH
-            python - <<'PY'
-            import os
-            from scripts import pr
-            owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
-            branch = os.environ['BRANCH']
-            pr_number = pr.open_or_update_pr(owner, repo, branch)
-            open('pr.txt', 'w').write(str(pr_number))
-            PY
+
+            python -c 'import os; from scripts import pr; owner, repo = os.environ["GITHUB_REPOSITORY"].split("/"); branch = os.environ["BRANCH"]; pr_number = pr.open_or_update_pr(owner, repo, branch); open("pr.txt","w").write(str(pr_number))'
             PR=$(cat pr.txt)
-            python scripts/status.py --update-last-pr $TASK_ID $PR
+
+            python scripts/status.py --update-last-pr "$TASK_ID" "$PR"
+
             sleep "$SLEEP_SECONDS"
-            python - <<'PY'
-            import os, sys
-            from scripts import pr
-            owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
-            pr_number = int(open('pr.txt').read())
-            state = pr.is_pr_merged(owner, repo, pr_number)
-            if state == 'ignored':
-                sys.exit(2)
-            sys.exit(0 if state == 'merged' else 1)
-            PY
+
+            python -c 'import os, sys; from scripts import pr; owner, repo = os.environ["GITHUB_REPOSITORY"].split("/"); pr_number = int(open("pr.txt").read()); state = pr.is_pr_merged(owner, repo, pr_number); sys.exit(2 if state=="ignored" else (0 if state=="merged" else 1))'
             result=$?
+
             if [ $result -eq 2 ]; then
               echo "PR ignored"
               exit 0
             fi
+
             if [ $result -eq 0 ]; then
-              python scripts/status.py --mark-merged $TASK_ID $PR
+              python scripts/status.py --mark-merged "$TASK_ID" "$PR"
               echo "PR merged"
               exit 0
             fi
+
             if [ $attempt -ge $max_attempts ]; then
-              python scripts/status.py --mark-failed $TASK_ID $PR
+              python scripts/status.py --mark-failed "$TASK_ID" "$PR"
               echo "Max attempts reached; task marked failed"
               exit 0
             fi
+
             attempt=$((attempt+1))
           done
