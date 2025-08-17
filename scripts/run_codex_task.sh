@@ -30,11 +30,18 @@ fi
 # Rebase on top of latest base branch (autostash to handle local changes)
 git rebase --autostash "origin/$BASE_BRANCH"
 
+# 🧹 Untrack .task_status.json if it's still tracked
+if git ls-files --error-unmatch .task_status.json >/dev/null 2>&1; then
+  git rm --cached .task_status.json || true
+  git commit -m "Remove .task_status.json from tracking"
+fi
+
 CODEX_BIN="${CODEX_CMD:-codex}"
 if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
   echo "Codex CLI is missing" >&2
   exit 1
 fi
+
 CODEX_STATUS=0
 if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
   touch codex-dry-run.txt
