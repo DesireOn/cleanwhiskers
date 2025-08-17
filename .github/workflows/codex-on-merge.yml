@@ -1,0 +1,11 @@
+name: Codex Trigger on Merge to Staging
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  next-task:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, "codex-automation") && github.event.pull_request.base.ref == "staging"
+    uses: ./.github/workflows/codex-runner.yml
+
