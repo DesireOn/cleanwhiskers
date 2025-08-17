@@ -27,8 +27,8 @@ else
   git checkout -b "$BRANCH" "origin/$BASE_BRANCH"
 fi
 
-# Rebase on top of latest base branch
-git rebase "origin/$BASE_BRANCH"
+# Rebase on top of latest base branch (autostash to handle local changes)
+git rebase --autostash "origin/$BASE_BRANCH"
 
 CODEX_BIN="${CODEX_CMD:-codex}"
 CODEX_STATUS=0
