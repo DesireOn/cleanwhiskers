@@ -39,7 +39,8 @@ jobs:
       - name: Install Codex CLI
         run: |
           pipx install codex-cli
-          codex --version
+          codex-cli --version
+          echo "CODEX_CMD=codex-cli" >> "$GITHUB_ENV"
 
       - name: Initialize status
         run: python scripts/status.py --init
