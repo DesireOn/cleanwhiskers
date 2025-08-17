@@ -11,6 +11,9 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      SLEEP_SECONDS: ${{ vars.SLEEP_SECONDS || 300 }}
+      NOOP_COMMIT: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,11 +80,7 @@ open('pr.txt', 'w').write(str(pr_number))
 PY
             PR=$(cat pr.txt)
             python scripts/status.py --update-last-pr $TASK_ID $PR
-            if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
-              sleep 5
-            else
-              for i in {1..30}; do sleep 10; done
-            fi
+            sleep "$SLEEP_SECONDS"
             python - <<'PY'
 import os, sys
 from scripts import pr
