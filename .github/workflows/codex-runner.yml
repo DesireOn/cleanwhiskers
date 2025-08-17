@@ -77,7 +77,7 @@ jobs:
             branch = os.environ['BRANCH']
             pr_number = pr.open_or_update_pr(owner, repo, branch)
             open('pr.txt', 'w').write(str(pr_number))
-PY
+            PY
             PR=$(cat pr.txt)
             python scripts/status.py --update-last-pr $TASK_ID $PR
             sleep "$SLEEP_SECONDS"
@@ -90,7 +90,7 @@ PY
             if state == 'ignored':
                 sys.exit(2)
             sys.exit(0 if state == 'merged' else 1)
-PY
+            PY
             result=$?
             if [ $result -eq 2 ]; then
               echo "PR ignored"
