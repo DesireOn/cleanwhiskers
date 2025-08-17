@@ -71,26 +71,26 @@ jobs:
             fi
             export BRANCH
             python - <<'PY'
-import os
-from scripts import pr
-owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
-branch = os.environ['BRANCH']
-pr_number = pr.open_or_update_pr(owner, repo, branch)
-open('pr.txt', 'w').write(str(pr_number))
-PY
+            import os
+            from scripts import pr
+            owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
+            branch = os.environ['BRANCH']
+            pr_number = pr.open_or_update_pr(owner, repo, branch)
+            open('pr.txt', 'w').write(str(pr_number))
+            PY
             PR=$(cat pr.txt)
             python scripts/status.py --update-last-pr $TASK_ID $PR
             sleep "$SLEEP_SECONDS"
             python - <<'PY'
-import os, sys
-from scripts import pr
-owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
-pr_number = int(open('pr.txt').read())
-state = pr.is_pr_merged(owner, repo, pr_number)
-if state == 'ignored':
-    sys.exit(2)
-sys.exit(0 if state == 'merged' else 1)
-PY
+            import os, sys
+            from scripts import pr
+            owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
+            pr_number = int(open('pr.txt').read())
+            state = pr.is_pr_merged(owner, repo, pr_number)
+            if state == 'ignored':
+                sys.exit(2)
+            sys.exit(0 if state == 'merged' else 1)
+            PY
             result=$?
             if [ $result -eq 2 ]; then
               echo "PR ignored"
