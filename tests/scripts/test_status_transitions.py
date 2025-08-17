@@ -2,8 +2,6 @@ import json
 import sys
 from pathlib import Path
 
-import pytest
-
 # Ensure repository root on path for importing scripts package
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
