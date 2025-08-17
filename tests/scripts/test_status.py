@@ -1,8 +1,5 @@
 import json
 import threading
-from pathlib import Path
-
-import pytest
 
 from scripts import status
 
@@ -38,7 +35,10 @@ def test_concurrent_writes(tmp_path, monkeypatch):
 
     t1 = threading.Thread(target=writer, args=(data1,))
     t2 = threading.Thread(target=writer, args=(data2,))
-    t1.start(); t2.start(); t1.join(); t2.join()
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
 
     with open(tmp_path / ".task_status.json") as fh:
         json.load(fh)  # should not be corrupted
