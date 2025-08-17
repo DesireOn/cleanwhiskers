@@ -31,6 +31,10 @@ fi
 git rebase --autostash "origin/$BASE_BRANCH"
 
 CODEX_BIN="${CODEX_CMD:-codex}"
+if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
+  echo "Codex CLI is missing" >&2
+  exit 1
+fi
 CODEX_STATUS=0
 if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
   touch codex-dry-run.txt

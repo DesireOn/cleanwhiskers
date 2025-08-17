@@ -36,6 +36,11 @@ jobs:
       - name: Install dependencies
         run: make setup
 
+      - name: Install Codex CLI
+        run: |
+          pipx install codex-cli
+          codex --version
+
       - name: Initialize status
         run: python scripts/status.py --init
 
