@@ -27,7 +27,7 @@ else
   git checkout -b "$BRANCH" "origin/$BASE_BRANCH"
 fi
 
-git rm --cached .task_status.json
+rm -rf .task_status.json
 
 # Rebase on top of latest base branch (autostash to handle local changes)
 git rebase --autostash "origin/$BASE_BRANCH"
