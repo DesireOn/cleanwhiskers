@@ -1,1 +1,6 @@
-- Define task spec + status tracking (repo scaffolding)
+- id: 1 
+  title: Create a dummy change for testing purpuses
+  status: pending
+- id: 2 
+  title: Revert the dummy change we just did please
+  status: pending
