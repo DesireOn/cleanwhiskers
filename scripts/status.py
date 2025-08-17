@@ -7,6 +7,11 @@ from typing import Callable, List
 
 import fcntl
 
+
+class VersionConflict(RuntimeError):
+    """Raised when the status file was modified by another process."""
+
+
 SCHEMA_VERSION = 1
 TASKS_FILE = Path("tasks.yaml")
 STATUS_FILE = Path(".task_status.json")
@@ -28,22 +33,34 @@ def _unlock_file(fd: int) -> None:
 def load_status(path: Path = STATUS_FILE) -> dict:
     """Load status JSON. Returns empty skeleton if file missing."""
     if not path.exists():
-        return {"tasks": [], "meta": {"schemaVersion": SCHEMA_VERSION}}
+        return {"tasks": [], "meta": {"schemaVersion": SCHEMA_VERSION, "version": 0}}
     with open(path, "r") as fh:
         _lock_file(fh.fileno())
         try:
             data = json.load(fh)
         finally:
             _unlock_file(fh.fileno())
+    data.setdefault("meta", {})
+    data["meta"].setdefault("schemaVersion", SCHEMA_VERSION)
+    data["meta"].setdefault("version", 0)
     return data
 
 
-def save_status(data: dict, path: Path = STATUS_FILE) -> None:
-    """Atomically save *data* to *path* using a temp file and rename."""
+def save_status(data: dict, path: Path = STATUS_FILE, *, expected_version: int | None = None) -> None:
+    """Atomically save *data* to *path* using a temp file and rename.
+
+    If ``expected_version`` is provided the current file version is compared
+    before writing and :class:`VersionConflict` is raised when it differs.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(LOCK_FILE, os.O_CREAT | os.O_RDWR)
     try:
         _lock_file(fd)
+        if expected_version is not None:
+            current = _load_status_unlocked(path)
+            current_version = current.get("meta", {}).get("version", 0)
+            if current_version != expected_version:
+                raise VersionConflict("status file changed")
         tmp_fd, tmp_path = tempfile.mkstemp(dir=str(path.parent))
         with os.fdopen(tmp_fd, "w") as tmp_fh:
             json.dump(data, tmp_fh, indent=2)
@@ -57,9 +74,13 @@ def save_status(data: dict, path: Path = STATUS_FILE) -> None:
 
 def _load_status_unlocked(path: Path = STATUS_FILE) -> dict:
     if not path.exists():
-        return {"tasks": [], "meta": {"schemaVersion": SCHEMA_VERSION}}
+        return {"tasks": [], "meta": {"schemaVersion": SCHEMA_VERSION, "version": 0}}
     with open(path, "r") as fh:
-        return json.load(fh)
+        data = json.load(fh)
+    data.setdefault("meta", {})
+    data["meta"].setdefault("schemaVersion", SCHEMA_VERSION)
+    data["meta"].setdefault("version", 0)
+    return data
 
 
 def _save_status_unlocked(data: dict, path: Path = STATUS_FILE) -> None:
@@ -73,18 +94,26 @@ def _save_status_unlocked(data: dict, path: Path = STATUS_FILE) -> None:
 
 
 def _update_task(task_id: int, updater: Callable[[dict], None]) -> None:
-    fd = os.open(LOCK_FILE, os.O_CREAT | os.O_RDWR)
-    try:
-        _lock_file(fd)
-        data = _load_status_unlocked()
+    while True:
+        data = load_status()
+        version = data.get("meta", {}).get("version", 0)
+        target = None
         for task in data.get("tasks", []):
             if task.get("id") == task_id:
-                updater(task)
+                target = task
                 break
-        _save_status_unlocked(data)
-    finally:
-        _unlock_file(fd)
-        os.close(fd)
+        if target is None:
+            return
+        before = json.dumps(target, sort_keys=True)
+        updater(target)
+        if before == json.dumps(target, sort_keys=True):
+            return
+        data["meta"]["version"] = version + 1
+        try:
+            save_status(data, expected_version=version)
+            return
+        except VersionConflict:
+            continue
 
 
 # ---------------------------------------------------------------------------
@@ -166,7 +195,7 @@ def init_status() -> None:
             }
             for idx, title in enumerate(titles, start=1)
         ],
-        "meta": {"schemaVersion": SCHEMA_VERSION},
+        "meta": {"schemaVersion": SCHEMA_VERSION, "version": 0},
     }
     save_status(data)
 

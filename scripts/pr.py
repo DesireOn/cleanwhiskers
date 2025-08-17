@@ -119,7 +119,7 @@ def open_or_update_pr(owner: str, repo: str, head: str, base: str = "staging") -
     Ensures the PR is labelled with ``codex-automation`` and returns the PR number.
     """
     pr_number = get_pr_number_by_branch(owner, repo, head)
-    if pr_number:
+    if pr_number is not None:
         _ensure_label(owner, repo, pr_number)
         return pr_number
 
