@@ -62,6 +62,10 @@ jobs:
             status=$?
             set -e
             BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            if [[ "$BRANCH" != codex/* ]]; then
+              echo "Branch $BRANCH is not automation-managed; exiting"
+              exit 0
+            fi
             export BRANCH
             python - <<'PY'
 import os
@@ -83,9 +87,17 @@ import os, sys
 from scripts import pr
 owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
 pr_number = int(open('pr.txt').read())
-sys.exit(0 if pr.is_pr_merged(owner, repo, pr_number) else 1)
+state = pr.is_pr_merged(owner, repo, pr_number)
+if state == 'ignored':
+    sys.exit(2)
+sys.exit(0 if state == 'merged' else 1)
 PY
-            if [ $? -eq 0 ]; then
+            result=$?
+            if [ $result -eq 2 ]; then
+              echo "PR ignored"
+              exit 0
+            fi
+            if [ $result -eq 0 ]; then
               python scripts/status.py --mark-merged $TASK_ID $PR
               echo "PR merged"
               exit 0

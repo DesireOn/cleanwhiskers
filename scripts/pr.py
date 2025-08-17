@@ -79,10 +79,29 @@ def get_pr_number_by_branch(owner: str, repo: str, head: str) -> Optional[int]:
     return None
 
 
-def is_pr_merged(owner: str, repo: str, pr_number: int) -> bool:
+def is_pr_merged(owner: str, repo: str, pr_number: int) -> str:
+    """Return merge state for a pull request.
+
+    The function checks the PR metadata first to ensure it belongs to the
+    automation system. A PR qualifies if it has the ``codex-automation`` label
+    and its head branch starts with ``codex/``. If either check fails the
+    function returns ``"ignored"``. Otherwise the GitHub merge API is queried
+    and ``"merged"`` or ``"open"`` is returned accordingly.
+    """
+
+    info_url = f"{API_ROOT}/repos/{owner}/{repo}/pulls/{pr_number}"
+    status_code, data = _request("GET", info_url)
+    if status_code != 200 or not isinstance(data, dict):
+        return "open"
+
+    head_ref = data.get("head", {}).get("ref", "")
+    labels = [lbl.get("name") for lbl in data.get("labels", [])]
+    if LABEL not in labels or not head_ref.startswith("codex/"):
+        return "ignored"
+
     url = f"{API_ROOT}/repos/{owner}/{repo}/pulls/{pr_number}/merge"
     status_code, _ = _request("GET", url)
-    return status_code == 204
+    return "merged" if status_code == 204 else "open"
 
 
 def _ensure_label(owner: str, repo: str, pr_number: int) -> None:

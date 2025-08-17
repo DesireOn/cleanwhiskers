@@ -6,6 +6,10 @@ on:
 
 jobs:
   next-task:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, "codex-automation") && github.event.pull_request.base.ref == "staging"
+    if: |
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'codex-automation') &&
+      github.event.pull_request.base.ref == 'staging' &&
+      startsWith(github.event.pull_request.head.ref, 'codex/')
     uses: ./.github/workflows/codex-runner.yml
 

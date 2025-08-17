@@ -66,18 +66,45 @@ def test_open_or_update_pr_existing(monkeypatch, tmp_path):
     assert [c[0] for c in calls] == ["GET", "POST"]
 
 
-def test_is_pr_merged(monkeypatch):
+def test_is_pr_merged_states(monkeypatch):
+    calls = []
+
     def fake_request(method, url, data=None):
-        return 204, None
+        calls.append(url)
+        if url.endswith("/pulls/1"):
+            return 200, {"head": {"ref": "codex/branch"}, "labels": [{"name": pr.LABEL}]}
+        if url.endswith("/pulls/1/merge"):
+            return 204, None
+        raise AssertionError("unexpected url")
 
     monkeypatch.setattr(pr, "_request", fake_request)
-    assert pr.is_pr_merged("owner", "repo", 1) is True
+    assert pr.is_pr_merged("owner", "repo", 1) == "merged"
+    assert calls == [
+        f"{pr.API_ROOT}/repos/owner/repo/pulls/1",
+        f"{pr.API_ROOT}/repos/owner/repo/pulls/1/merge",
+    ]
 
-    def fake_request_not(method, url, data=None):
-        return 404, None
+    def fake_request_open(method, url, data=None):
+        if url.endswith("/pulls/1"):
+            return 200, {"head": {"ref": "codex/branch"}, "labels": [{"name": pr.LABEL}]}
+        if url.endswith("/pulls/1/merge"):
+            return 404, None
+        raise AssertionError("unexpected url")
 
-    monkeypatch.setattr(pr, "_request", fake_request_not)
-    assert pr.is_pr_merged("owner", "repo", 1) is False
+    monkeypatch.setattr(pr, "_request", fake_request_open)
+    assert pr.is_pr_merged("owner", "repo", 1) == "open"
+
+    def fake_request_ignored_label(method, url, data=None):
+        return 200, {"head": {"ref": "codex/branch"}, "labels": []}
+
+    monkeypatch.setattr(pr, "_request", fake_request_ignored_label)
+    assert pr.is_pr_merged("owner", "repo", 1) == "ignored"
+
+    def fake_request_ignored_prefix(method, url, data=None):
+        return 200, {"head": {"ref": "feature"}, "labels": [{"name": pr.LABEL}]}
+
+    monkeypatch.setattr(pr, "_request", fake_request_ignored_prefix)
+    assert pr.is_pr_merged("owner", "repo", 1) == "ignored"
 
 
 def test_get_pr_number_by_branch(monkeypatch):
