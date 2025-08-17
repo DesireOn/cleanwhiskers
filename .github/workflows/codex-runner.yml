@@ -38,7 +38,7 @@ jobs:
 
       - name: Install Codex CLI
         run: |
-          pipx install codex-cli
+          pipx install "codex-cli==1.0.0"
           codex-cli --version
           echo "CODEX_CMD=codex-cli" >> "$GITHUB_ENV"
 
