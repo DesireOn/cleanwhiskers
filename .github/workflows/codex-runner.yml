@@ -36,12 +36,17 @@ jobs:
       - name: Install dependencies
         run: make setup
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Install Codex CLI
         run: |
-          pip install --upgrade pip
-          pip install codex-cli
-          codex-cli --version
-          echo "CODEX_CMD=codex-cli" >> "$GITHUB_ENV"
+          npm install -g @openai/codex
+          codex --version
+          # Use the real binary name:
+          echo "CODEX_CMD=codex" >> "$GITHUB_ENV"
 
       - name: Initialize status
         run: python scripts/status.py --init
