@@ -1,11 +1,46 @@
 {
   "tasks": [
     {
+      "attempts": 0,
+      "status": "in_progress",
+      "last_pr": 0,
       "id": 1,
-      "title": "Define task spec + status tracking (repo scaffolding)",
+      "title": "id: 1"
+    },
+    {
       "attempts": 0,
       "status": "pending",
-      "last_pr": 0
+      "last_pr": 0,
+      "id": 2,
+      "title": "title: Create a dummy change for testing purpuses"
+    },
+    {
+      "attempts": 0,
+      "status": "pending",
+      "last_pr": 0,
+      "id": 3,
+      "title": "status: pending"
+    },
+    {
+      "attempts": 0,
+      "status": "pending",
+      "last_pr": 0,
+      "id": 4,
+      "title": "id: 2"
+    },
+    {
+      "attempts": 0,
+      "status": "pending",
+      "last_pr": 0,
+      "id": 5,
+      "title": "title: Revert the dummy change we just did please"
+    },
+    {
+      "attempts": 0,
+      "status": "pending",
+      "last_pr": 0,
+      "id": 6,
+      "title": "status: pending"
     }
   ],
   "meta": {
