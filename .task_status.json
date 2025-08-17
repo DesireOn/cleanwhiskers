@@ -1,11 +1,18 @@
 {
   "tasks": [
     {
+      "attempts": 0,
+      "status": "in_progress",
+      "last_pr": 0,
       "id": 1,
-      "title": "Define task spec + status tracking (repo scaffolding)",
+      "title": "Add random text on home page for testing purposes"
+    },
+    {
       "attempts": 0,
       "status": "pending",
-      "last_pr": 0
+      "last_pr": 0,
+      "id": 2,
+      "title": "Revert random text that was created in the previous task please"
     }
   ],
   "meta": {
