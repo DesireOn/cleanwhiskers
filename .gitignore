@@ -33,6 +33,11 @@ phpstan.neon
 
 # Task status lock file
 /.task_status.lock
+
+# Codex runner artifacts
+/.task_status.json
+/task.json
+
 # Python artifacts
 __pycache__/
 *.pyc
