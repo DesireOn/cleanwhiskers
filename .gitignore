@@ -30,3 +30,9 @@
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+# Task status lock file
+/.task_status.lock
+# Python artifacts
+__pycache__/
+*.pyc
