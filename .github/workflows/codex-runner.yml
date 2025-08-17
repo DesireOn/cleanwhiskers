@@ -1,0 +1,99 @@
+name: Codex Runner
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: make setup
+
+      - name: Initialize status
+        run: python scripts/status.py --init
+
+      - name: Fetch next task
+        id: fetch
+        run: |
+          set +e
+          python scripts/task_fetcher.py --print-json > task.json
+          echo "exit_code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+
+      - name: No task to run
+        if: steps.fetch.outputs.exit_code == '20'
+        run: echo "No pending tasks"
+
+      - name: Parse task info
+        if: steps.fetch.outputs.exit_code != '20'
+        run: |
+          echo "TASK_ID=$(jq -r '.id' task.json)" >> "$GITHUB_ENV"
+          echo "TASK_TITLE=$(jq -r '.title' task.json)" >> "$GITHUB_ENV"
+
+      - name: Run Codex task with retries
+        if: steps.fetch.outputs.exit_code != '20'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          attempt=1
+          max_attempts=3
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt"
+            python scripts/status.py --begin-attempt $TASK_ID
+            set +e
+            bash scripts/run_codex_task.sh "$TASK_ID" "$TASK_TITLE" "$attempt"
+            status=$?
+            set -e
+            BRANCH=$(git rev-parse --abbrev-ref HEAD)
+            export BRANCH
+            python - <<'PY'
+import os
+from scripts import pr
+owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
+branch = os.environ['BRANCH']
+pr_number = pr.open_or_update_pr(owner, repo, branch)
+open('pr.txt', 'w').write(str(pr_number))
+PY
+            PR=$(cat pr.txt)
+            python scripts/status.py --update-last-pr $TASK_ID $PR
+            if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
+              sleep 5
+            else
+              for i in {1..30}; do sleep 10; done
+            fi
+            python - <<'PY'
+import os, sys
+from scripts import pr
+owner, repo = os.environ['GITHUB_REPOSITORY'].split('/')
+pr_number = int(open('pr.txt').read())
+sys.exit(0 if pr.is_pr_merged(owner, repo, pr_number) else 1)
+PY
+            if [ $? -eq 0 ]; then
+              python scripts/status.py --mark-merged $TASK_ID $PR
+              echo "PR merged"
+              exit 0
+            fi
+            if [ $attempt -ge $max_attempts ]; then
+              python scripts/status.py --mark-failed $TASK_ID $PR
+              echo "Max attempts reached; task marked failed"
+              exit 0
+            fi
+            attempt=$((attempt+1))
+          done
