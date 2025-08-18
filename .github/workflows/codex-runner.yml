@@ -70,7 +70,7 @@ jobs:
       - name: Run Codex task with retries
         run: bash scripts/run_codex_task.sh "$TASK_ID" "$TASK_TITLE" "$attempt"
         env:
-          TASK_ID: "task-id-placeholder"
-          TASK_TITLE: "Update the README file formatting"
-          attempt: "1"
+          # TASK_ID: "task-id-placeholder"
+          # TASK_TITLE: "Update the README file formatting"
+          # attempt: "1"
           GITHUB_REPOSITORY: ${{ github.repository }}
