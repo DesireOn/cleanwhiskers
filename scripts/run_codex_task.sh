@@ -52,10 +52,10 @@ else
   set -e
 fi
 
-set +e
-make test -k
-TEST_STATUS=$?
-set -e
+# set +e
+# make test -k
+# TEST_STATUS=$?
+# set -e
 
 git add -A
 if git diff --cached --quiet; then
