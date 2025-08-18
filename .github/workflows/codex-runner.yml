@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Set up Node (needed for other steps if any)
+      - name: Set up Node.js (for other tools, not Codex CLI)
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -33,28 +33,30 @@ jobs:
       - name: Install Codex CLI (static Linux binary)
         run: |
           set -euxo pipefail
-          # Get latest release tag
+
+          # Fetch latest release tag from GitHub
           rel="$(curl -s https://api.github.com/repos/openai/codex/releases/latest | jq -r .tag_name)"
 
-          # Download Linux musl binary
+          # Download and extract the static binary for Linux (musl)
           curl -L -o codex.tar.gz "https://github.com/openai/codex/releases/download/${rel}/codex-x86_64-unknown-linux-musl.tar.gz"
           tar -xzf codex.tar.gz
 
-          # Move to /usr/local/bin and make executable
+          # Move binary to PATH and make it executable
           mv codex-x86_64-unknown-linux-musl /usr/local/bin/codex
           chmod +x /usr/local/bin/codex
 
-          # Confirm it works
-          codex exec "noop test run" --full-auto . --dry-run
+          # Sanity check that it works (no --cwd!)
+          codex exec "noop test run" --full-auto --dry-run
 
-          # Export the binary path to environment
+          # Persist binary location for downstream steps
           echo "CODEX_CMD=/usr/local/bin/codex" >> "$GITHUB_ENV"
 
       - name: Debug Codex CLI location
         run: |
+          set -euxo pipefail
           which codex || true
           type -a codex || true
-          echo "CODEX_CMD = $CODEX_CMD"
+          echo "CODEX_CMD = ${CODEX_CMD:-unset}"
 
       - name: Run Codex task with retries
         run: bash scripts/run_codex_task.sh "$TASK_ID" "$TASK_TITLE" "$attempt"
