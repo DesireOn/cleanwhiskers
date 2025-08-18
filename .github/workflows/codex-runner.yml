@@ -18,6 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Git identity for commits
+        run: |
+          git config --global user.email "bot@cleanwhiskers.dev"
+          git config --global user.name "CleanWhiskers Bot"
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
