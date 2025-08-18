@@ -46,8 +46,8 @@ if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
   touch codex-dry-run.txt
 else
   set +e
-  echo "Running: $CODEX_BIN exec --full-auto \"$TASK_TITLE\""
-  "$CODEX_BIN" exec --full-auto "$TASK_TITLE"
+  echo "Running: $CODEX_BIN exec --model gpt-4 --full-auto \"$TASK_TITLE\""
+  "$CODEX_BIN" exec --model gpt-4 --full-auto "$TASK_TITLE"
   CODEX_STATUS=$?
   set -e
 fi
