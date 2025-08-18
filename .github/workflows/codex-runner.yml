@@ -74,3 +74,4 @@ jobs:
           TASK_TITLE: "Update the README file formatting"
           attempt: "1"
           GITHUB_REPOSITORY: ${{ github.repository }}
+          CODEX_DRY_RUN: "1"
