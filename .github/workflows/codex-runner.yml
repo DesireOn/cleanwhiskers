@@ -5,6 +5,10 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write  # ✅ allows pushing to branches
+  pull-requests: write  # (optional) allows Codex to create/update PRs
+
 jobs:
   run-codex-task:
     runs-on: ubuntu-latest
@@ -12,7 +16,7 @@ jobs:
     env:
       SLEEP_SECONDS: 300
       NOOP_COMMIT: true
-      OPENAI_API_KEY: 123
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
       - name: Checkout repository
