@@ -68,4 +68,8 @@ fi
 
 git push --force-with-lease origin "$BRANCH"
 
+# Create or update pull request
+echo "Creating or updating pull request via scripts/pr.py..."
+python3 -c 'import os; from scripts import pr; owner, repo = os.environ["GITHUB_REPOSITORY"].split("/"); branch = os.environ["BRANCH"]; pr_number = pr.open_or_update_pr(owner, repo, branch); open("pr.txt", "w").write(str(pr_number))'
+
 exit $(( CODEX_STATUS ))
