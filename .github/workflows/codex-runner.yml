@@ -47,7 +47,7 @@ jobs:
           npm install -g @openai/codex
           CODEX_BIN="$(npm bin -g)/codex"
           echo "Using codex at: $CODEX_BIN"
-          "$CODEX_BIN" --version
+          "$CODEX_BIN" exec "noop test run" --full-auto --cwd . --dry-run
           echo "CODEX_CMD=$CODEX_BIN" >> "$GITHUB_ENV"
 
       - name: Inspect PATH for codex binaries
