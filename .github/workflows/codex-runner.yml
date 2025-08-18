@@ -16,7 +16,7 @@ jobs:
     env:
       SLEEP_SECONDS: 300
       NOOP_COMMIT: true
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_API_KEY: 123
 
     steps:
       - name: Checkout repository
@@ -74,4 +74,3 @@ jobs:
           TASK_TITLE: "Update the README file formatting"
           attempt: "1"
           GITHUB_REPOSITORY: ${{ github.repository }}
-          CODEX_DRY_RUN: "1"
