@@ -8,7 +8,7 @@ The `Codex Runner` GitHub Action orchestrates automation when manually triggered
 
 1. **Setup** – `make setup` installs PHP dependencies. The workflow also initializes task status.
 2. **Fetch next task** – `scripts/task_fetcher.py` retrieves the next pending task.
-3. **Run task** – `scripts/run_codex_task.sh` checks out `staging`, creates or rebases a branch named `codex/task-<id>-<slug>`, invokes the Codex CLI, and runs project tests via `make test`.
+3. **Run task** – `scripts/run_codex_task.sh` checks out `staging`, creates or rebases a branch named `codex/task-<id>-<slug>`, invokes the Codex CLI via `codex exec --full-auto "$TASK_TITLE" --cwd .`, and runs project tests via `make test`.
 4. **Open or update PR** – `scripts/pr.py` ensures a pull request exists for the branch and applies required labels.
 5. **Retry loop** – The workflow waits for the PR to merge; if not merged it retries up to three times before marking the task failed.
 
@@ -33,8 +33,14 @@ Example: `codex/task-9-repository-documentation`.
 
 ## Environment variables
 
-- `CODEX_CMD` – override the Codex binary (default: `codex`).
+- `CODEX_CMD` – absolute path to the npm-installed Codex CLI (e.g., `$(npm bin -g)/codex`). The Python `codex-cli` is unrelated and should not be installed.
 - `CODEX_DRY_RUN` – set to `1` to skip executing Codex and just run tests; useful for smoke checks.
+
+To run Codex manually outside the workflow, use:
+
+```bash
+codex exec "Your task title or instruction" --cwd . --full-auto
+```
 
 ## Running the workflow
 

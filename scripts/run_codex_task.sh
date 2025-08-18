@@ -32,8 +32,12 @@ git rebase --autostash "origin/$BASE_BRANCH"
 
 CODEX_BIN="${CODEX_CMD:-codex}"
 if ! command -v "$CODEX_BIN" >/dev/null 2>&1; then
-  echo "Codex CLI is missing" >&2
+  echo "Codex CLI is missing (expected at $CODEX_BIN)" >&2
   exit 1
+fi
+
+if command -v codex-cli >/dev/null 2>&1; then
+  echo "Warning: 'codex-cli' (Python) found on PATH but will be ignored. Using: $CODEX_BIN" >&2
 fi
 
 CODEX_STATUS=0
@@ -41,7 +45,8 @@ if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
   touch codex-dry-run.txt
 else
   set +e
-  "$CODEX_BIN" --task "$TASK_TITLE" --repo .
+  echo "Running: $CODEX_BIN exec --full-auto \"$TASK_TITLE\" --cwd ."
+  "$CODEX_BIN" exec --full-auto "$TASK_TITLE" --cwd .
   CODEX_STATUS=$?
   set -e
 fi
