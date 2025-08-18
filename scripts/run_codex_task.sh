@@ -13,6 +13,7 @@ BASE_BRANCH="${4:-staging}"
 
 SLUG=$(python3 -c "from scripts.slug import slugify; import sys; print(slugify(sys.argv[1]))" "$TASK_TITLE")
 BRANCH="codex/task-${TASK_ID}-${SLUG}"
+export BRANCH  # ✅ Makes it visible to Python subprocesses
 
 # Ensure base branch is up to date
 git fetch origin
@@ -45,8 +46,8 @@ if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
   touch codex-dry-run.txt
 else
   set +e
-  echo "Running: $CODEX_BIN exec --full-auto \"$TASK_TITLE\" --cwd ."
-  "$CODEX_BIN" exec --full-auto "$TASK_TITLE" .
+  echo "Running: $CODEX_BIN exec --full-auto \"$TASK_TITLE\""
+  "$CODEX_BIN" exec --full-auto "$TASK_TITLE"
   CODEX_STATUS=$?
   set -e
 fi
