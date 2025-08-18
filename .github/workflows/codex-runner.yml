@@ -74,3 +74,4 @@ jobs:
           TASK_TITLE: "Update the README file formatting"
           attempt: "1"
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
