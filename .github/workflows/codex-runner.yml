@@ -43,10 +43,18 @@ jobs:
 
       - name: Install Codex CLI
         run: |
+          set -euo pipefail
           npm install -g @openai/codex
-          codex --version
-          # Use the real binary name:
-          echo "CODEX_CMD=codex" >> "$GITHUB_ENV"
+          CODEX_BIN="$(npm bin -g)/codex"
+          echo "Using codex at: $CODEX_BIN"
+          "$CODEX_BIN" --version
+          echo "CODEX_CMD=$CODEX_BIN" >> "$GITHUB_ENV"
+
+      - name: Inspect PATH for codex binaries
+        run: |
+          set -euo pipefail
+          type -a codex || true
+          type -a codex-cli || true
 
       - name: Initialize status
         run: python scripts/status.py --init
