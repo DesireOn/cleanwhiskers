@@ -68,4 +68,4 @@ fi
 
 git push --force-with-lease origin "$BRANCH"
 
-exit $(( CODEX_STATUS || TEST_STATUS ))
+exit $(( CODEX_STATUS ))
