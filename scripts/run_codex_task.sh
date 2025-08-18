@@ -46,7 +46,7 @@ if [ "${CODEX_DRY_RUN:-0}" = "1" ]; then
 else
   set +e
   echo "Running: $CODEX_BIN exec --full-auto \"$TASK_TITLE\" --cwd ."
-  "$CODEX_BIN" exec --full-auto "$TASK_TITLE" --cwd .
+  "$CODEX_BIN" exec --full-auto "$TASK_TITLE" .
   CODEX_STATUS=$?
   set -e
 fi

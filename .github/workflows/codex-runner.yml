@@ -45,7 +45,7 @@ jobs:
           chmod +x /usr/local/bin/codex
 
           # Confirm it works
-          codex exec "noop test run" --full-auto --cwd . --dry-run
+          codex exec "noop test run" --full-auto . --dry-run
 
           # Export the binary path to environment
           echo "CODEX_CMD=/usr/local/bin/codex" >> "$GITHUB_ENV"
