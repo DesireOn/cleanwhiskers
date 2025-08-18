@@ -33,22 +33,21 @@ jobs:
       - name: Install Codex CLI (static Linux binary)
         run: |
           set -euxo pipefail
-
+      
           # Fetch latest release tag from GitHub
           rel="$(curl -s https://api.github.com/repos/openai/codex/releases/latest | jq -r .tag_name)"
-
-          # Download and extract the static binary for Linux (musl)
+      
+          # Download and extract static binary
           curl -L -o codex.tar.gz "https://github.com/openai/codex/releases/download/${rel}/codex-x86_64-unknown-linux-musl.tar.gz"
           tar -xzf codex.tar.gz
-
-          # Move binary to PATH and make it executable
+      
+          # Move to bin and make executable
           mv codex-x86_64-unknown-linux-musl /usr/local/bin/codex
           chmod +x /usr/local/bin/codex
-
-          # Sanity check that it works (no --cwd!)
-          codex exec "noop test run" --full-auto --dry-run
-
-          # Persist binary location for downstream steps
+      
+          # Final working validation – no dry run
+          codex exec "noop test run" --full-auto
+      
           echo "CODEX_CMD=/usr/local/bin/codex" >> "$GITHUB_ENV"
 
       - name: Debug Codex CLI location
