@@ -2,7 +2,7 @@
   <div class="footer-top">
     <div class="footer-brand">
       <a href="{{ path('app_homepage') }}" class="footer-logo">CleanWhiskers</a>
-      <p class="footer-tagline">Find trusted pet care near you.</p>
+      <p class="footer-tagline">{{ 'Find trusted pet groomers near you.'|trans }}</p>
     </div>
     <nav class="footer-nav" aria-label="Footer">
       <ul>
@@ -18,8 +18,8 @@
       </ul>
     </nav>
     <div class="footer-trust">
-      <span class="trust-seal trust-seal--ssl">SSL Secured</span>
-      <span class="trust-seal trust-seal--reviews">Verified Reviews</span>
+      <span class="trust-seal trust-seal--ssl">{{ 'SSL Secured'|trans }}</span>
+      <span class="trust-seal trust-seal--reviews">{{ 'Verified Reviews'|trans }}</span>
     </div>
     <nav class="footer-social" aria-label="Social media">
       <ul>
@@ -29,13 +29,13 @@
       </ul>
     </nav>
     <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search">
-      <label for="footer-city" class="sr-only">Search by city</label>
-      <input type="text" id="footer-city" name="city" list="city-list" placeholder="City or ZIP" required>
-      <button type="submit">Search</button>
+      <label for="footer-city" class="sr-only">{{ 'Search by city'|trans }}</label>
+      <input type="text" id="footer-city" name="city" list="city-list" placeholder="{{ 'City or ZIP'|trans }}" required>
+      <button type="submit">{{ 'Search'|trans }}</button>
     </form>
   </div>
   <div class="footer-bottom">
-    <a href="#top" class="back-to-top">Back to top</a>
+    <a href="#top" class="back-to-top">{{ 'Back to top'|trans }}</a>
     <p>&copy; {{ 'now'|date('Y') }} CleanWhiskers</p>
   </div>
 </footer>
