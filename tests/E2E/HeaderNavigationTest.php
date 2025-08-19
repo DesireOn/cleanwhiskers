@@ -49,6 +49,14 @@ final class HeaderNavigationTest extends PantherTestCase
 
         self::assertSelectorExists('footer a[href="#about"]');
         self::assertSelectorNotExists('header a[href="#about"]');
+        self::assertSelectorExists('footer a[href="#contact"]');
+        self::assertSelectorNotExists('header a[href="#contact"]');
+        self::assertSelectorExists('footer a[href="#faq"]');
+        self::assertSelectorNotExists('header a[href="#faq"]');
+        self::assertSelectorExists('footer a[href="#terms"]');
+        self::assertSelectorNotExists('header a[href="#terms"]');
+        self::assertSelectorExists('footer a[href="#privacy"]');
+        self::assertSelectorNotExists('header a[href="#privacy"]');
 
         $client->executeScript('document.getElementById("nav-toggle").click();');
         $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');

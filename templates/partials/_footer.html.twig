@@ -17,6 +17,22 @@
         <li><a href="#privacy">Privacy</a></li>
       </ul>
     </nav>
+    <div class="footer-trust">
+      <span class="trust-seal trust-seal--ssl">SSL Secured</span>
+      <span class="trust-seal trust-seal--reviews">Verified Reviews</span>
+    </div>
+    <nav class="footer-social" aria-label="Social media">
+      <ul>
+        <li><a href="https://twitter.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--twitter">Twitter</a></li>
+        <li><a href="https://facebook.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--facebook">Facebook</a></li>
+        <li><a href="https://instagram.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--instagram">Instagram</a></li>
+      </ul>
+    </nav>
+    <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search">
+      <label for="footer-city" class="sr-only">Search by city</label>
+      <input type="text" id="footer-city" name="city" list="city-list" placeholder="City or ZIP" required>
+      <button type="submit">Search</button>
+    </form>
   </div>
   <div class="footer-bottom">
     <a href="#top" class="back-to-top">Back to top</a>
