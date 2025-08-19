@@ -16,15 +16,16 @@ final class SeedDatasetTest extends TestCase
 
         self::assertNotEmpty($dataset->cities);
         self::assertSame('Sofia', $dataset->cities[0]['name']);
+        self::assertGreaterThanOrEqual(5, count($dataset->cities));
 
         self::assertNotEmpty($dataset->services);
         self::assertSame('Mobile Dog Grooming', $dataset->services[0]['name']);
 
-        self::assertCount(2, $dataset->users);
-        self::assertSame('groomer@example.com', $dataset->users[0]['email']);
+        self::assertGreaterThanOrEqual(6, count($dataset->users));
+        self::assertSame('groomer1@example.com', $dataset->users[0]['email']);
         self::assertContains(User::ROLE_GROOMER, $dataset->users[0]['roles']);
 
-        self::assertCount(1, $dataset->groomerProfiles);
+        self::assertGreaterThanOrEqual(5, count($dataset->groomerProfiles));
         self::assertSame('Sofia Mobile Groomer', $dataset->groomerProfiles[0]['businessName']);
     }
 }

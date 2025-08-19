@@ -39,11 +39,17 @@ final class SeederIdempotencyTest extends KernelTestCase
         $this->seeder->seed($dataset, true);
         $this->seeder->seed($dataset, true);
 
-        self::assertSame(1, $this->em->getRepository(City::class)->count([]));
-        self::assertSame(1, $this->em->getRepository(Service::class)->count([]));
-        self::assertSame(2, $this->em->getRepository(User::class)->count([]));
-        self::assertSame(1, $this->em->getRepository(GroomerProfile::class)->count([]));
-        self::assertSame(1, $this->em->getRepository(Review::class)->count([]));
-        self::assertSame(1, $this->em->getRepository(BookingRequest::class)->count([]));
+        $expectedCityCount = count($dataset->cities);
+        $expectedServiceCount = count($dataset->services);
+        $expectedUserCount = count($dataset->users);
+        $expectedProfileCount = count($dataset->groomerProfiles);
+        $expectedSampleCount = $expectedProfileCount;
+
+        self::assertSame($expectedCityCount, $this->em->getRepository(City::class)->count([]));
+        self::assertSame($expectedServiceCount, $this->em->getRepository(Service::class)->count([]));
+        self::assertSame($expectedUserCount, $this->em->getRepository(User::class)->count([]));
+        self::assertSame($expectedProfileCount, $this->em->getRepository(GroomerProfile::class)->count([]));
+        self::assertSame($expectedSampleCount, $this->em->getRepository(Review::class)->count([]));
+        self::assertSame($expectedSampleCount, $this->em->getRepository(BookingRequest::class)->count([]));
     }
 }

@@ -17,18 +17,17 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $city = new City('Sofia');
-        $manager->persist($city);
+        $cityNames = ['Sofia', 'Plovdiv', 'Varna', 'Burgas', 'Ruse'];
+        $cities = [];
+        foreach ($cityNames as $name) {
+            $city = new City($name);
+            $manager->persist($city);
+            $cities[$name] = $city;
+        }
 
         $service = (new Service())
             ->setName('Mobile Dog Grooming');
         $manager->persist($service);
-
-        $groomerUser = (new User())
-            ->setEmail('groomer@example.com')
-            ->setPassword('hash')
-            ->setRoles([User::ROLE_GROOMER]);
-        $manager->persist($groomerUser);
 
         $petOwner = (new User())
             ->setEmail('owner@example.com')
@@ -36,21 +35,29 @@ class AppFixtures extends Fixture
             ->setRoles([User::ROLE_PET_OWNER]);
         $manager->persist($petOwner);
 
-        $profile = new GroomerProfile(
-            $groomerUser,
-            $city,
-            'Sofia Mobile Groomer',
-            'Professional mobile grooming services.',
-        );
-        $profile->addService($service);
-        $manager->persist($profile);
+        foreach ($cityNames as $index => $name) {
+            $groomerUser = (new User())
+                ->setEmail(sprintf('groomer%d@example.com', $index + 1))
+                ->setPassword('hash')
+                ->setRoles([User::ROLE_GROOMER]);
+            $manager->persist($groomerUser);
 
-        $review = new Review($profile, $petOwner, 5, 'Excellent service!');
-        $manager->persist($review);
+            $profile = new GroomerProfile(
+                $groomerUser,
+                $cities[$name],
+                sprintf('%s Mobile Groomer', $name),
+                'Professional mobile grooming services.',
+            );
+            $profile->addService($service);
+            $manager->persist($profile);
 
-        $booking = (new BookingRequest($profile, $petOwner))
-            ->setService($service);
-        $manager->persist($booking);
+            $review = new Review($profile, $petOwner, 5, 'Excellent service!');
+            $manager->persist($review);
+
+            $booking = (new BookingRequest($profile, $petOwner))
+                ->setService($service);
+            $manager->persist($booking);
+        }
 
         $manager->flush();
     }
