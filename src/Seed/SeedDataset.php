@@ -39,19 +39,55 @@ final class SeedDataset
         return new self(
             cities: [
                 ['name' => 'Sofia'],
+                ['name' => 'Plovdiv'],
+                ['name' => 'Varna'],
+                ['name' => 'Burgas'],
+                ['name' => 'Ruse'],
             ],
             services: [
                 ['name' => 'Mobile Dog Grooming'],
             ],
             users: [
-                ['email' => 'groomer@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
+                ['email' => 'groomer1@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
+                ['email' => 'groomer2@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
+                ['email' => 'groomer3@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
+                ['email' => 'groomer4@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
+                ['email' => 'groomer5@example.com', 'password' => 'hash', 'roles' => [User::ROLE_GROOMER]],
                 ['email' => 'owner@example.com', 'password' => 'hash', 'roles' => [User::ROLE_PET_OWNER]],
             ],
             groomerProfiles: [
                 [
-                    'userEmail' => 'groomer@example.com',
+                    'userEmail' => 'groomer1@example.com',
                     'city' => 'Sofia',
                     'businessName' => 'Sofia Mobile Groomer',
+                    'about' => 'Professional mobile grooming services.',
+                    'services' => ['Mobile Dog Grooming'],
+                ],
+                [
+                    'userEmail' => 'groomer2@example.com',
+                    'city' => 'Plovdiv',
+                    'businessName' => 'Plovdiv Mobile Groomer',
+                    'about' => 'Professional mobile grooming services.',
+                    'services' => ['Mobile Dog Grooming'],
+                ],
+                [
+                    'userEmail' => 'groomer3@example.com',
+                    'city' => 'Varna',
+                    'businessName' => 'Varna Mobile Groomer',
+                    'about' => 'Professional mobile grooming services.',
+                    'services' => ['Mobile Dog Grooming'],
+                ],
+                [
+                    'userEmail' => 'groomer4@example.com',
+                    'city' => 'Burgas',
+                    'businessName' => 'Burgas Mobile Groomer',
+                    'about' => 'Professional mobile grooming services.',
+                    'services' => ['Mobile Dog Grooming'],
+                ],
+                [
+                    'userEmail' => 'groomer5@example.com',
+                    'city' => 'Ruse',
+                    'businessName' => 'Ruse Mobile Groomer',
                     'about' => 'Professional mobile grooming services.',
                     'services' => ['Mobile Dog Grooming'],
                 ],
