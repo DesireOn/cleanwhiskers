@@ -6,6 +6,8 @@ carousels.forEach((carousel) => {
     const next = carousel.querySelector('[data-carousel-next]');
     const cards = track.querySelectorAll('.carousel__card');
 
+    track.setAttribute('tabindex', '0');
+
     if (!cards.length) {
         return;
     }
@@ -19,6 +21,7 @@ carousels.forEach((carousel) => {
     let isDragging = false;
     let startX;
     let scrollStart;
+    let touchStartX;
 
     track.addEventListener('pointerdown', (e) => {
         isDragging = true;
@@ -41,6 +44,22 @@ carousels.forEach((carousel) => {
 
     track.addEventListener('pointerleave', () => {
         isDragging = false;
+    });
+
+    track.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    track.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const dx = touchEndX - touchStartX;
+        if (Math.abs(dx) > 50) {
+            if (dx < 0) {
+                next.click();
+            } else {
+                prev.click();
+            }
+        }
     });
 
     prev.addEventListener('click', () => {
