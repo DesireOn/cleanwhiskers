@@ -99,8 +99,12 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { initNavToggle: initNavToggle, openMenu: openMenu, closeMenu: closeMenu, focusTrap: focusTrap };
   } else {
-    document.addEventListener('DOMContentLoaded', function () {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        initNavToggle(document);
+      });
+    } else {
       initNavToggle(document);
-    });
+    }
   }
 })(this);
