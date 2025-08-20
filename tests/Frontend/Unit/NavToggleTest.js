@@ -30,6 +30,7 @@ function createLink(doc) {
     querySelector: () => first,
     querySelectorAll: () => [first, last],
     contains: () => false,
+    setAttribute: () => {},
   };
   const toggle = {
     setAttribute: () => {},
@@ -51,7 +52,7 @@ function createLink(doc) {
   const nav = {
     querySelectorAll: () => [first, last],
   };
-
+  doc.body.dataset.menuOpen = 'true';
   doc.activeElement = first;
   const backward = { key: 'Tab', shiftKey: true, preventDefault: function () { this.called = true; }, called: false };
   navToggle.focusTrap(doc, nav, backward);

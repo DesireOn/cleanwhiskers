@@ -1,12 +1,11 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 <header class="header">
-  <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" type="button">
-    <span class="sr-only">{{ 'Menu'|trans }}</span>
+  <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="{{ 'Menu'|trans }}" type="button">
     <span class="hamburger" aria-hidden="true"></span>
   </button>
   <a href="{{ path('app_search_redirect') }}" class="nav__link header__cta header__cta--mobile header__cta--primary">{{ 'Find a Groomer'|trans }}</a>
-  <nav id="primary-nav" class="header__nav" aria-label="Primary">
-    <ul class="nav">
+  <nav id="primary-nav" class="header__nav" role="navigation" aria-label="{{ 'Primary'|trans }}">
+    <ul class="nav" aria-hidden="true">
       <li class="nav__item nav__item--desktop"><a class="nav__link header__cta header__cta--primary" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
       <li class="nav__item"><a class="nav__link header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
       <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
