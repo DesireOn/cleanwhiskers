@@ -15,3 +15,9 @@
 .search--compact .search-form__button {
     min-height: 36px;
 }
+
+@media (max-width: 768px) {
+    .sticky-search {
+        display: none;
+    }
+}
