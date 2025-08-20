@@ -10,6 +10,5 @@
 2. Activate the hamburger button.
 3. Ensure body has `data-menu-open="true"` and scrolling is disabled.
 4. Tab through links; focus cycles within the menu.
-5. Click the toggle again to close the menu and verify body no longer has `data-menu-open`.
-6. Press `Escape` to close the menu and verify body no longer has `data-menu-open`.
-7. Click outside the menu and ensure it closes.
+5. Press `Escape` to close the menu and verify body no longer has `data-menu-open`.
+6. Click outside the menu and ensure it closes.

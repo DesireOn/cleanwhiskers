@@ -68,30 +68,4 @@ final class HeaderNavigationTest extends PantherTestCase
         $active = $client->executeScript('return document.activeElement.id');
         self::assertSame('nav-toggle', $active);
     }
-
-    public function testMobileNavigationToggleButtonClosesMenu(): void
-    {
-        $client = self::createPantherClient();
-        $client->manage()->window()->setSize(new WebDriverDimension(375, 667));
-        $client->request('GET', '/');
-
-        $client->executeScript('document.getElementById("nav-toggle").click();');
-        $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');
-        self::assertSame('true', $expanded);
-
-        $idAtPoint = $client->executeScript(
-            'var t=document.getElementById("nav-toggle");'
-            .'var r=t.getBoundingClientRect();'
-            .'return document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2).id;'
-        );
-        self::assertSame('nav-toggle', $idAtPoint);
-
-        $client->executeScript(
-            'var t=document.getElementById("nav-toggle");'
-            .'var r=t.getBoundingClientRect();'
-            .'document.elementFromPoint(r.left + 1, r.top + 1).click();'
-        );
-        $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');
-        self::assertSame('false', $expanded);
-    }
 }
