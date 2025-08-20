@@ -1,6 +1,6 @@
 const assert = require('assert');
 const path = require('path');
-const navToggle = require(path.join(__dirname, '../../../assets/js/nav-toggle.js'));
+const navToggle = require(path.join(__dirname, '../../../src/public/js/nav-toggle.js'));
 
 function createDocument() {
   const doc = {
