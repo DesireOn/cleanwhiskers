@@ -18,9 +18,18 @@
 }
 
 .carousel__card {
-    flex: 0 0 80%;
-    max-width: 300px;
-    scroll-snap-align: start;
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+}
+
+@media (min-width: 768px) {
+    .carousel__track {
+        overflow-x: hidden;
+    }
+
+    .carousel__card {
+        flex: 0 0 calc(33.333% - var(--space-3));
+    }
 }
 
 .carousel__button {

@@ -7,7 +7,7 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 import './styles/utilities.css';
-import './styles/blocks/carousel.css';
+import './styles/blocks/carousel-mmGYQrl.css';
 import './styles/blocks/groomer-card.css';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
