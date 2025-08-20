@@ -27,6 +27,7 @@
     opacity: 0;
     pointer-events: none;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
     z-index: 1000;
 }
 
@@ -52,8 +53,19 @@ body[data-menu-open="true"] .nav {
 }
 
 .nav__link:hover,
-.nav__link:focus {
+.nav__link:focus-visible {
     background-color: var(--color-pastel);
+}
+
+.nav__link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.nav__link[aria-current="page"] {
+    color: var(--color-accent);
+    text-decoration: underline;
+    font-weight: 600;
 }
 
 .header__cta--primary {
