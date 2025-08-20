@@ -5,6 +5,25 @@
     padding: var(--space-3);
 }
 
+#nav-toggle {
+    background: none;
+    border: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: var(--space-2);
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+}
+
+#nav-toggle .hamburger {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    box-shadow: 0 6px 0 var(--color-text), 0 12px 0 var(--color-text);
+}
+
 .header__nav {
     position: relative;
 }
