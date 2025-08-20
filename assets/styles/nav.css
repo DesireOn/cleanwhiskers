@@ -1,0 +1,22 @@
+#mobile-nav-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Hide toggle on large screens */
+@media (min-width: 768px) {
+  #mobile-nav-toggle {
+    display: none;
+  }
+}
+
+/* Mobile nav behaviour when JS is enabled */
+@media (max-width: 767px) {
+  body.js .mobile-nav {
+    display: none;
+  }
+  body.js .mobile-nav.is-open {
+    display: block;
+  }
+}
