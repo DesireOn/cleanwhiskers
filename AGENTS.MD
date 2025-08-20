@@ -223,6 +223,8 @@ Definition of Done (DoD)
 
  Security, perf, and error handling considered
 
+ Static asset links (CSS/JS) verified to point to existing files to prevent 404s
+
  PR template completed
 
 
