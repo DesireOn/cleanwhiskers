@@ -1,6 +1,6 @@
 (function (global) {
   function focusTrap(doc, nav, e) {
-    if (e.key !== 'Tab') {
+    if (e.key !== 'Tab' || doc.body.dataset.menuOpen !== 'true') {
       return;
     }
     var focusable = nav.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
@@ -37,6 +37,10 @@
     doc.body.style.overflow = '';
     toggle.setAttribute('aria-expanded', 'false');
     menu.setAttribute('aria-hidden', 'true');
+    if (typeof toggle.focus === 'function') {
+      toggle.focus();
+      doc.activeElement = toggle;
+    }
   }
 
   function initNavToggle(doc) {
@@ -66,11 +70,7 @@
     var onKeyDown = function (e) {
       if (e.key === 'Escape') {
         closeMenu(doc, menu, toggle);
-        if (typeof toggle.focus === 'function') {
-          toggle.focus();
-          doc.activeElement = toggle;
-        }
-      } else {
+      } else if (doc.body.dataset.menuOpen === 'true') {
         focusTrap(doc, menu, e);
       }
     };
