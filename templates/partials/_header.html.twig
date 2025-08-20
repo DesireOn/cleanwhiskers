@@ -4,16 +4,16 @@
     <span class="sr-only">{{ 'Menu'|trans }}</span>
     <span class="hamburger" aria-hidden="true"></span>
   </button>
-  <a href="{{ path('app_search_redirect') }}" class="header__cta header__cta--mobile header__cta--primary">{{ 'Find a Groomer'|trans }}</a>
+  <a href="{{ path('app_search_redirect') }}" class="header__link header__cta header__cta--mobile header__cta--primary">{{ 'Find a Groomer'|trans }}</a>
   <nav id="primary-nav" class="header__nav" aria-label="Primary">
-    <ul class="nav--desktop">
-      <li><a class="header__cta header__cta--primary" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
-      <li><a class="header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
-      <li><a href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
+    <ul class="nav--desktop header__menu header__menu--desktop">
+      <li class="header__item"><a class="header__link header__cta header__cta--primary" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
+      <li class="header__item"><a class="header__link header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
+      <li class="header__item"><a class="header__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
     </ul>
-    <ul class="nav--mobile">
-      <li><a class="header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
-      <li><a href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
+    <ul class="nav--mobile header__menu header__menu--mobile">
+      <li class="header__item"><a class="header__link header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
+      <li class="header__item"><a class="header__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
     </ul>
   </nav>
 </header>
