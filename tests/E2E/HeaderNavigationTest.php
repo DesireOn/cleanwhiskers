@@ -30,9 +30,9 @@ final class HeaderNavigationTest extends PantherTestCase
         $client->manage()->window()->setSize(new WebDriverDimension(1280, 800));
         $client->request('GET', '/');
 
-        self::assertSelectorTextContains('.nav--desktop a[href="/search"]', 'Find a Groomer');
-        self::assertSelectorTextContains('.nav--desktop a[href="/register?role=groomer"]', 'List Your Business');
-        self::assertSelectorTextContains('.nav--desktop a[href="/blog"]', 'Blog');
+        self::assertSelectorTextContains('.nav a[href="/search"]', 'Find a Groomer');
+        self::assertSelectorTextContains('.nav a[href="/register?role=groomer"]', 'List Your Business');
+        self::assertSelectorTextContains('.nav a[href="/blog"]', 'Blog');
         $display = $client->executeScript('return window.getComputedStyle(document.getElementById("nav-toggle")).display;');
         self::assertSame('none', $display);
     }

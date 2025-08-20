@@ -42,11 +42,27 @@
   function initNavToggle(doc) {
     doc = doc || document;
     var nav = doc.getElementById('primary-nav');
-    var menu = nav ? nav.querySelector('.header__menu--mobile') : null;
+    var menu = nav ? nav.querySelector('.nav') : null;
     var toggle = doc.getElementById('nav-toggle');
     if (!menu || !toggle) {
       return;
     }
+    var mq = global.matchMedia('(min-width: 768px)');
+    var syncMenu = function (e) {
+      if (e.matches) {
+        menu.removeAttribute('aria-hidden');
+        doc.body.style.overflow = '';
+        toggle.setAttribute('aria-expanded', 'false');
+      } else {
+        closeMenu(doc, menu, toggle);
+      }
+    };
+    if (mq.addEventListener) {
+      mq.addEventListener('change', syncMenu);
+    } else if (mq.addListener) {
+      mq.addListener(syncMenu);
+    }
+    syncMenu(mq);
     var onKeyDown = function (e) {
       if (e.key === 'Escape') {
         closeMenu(doc, menu, toggle);
