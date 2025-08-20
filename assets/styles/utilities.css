@@ -14,3 +14,7 @@
 @media (min-width: 1024px) {
     .hidden-lg { display: initial !important; }
 }
+
+/* Margin utilities */
+.mb-4 { margin-bottom: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
