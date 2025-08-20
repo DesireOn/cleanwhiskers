@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia('(max-width: 768px)').matches) {
+        return;
+    }
     const sticky = document.getElementById('sticky-search');
     const hero = document.querySelector('.hero');
     if (!sticky || !hero) {
