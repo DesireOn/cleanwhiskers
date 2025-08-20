@@ -20,52 +20,61 @@
     }
   }
 
-  function openMenu(doc, nav, toggle) {
+  function openMenu(doc, menu, toggle) {
     doc.body.dataset.menuOpen = 'true';
     doc.body.style.overflow = 'hidden';
     toggle.setAttribute('aria-expanded', 'true');
-    var first = nav.querySelector('a, button, [tabindex]:not([tabindex="-1"])');
+    menu.setAttribute('aria-hidden', 'false');
+    var first = menu.querySelector('a, button, [tabindex]:not([tabindex="-1"])');
     if (first && typeof first.focus === 'function') {
       first.focus();
       doc.activeElement = first;
     }
   }
 
-  function closeMenu(doc, nav, toggle) {
+  function closeMenu(doc, menu, toggle) {
     delete doc.body.dataset.menuOpen;
     doc.body.style.overflow = '';
     toggle.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('aria-hidden', 'true');
   }
 
   function initNavToggle(doc) {
     doc = doc || document;
     var nav = doc.getElementById('primary-nav');
+    var menu = nav ? nav.querySelector('.header__menu--mobile') : null;
     var toggle = doc.getElementById('nav-toggle');
-    if (!nav || !toggle) {
+    if (!menu || !toggle) {
       return;
     }
     var onKeyDown = function (e) {
       if (e.key === 'Escape') {
-        closeMenu(doc, nav, toggle);
+        closeMenu(doc, menu, toggle);
         if (typeof toggle.focus === 'function') {
           toggle.focus();
           doc.activeElement = toggle;
         }
       } else {
-        focusTrap(doc, nav, e);
+        focusTrap(doc, menu, e);
       }
     };
     var onClickOutside = function (e) {
-      if (!nav.contains(e.target) && e.target !== toggle) {
-        closeMenu(doc, nav, toggle);
+      if (!menu.contains(e.target) && e.target !== toggle) {
+        closeMenu(doc, menu, toggle);
       }
     };
     toggle.addEventListener('click', function () {
-      if (doc.body.dataset.menuOpen === 'true') {
-        closeMenu(doc, nav, toggle);
+      var expanded = toggle.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        closeMenu(doc, menu, toggle);
       } else {
-        openMenu(doc, nav, toggle);
+        openMenu(doc, menu, toggle);
       }
+    });
+    menu.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        closeMenu(doc, menu, toggle);
+      });
     });
     doc.addEventListener('keydown', onKeyDown);
     doc.addEventListener('click', onClickOutside);

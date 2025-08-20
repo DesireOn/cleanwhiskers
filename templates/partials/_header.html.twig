@@ -1,6 +1,6 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 <header class="header">
-  <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav">
+  <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" type="button">
     <span class="sr-only">{{ 'Menu'|trans }}</span>
     <span class="hamburger" aria-hidden="true"></span>
   </button>
@@ -11,7 +11,7 @@
       <li class="header__item"><a class="header__link header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
       <li class="header__item"><a class="header__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
     </ul>
-    <ul class="nav--mobile header__menu header__menu--mobile">
+    <ul class="nav--mobile header__menu header__menu--mobile" aria-hidden="true">
       <li class="header__item"><a class="header__link header__cta header__cta--secondary" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
       <li class="header__item"><a class="header__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
     </ul>
