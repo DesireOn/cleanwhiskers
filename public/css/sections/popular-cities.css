@@ -7,20 +7,8 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: var(--space-3);
-    grid-template-columns: repeat(2, 1fr);
-}
-
-@media (min-width: 480px) {
-    .popular-cities__grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 768px) {
-    .popular-cities__grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .popular-cities__link {
@@ -32,12 +20,16 @@
     border: 1px solid #e5e7eb;
     border-radius: 9999px;
     text-decoration: none;
-    color: inherit;
-    min-height: 3rem;
+    color: #111;
+    min-width: 44px;
+    min-height: 44px;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
 .popular-cities__link:hover,
 .popular-cities__link:focus {
+    background-color: var(--color-accent, #2563eb);
+    color: #fff;
     border-color: var(--color-accent, #2563eb);
     box-shadow: 0 0 0 2px var(--color-accent, #2563eb);
 }
@@ -46,10 +38,16 @@
     outline: none;
 }
 
+.popular-cities__link:hover .popular-cities__avatar,
+.popular-cities__link:focus .popular-cities__avatar {
+    background-color: #fff;
+    color: var(--color-accent, #2563eb);
+}
+
 .popular-cities__avatar {
     flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
+    width: 2.75rem;
+    height: 2.75rem;
     border-radius: 50%;
     background-color: #f3f4f6;
     display: flex;
@@ -58,6 +56,7 @@
     font-weight: 600;
     text-transform: uppercase;
     overflow: hidden;
+    color: #111;
 }
 
 .popular-cities__avatar img {
