@@ -13,8 +13,8 @@
 
   function init(doc) {
     doc = doc || document;
-    var toggle = doc.getElementById('mobile-nav-toggle');
-    var nav = doc.getElementById('mobile-nav');
+    var toggle = doc.getElementById('nav-toggle');
+    var nav = doc.getElementById('primary-nav');
     if (!toggle || !nav) {
       return;
     }

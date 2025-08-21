@@ -1,22 +1,85 @@
-#mobile-nav-toggle {
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-toggle {
   background: none;
-  border: none;
+  border: 0;
   cursor: pointer;
 }
 
-/* Hide toggle on large screens */
-@media (min-width: 768px) {
-  #mobile-nav-toggle {
+.nav-toggle__icon,
+.nav-toggle__icon::before,
+.nav-toggle__icon::after {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  position: relative;
+}
+
+.nav-toggle__icon::before,
+.nav-toggle__icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.nav-toggle__icon::before { top: -6px; }
+.nav-toggle__icon::after { top: 6px; }
+
+.nav {
+  --gap: 1.5rem;
+}
+
+.nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--gap);
+}
+
+.nav__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav__link--cta {
+  background: #ff6f00;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+@media (max-width: 767px) {
+  .nav__list {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  body.js .nav {
     display: none;
+  }
+
+  body.js .nav.is-open {
+    display: block;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 0.75rem 0;
+  }
+
+  .nav-toggle {
+    display: block;
   }
 }
 
-/* Mobile nav behaviour when JS is enabled */
-@media (max-width: 767px) {
-  body.js .mobile-nav {
+@media (min-width: 768px) {
+  .nav-toggle {
     display: none;
-  }
-  body.js .mobile-nav.is-open {
-    display: block;
   }
 }
