@@ -62,12 +62,16 @@
     align-items: center;
     text-decoration: none;
     z-index: 1000;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .back-to-top:hover,
 .back-to-top:focus {
-    background: var(--color-text);
+    background: var(--color-accent);
+    filter: brightness(110%);
     color: var(--color-cream);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
 }
 
 @media (min-width: 768px) {
