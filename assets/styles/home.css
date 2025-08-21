@@ -93,6 +93,7 @@
     align-items: center;
     gap: var(--space-2);
     margin: 0;
+    width: 100%;
 }
 
 .sticky-search .search-form label {
@@ -107,10 +108,14 @@
 .sticky-search .search-form__input,
 .sticky-search .search-form__select,
 .sticky-search .search-form__button {
-    flex: 1;
     min-height: 44px;
 }
 
+.sticky-search .search-form__input--city {
+    flex: 1 1 80%;
+}
+
+.sticky-search .search-form__select--service,
 .sticky-search .search-form__button {
     flex: 0 0 auto;
 }

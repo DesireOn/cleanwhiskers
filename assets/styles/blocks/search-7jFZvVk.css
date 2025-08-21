@@ -1,3 +1,19 @@
+.sticky-search {
+    width: 100%;
+}
+
+.sticky-search .search-form {
+    width: 100%;
+}
+
+.sticky-search .search-form__input--city {
+    flex: 1 1 80%;
+}
+
+.sticky-search .search-form__select--service,
+.sticky-search .search-form__button {
+    flex: 0 0 auto;
+}
 
 .sticky-search.is-sticky .search-form label {
     display: flex;
