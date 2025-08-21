@@ -24,7 +24,15 @@ carousels.forEach((carousel) => {
     window.addEventListener('resize', updateMetrics);
 
     function scrollByCard(direction) {
-        track.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        let target = track.scrollLeft + direction * cardWidth;
+        if (target < 0) {
+            target = 0;
+        }
+        if (target > maxScroll) {
+            target = maxScroll;
+        }
+        track.scrollTo({ left: target, behavior: 'smooth' });
     }
 
     prev.addEventListener('click', () => {
@@ -40,6 +48,9 @@ carousels.forEach((carousel) => {
     let scrollStart = 0;
 
     track.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse') {
+            return;
+        }
         isDragging = true;
         startX = e.clientX;
         scrollStart = track.scrollLeft;
@@ -55,10 +66,10 @@ carousels.forEach((carousel) => {
     });
 
     function endDrag(e) {
-        isDragging = false;
-        if (e.pointerId) {
+        if (track.hasPointerCapture(e.pointerId)) {
             track.releasePointerCapture(e.pointerId);
         }
+        isDragging = false;
     }
 
     track.addEventListener('pointerup', endDrag);
@@ -69,9 +80,9 @@ carousels.forEach((carousel) => {
 
     track.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
-            prev.click();
+            scrollByCard(-1);
         } else if (event.key === 'ArrowRight') {
-            next.click();
+            scrollByCard(1);
         }
     });
 });
