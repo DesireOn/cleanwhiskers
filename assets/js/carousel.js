@@ -6,22 +6,38 @@ carousels.forEach((carousel) => {
     const next = carousel.querySelector('[data-carousel-next]');
     const cards = track.querySelectorAll('.carousel__card');
 
-    track.setAttribute('tabindex', '0');
-
-    if (!cards.length) {
+    if (!track || !prev || !next || !cards.length) {
         return;
     }
 
-    const cardWidth = cards[0].getBoundingClientRect().width;
+    track.setAttribute('tabindex', '0');
 
-    function scrollBy(offset) {
-        track.scrollBy({ left: offset, behavior: 'smooth' });
+    let cardWidth = 0;
+
+    function updateMetrics() {
+        const style = getComputedStyle(track);
+        const gap = parseInt(style.columnGap || style.gap, 10) || 0;
+        cardWidth = cards[0].getBoundingClientRect().width + gap;
     }
 
+    updateMetrics();
+    window.addEventListener('resize', updateMetrics);
+
+    function scrollByCard(direction) {
+        track.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+    }
+
+    prev.addEventListener('click', () => {
+        scrollByCard(-1);
+    });
+
+    next.addEventListener('click', () => {
+        scrollByCard(1);
+    });
+
     let isDragging = false;
-    let startX;
-    let scrollStart;
-    let touchStartX;
+    let startX = 0;
+    let scrollStart = 0;
 
     track.addEventListener('pointerdown', (e) => {
         isDragging = true;
@@ -38,52 +54,23 @@ carousels.forEach((carousel) => {
         track.scrollLeft = scrollStart - dx;
     });
 
-    track.addEventListener('pointerup', () => {
+    function endDrag(e) {
         isDragging = false;
-    });
+        if (e.pointerId) {
+            track.releasePointerCapture(e.pointerId);
+        }
+    }
 
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
     track.addEventListener('pointerleave', () => {
         isDragging = false;
-    });
-
-    track.addEventListener('touchstart', (e) => {
-        touchStartX = e.touches[0].clientX;
-    });
-
-    track.addEventListener('touchend', (e) => {
-        const touchEndX = e.changedTouches[0].clientX;
-        const dx = touchEndX - touchStartX;
-        if (Math.abs(dx) > 50) {
-            if (dx < 0) {
-                next.click();
-            } else {
-                prev.click();
-            }
-        }
-    });
-
-    prev.addEventListener('click', () => {
-        if (track.scrollLeft <= 0) {
-            track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-            return;
-        }
-        scrollBy(-cardWidth);
-    });
-
-    next.addEventListener('click', () => {
-        const maxScroll = track.scrollWidth - track.clientWidth;
-        if (track.scrollLeft >= maxScroll) {
-            track.scrollTo({ left: 0, behavior: 'smooth' });
-            return;
-        }
-        scrollBy(cardWidth);
     });
 
     track.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
             prev.click();
-        }
-        if (event.key === 'ArrowRight') {
+        } else if (event.key === 'ArrowRight') {
             next.click();
         }
     });
