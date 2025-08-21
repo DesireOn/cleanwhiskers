@@ -1,0 +1,10 @@
+{
+  "entrypoints": {
+    "js/mobile-nav-toggle": {
+      "js": [
+        "/runtime.js",
+        "/js/mobile-nav-toggle.js"
+      ]
+    }
+  }
+}
