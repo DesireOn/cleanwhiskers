@@ -26,7 +26,7 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
-            {{ encore_entry_script_tags('js/mobile-nav-toggle') }}
+            <script src="{{ asset('js/mobile-nav-toggle.js') }}" defer></script>
         {% endblock %}
     </head>
     <body id="top" data-route="{{ app.request.attributes.get('_route') }}">
