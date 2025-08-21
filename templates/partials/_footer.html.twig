@@ -6,45 +6,42 @@
         <p class="footer-tagline">{{ 'Find trusted pet groomers near you.'|trans }}</p>
       </div>
       <div class="footer-columns">
-        <nav class="footer-nav" aria-label="Footer">
-          <h3 class="footer-heading">{{ 'Site'|trans }}</h3>
-          <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#faq">FAQ</a></li>
-          </ul>
-        </nav>
-        <nav class="footer-legal" aria-label="Legal">
-          <h3 class="footer-heading">{{ 'Legal'|trans }}</h3>
-          <ul>
-            <li><a href="#terms">Terms</a></li>
-            <li><a href="#privacy">Privacy</a></li>
-          </ul>
-        </nav>
-        <div class="footer-trust">
-          <h3 class="footer-heading">{{ 'Trust'|trans }}</h3>
-          <span class="trust-seal trust-seal--ssl">{{ 'SSL Secured'|trans }}</span>
-          <span class="trust-seal trust-seal--reviews">{{ 'Verified Reviews'|trans }}</span>
+        <div class="footer-nav">
+          <nav aria-label="{{ 'Site'|trans }}">
+            <h3 class="footer-heading">{{ 'Site'|trans }}</h3>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li><a href="#faq">FAQ</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="{{ 'Legal'|trans }}">
+            <h3 class="footer-heading">{{ 'Legal'|trans }}</h3>
+            <ul>
+              <li><a href="#terms">Terms</a></li>
+              <li><a href="#privacy">Privacy</a></li>
+            </ul>
+          </nav>
         </div>
-        <nav class="footer-social" aria-label="Social media">
+        <nav class="footer-social" aria-label="{{ 'Social media'|trans }}">
           <h3 class="footer-heading">{{ 'Follow Us'|trans }}</h3>
           <ul>
-            <li><a href="https://twitter.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--twitter">Twitter</a></li>
-            <li><a href="https://facebook.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--facebook">Facebook</a></li>
-            <li><a href="https://instagram.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--instagram">Instagram</a></li>
+            <li><a href="https://twitter.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--twitter" aria-label="Twitter">Twitter</a></li>
+            <li><a href="https://facebook.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--facebook" aria-label="Facebook">Facebook</a></li>
+            <li><a href="https://instagram.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--instagram" aria-label="Instagram">Instagram</a></li>
           </ul>
         </nav>
         <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search">
           <h3 class="footer-heading">{{ 'Search'|trans }}</h3>
           <label for="footer-city" class="sr-only">{{ 'Search by city'|trans }}</label>
           <input type="text" id="footer-city" name="city" list="city-list" placeholder="{{ 'City or ZIP'|trans }}" required>
-          <button type="submit">{{ 'Search'|trans }}</button>
+          <button type="submit" class="btn btn--accent">{{ 'Search'|trans }}</button>
         </form>
       </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; {{ 'now'|date('Y') }} CleanWhiskers</p>
-      <a href="#top" class="back-to-top">{{ 'Back to top'|trans }}</a>
+      <a href="#top" class="back-to-top btn btn--accent">{{ 'Back to top'|trans }}</a>
     </div>
   </div>
 </footer>
