@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\E2E\Homepage;
 
 use App\Entity\City;
-use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -25,14 +24,11 @@ final class HeroSearchFlowTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testTypingCityAndServiceRedirectsToListing(): void
+    public function testTypingCityRedirectsToListing(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
-        $service = (new Service())->setName('Grooming');
-        $service->refreshSlugFrom($service->getName());
         $this->em->persist($city);
-        $this->em->persist($service);
         $this->em->flush();
 
         $crawler = $this->client->request('GET', '/');
@@ -40,11 +36,10 @@ final class HeroSearchFlowTest extends WebTestCase
 
         $form = $crawler->filter('#search-form')->form([
             'city' => $city->getSlug(),
-            'service' => $service->getSlug(),
         ]);
         $this->client->submit($form);
 
-        self::assertResponseRedirects('/groomers/'.$city->getSlug().'/'.$service->getSlug());
+        self::assertResponseRedirects('/groomers/'.$city->getSlug());
         $this->client->followRedirect();
         self::assertResponseIsSuccessful();
     }
