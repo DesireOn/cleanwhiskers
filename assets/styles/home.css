@@ -101,6 +101,11 @@
 }
 
 .sticky-search .search-form__input,
+.sticky-search .search-form__select {
+    font-size: 1rem;
+}
+
+.sticky-search .search-form__input,
 .sticky-search .search-form__select,
 .sticky-search .search-form__button {
     flex: 1;
