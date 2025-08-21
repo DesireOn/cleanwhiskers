@@ -50,13 +50,14 @@
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { initMobileNav: init, openMenu: openMenu, closeMenu: closeMenu };
-  } else {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function () {
-        init(document);
+  }
+  if (global.document) {
+    if (global.document.readyState === 'loading') {
+      global.document.addEventListener('DOMContentLoaded', function () {
+        init(global.document);
       });
     } else {
-      init(document);
+      init(global.document);
     }
   }
-})(this);
+})(typeof window !== 'undefined' ? window : global);
