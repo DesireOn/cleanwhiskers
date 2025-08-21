@@ -16,6 +16,19 @@
     button.removeAttribute('aria-disabled');
     var pending = false;
     button.addEventListener('click', function (e) {
+      var href = button.getAttribute('href');
+      if (href && href.charAt(0) === '#') {
+        if (e && typeof e.preventDefault === 'function') {
+          e.preventDefault();
+        }
+        var target = doc.querySelector(href);
+        if (target && typeof target.scrollIntoView === 'function') {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        button.removeAttribute('aria-disabled');
+        pending = false;
+        return;
+      }
       if (pending) {
         if (e && typeof e.preventDefault === 'function') {
           e.preventDefault();
@@ -24,7 +37,6 @@
       }
       pending = true;
       button.setAttribute('aria-disabled', 'true');
-      var href = button.getAttribute('href');
       if (fetchFn) {
         fetchFn(href, { method: 'HEAD' })
           .then(function () {
