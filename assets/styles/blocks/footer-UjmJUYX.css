@@ -1,8 +1,7 @@
-
 .site-footer {
     background: var(--color-text);
     color: var(--color-cream);
-    padding: var(--space-6) var(--space-3);
+    padding: var(--space-5) var(--space-3);
 }
 
 .footer-inner {
@@ -59,40 +58,13 @@
     gap: var(--space-2);
 }
 
-.footer-nav ul,
-.footer-legal ul {
+.footer-nav nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-}
-
-.footer-trust {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-}
-
-.trust-seal {
-    background: var(--color-cream);
-    color: var(--color-text);
-    font-size: 0.875rem;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    display: inline-flex;
-    align-items: center;
-}
-
-.trust-seal--ssl::before {
-    content: "\1F512"; /* 🔒 */
-    margin-right: var(--space-1);
-}
-
-.trust-seal--reviews::before {
-    content: "\2B50"; /* ⭐ */
-    margin-right: var(--space-1);
 }
 
 .footer-social ul {
@@ -136,11 +108,8 @@
 }
 
 .footer-nav a,
-.footer-legal a,
 .footer-social a,
-.back-to-top,
-.footer-search input,
-.footer-search button {
+.footer-search input {
     min-height: 44px;
     display: flex;
     align-items: center;
@@ -172,20 +141,7 @@
     position: fixed;
     right: var(--space-2);
     bottom: var(--space-2);
-    background: var(--color-accent);
-    color: var(--color-text);
-    border: 0;
-    border-radius: var(--radius-md);
     z-index: 1000;
-}
-
-.back-to-top:hover,
-.back-to-top:focus {
-    background: var(--color-cream);
-}
-
-.back-to-top:active {
-    opacity: 0.8;
 }
 
 @media (min-width: 768px) {
@@ -197,7 +153,7 @@
 
     .footer-columns {
         flex: 1;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
     .footer-bottom {
@@ -209,8 +165,5 @@
     .back-to-top {
         position: static;
         padding: 0;
-        background: none;
-        border: 0;
-        border-radius: 0;
     }
 }
