@@ -31,15 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         lastScrollY = currentY;
+        ticking = false;
     };
 
-    const debounce = (fn, wait = 50) => {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => fn(...args), wait);
-        };
-    };
-
-    window.addEventListener('scroll', debounce(handleScroll));
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(handleScroll);
+            ticking = true;
+        }
+    });
 });
