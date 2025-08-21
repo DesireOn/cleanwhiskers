@@ -48,6 +48,9 @@ carousels.forEach((carousel) => {
     let scrollStart = 0;
 
     track.addEventListener('pointerdown', (e) => {
+        if (e.pointerType !== 'mouse') {
+            return;
+        }
         isDragging = true;
         startX = e.clientX;
         scrollStart = track.scrollLeft;
@@ -63,10 +66,10 @@ carousels.forEach((carousel) => {
     });
 
     function endDrag(e) {
-        isDragging = false;
-        if (e.pointerId) {
+        if (track.hasPointerCapture(e.pointerId)) {
             track.releasePointerCapture(e.pointerId);
         }
+        isDragging = false;
     }
 
     track.addEventListener('pointerup', endDrag);

@@ -69,6 +69,19 @@ final class FeaturedGroomersCarouselTest extends PantherTestCase
         $client = self::createPantherClient();
         $client->request('GET', '/');
 
+        $arrowsVisible = $client->executeScript(<<<'JS'
+const prev = document.querySelector('[data-carousel-prev]');
+const next = document.querySelector('[data-carousel-next]');
+function isVisible(btn) {
+    const rect = btn.getBoundingClientRect();
+    const el = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    return el === btn;
+}
+return [isVisible(prev), isVisible(next)];
+JS);
+
+        self::assertSame([true, true], $arrowsVisible);
+
         $initial = $client->executeScript('return document.querySelector(".carousel__track").scrollLeft;');
         $client->executeScript('document.querySelector("[data-carousel-next]").click();');
         $afterNext = $client->executeScript('return document.querySelector(".carousel__track").scrollLeft;');
