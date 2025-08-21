@@ -9,7 +9,8 @@
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     padding-bottom: var(--space-2);
-    touch-action: pan-y;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
 }
 
 .carousel__track:focus {
