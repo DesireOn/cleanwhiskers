@@ -1,11 +1,15 @@
 (function (global) {
   function openMenu(doc, nav, toggle) {
+    doc.body.dataset.menuOpen = 'true';
+    doc.body.style.overflow = 'hidden';
     nav.classList.add('is-open');
     toggle.setAttribute('aria-expanded', 'true');
     nav.setAttribute('aria-hidden', 'false');
   }
 
   function closeMenu(doc, nav, toggle) {
+    delete doc.body.dataset.menuOpen;
+    doc.body.style.overflow = '';
     nav.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
     nav.setAttribute('aria-hidden', 'true');
