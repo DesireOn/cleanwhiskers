@@ -49,7 +49,25 @@
 }
 
 .back-to-top {
-    align-self: flex-start;
+    position: fixed;
+    right: var(--space-3);
+    bottom: var(--space-3);
+    background: var(--color-accent);
+    color: var(--color-cream);
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-md);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+.back-to-top:hover,
+.back-to-top:focus {
+    background: var(--color-text);
+    color: var(--color-cream);
 }
 
 @media (min-width: 768px) {
