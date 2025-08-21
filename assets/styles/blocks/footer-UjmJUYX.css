@@ -1,4 +1,3 @@
-
 .site-footer {
     background: var(--color-text);
     color: var(--color-cream);
@@ -21,18 +20,6 @@
     text-decoration: underline;
 }
 
-.site-footer a:active {
-    opacity: 0.8;
-}
-
-.footer-top {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: var(--space-5);
-}
-
 .footer-brand .footer-logo {
     font-weight: 700;
     font-size: 1.25rem;
@@ -51,48 +38,16 @@
 .footer-columns {
     display: grid;
     gap: var(--space-4);
+    margin-top: var(--space-5);
 }
 
-.footer-columns > * {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-}
-
-.footer-nav ul,
-.footer-legal ul {
+.footer-nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-}
-
-.footer-trust {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-}
-
-.trust-seal {
-    background: var(--color-cream);
-    color: var(--color-text);
-    font-size: 0.875rem;
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-sm);
-    display: inline-flex;
-    align-items: center;
-}
-
-.trust-seal--ssl::before {
-    content: "\1F512"; /* 🔒 */
-    margin-right: var(--space-1);
-}
-
-.trust-seal--reviews::before {
-    content: "\2B50"; /* ⭐ */
-    margin-right: var(--space-1);
 }
 
 .footer-social ul {
@@ -106,8 +61,12 @@
 .footer-social a {
     background: var(--color-accent);
     color: var(--color-text);
-    padding: var(--space-1) var(--space-2);
+    width: 44px;
+    height: 44px;
     border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: background 0.2s ease;
 }
 
@@ -116,45 +75,33 @@
     background: var(--color-cream);
 }
 
-.footer-social a:active {
-    opacity: 0.8;
-}
-
-.social-link--twitter::before {
-    content: "\1F426"; /* 🐦 */
-    margin-right: var(--space-1);
-}
-
-.social-link--facebook::before {
-    content: "\1F4F1"; /* 📱 */
-    margin-right: var(--space-1);
-}
-
-.social-link--instagram::before {
-    content: "\1F4F7"; /* 📷 */
-    margin-right: var(--space-1);
-}
-
-.footer-nav a,
-.footer-legal a,
-.footer-social a,
-.back-to-top,
-.footer-search input,
-.footer-search button {
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    padding: 0 var(--space-1);
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .footer-search {
     display: flex;
+    flex-direction: column;
     gap: var(--space-1);
 }
 
 .footer-search input {
     flex: 1;
     font-size: 1rem;
+    padding: var(--space-1);
+    min-height: 44px;
+}
+
+.footer-search button {
+    min-height: 44px;
 }
 
 .footer-bottom {
@@ -169,35 +116,17 @@
 
 .back-to-top {
     align-self: flex-start;
-    position: fixed;
-    right: var(--space-2);
-    bottom: var(--space-2);
-    background: var(--color-accent);
-    color: var(--color-text);
-    border: 0;
-    border-radius: var(--radius-md);
-    z-index: 1000;
-}
-
-.back-to-top:hover,
-.back-to-top:focus {
-    background: var(--color-cream);
-}
-
-.back-to-top:active {
-    opacity: 0.8;
 }
 
 @media (min-width: 768px) {
-    .footer-top {
-        flex-direction: row;
-        justify-content: space-between;
+    .footer-columns {
+        grid-template-columns: repeat(3, 1fr);
         align-items: flex-start;
     }
 
-    .footer-columns {
-        flex: 1;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    .footer-search {
+        flex-direction: row;
+        align-items: center;
     }
 
     .footer-bottom {
@@ -205,12 +134,5 @@
         justify-content: space-between;
         align-items: center;
     }
-
-    .back-to-top {
-        position: static;
-        padding: 0;
-        background: none;
-        border: 0;
-        border-radius: 0;
-    }
 }
+
