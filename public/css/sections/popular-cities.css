@@ -2,14 +2,23 @@
     padding: var(--space-4) var(--space-3);
 }
 
+.popular-cities__heading {
+    margin: 0 0 var(--space-2);
+}
+
+.popular-cities__description {
+    margin: 0 0 var(--space-4);
+    color: #4b5563;
+}
+
 .popular-cities__grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: var(--space-4);
-    grid-template-columns: repeat(auto-fit, minmax(120px, max-content));
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    justify-content: start;
 }
 
 .popular-cities__link {
