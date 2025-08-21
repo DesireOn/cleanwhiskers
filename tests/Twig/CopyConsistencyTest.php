@@ -29,17 +29,13 @@ final class CopyConsistencyTest extends KernelTestCase
         $hero = $twig->render('home/partials/_hero.html.twig', [
             'ctaLinks' => [
                 'find' => ['label' => 'Find a Groomer'],
-                'list' => ['label' => 'List Your Business', 'url' => '/register'],
             ],
             'cities' => [
                 ['slug' => 'sofia', 'name' => 'Sofia'],
             ],
-            'services' => [
-                ['slug' => 'grooming', 'name' => 'Grooming'],
-            ],
         ]);
         self::assertStringContainsString('Book mobile pet grooming in minutes — trusted local professionals.', $hero);
-        self::assertStringContainsString('List Your Business', $hero);
+        self::assertStringNotContainsString('List Your Business', $hero);
         self::assertStringNotContainsString('Join as Groomer', $hero);
 
         // CTA banner
