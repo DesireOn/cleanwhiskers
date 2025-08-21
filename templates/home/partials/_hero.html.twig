@@ -2,18 +2,18 @@
     <div class="hero__container">
         <h1 class="hero__title">{{ 'Book mobile pet grooming in minutes — trusted local professionals.'|trans }}</h1>
         <form id="search-form" class="hero__form" method="get" action="/search" role="search">
-            <div class="hero__field hero__field--city">
-                <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
+            <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
+            <div class="hero__controls">
                 <input class="hero__input" type="text" id="city" name="city" list="city-list" placeholder="{{ 'City or ZIP'|trans }}" required>
                 <datalist id="city-list">
                     {% for city in cities %}
                         <option value="{{ city.slug }}">{{ city.name }}</option>
                     {% endfor %}
                 </datalist>
+                <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
+                    {{ ctaLinks.find.label|trans }}
+                </button>
             </div>
-            <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
-                {{ ctaLinks.find.label|trans }}
-            </button>
         </form>
     </div>
 </section>

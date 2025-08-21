@@ -1,5 +1,5 @@
 .hero {
-    padding: var(--space-5) var(--space-3) var(--space-3);
+    padding: var(--space-5) var(--space-3) var(--space-2);
     background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
 }
 
@@ -18,11 +18,12 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    margin-bottom: 0;
 }
 
-.hero__field {
-    text-align: left;
+.hero__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
 }
 
 .hero__label {
@@ -33,6 +34,7 @@
 
 .hero__input {
     width: 100%;
+    max-width: 24rem;
     font-size: 1rem;
     padding: var(--space-2);
     border: 1px solid var(--color-neutral);
@@ -41,6 +43,9 @@
 
 .hero__submit {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: filter 0.2s ease;
 }
 .hero__submit:hover {
@@ -52,22 +57,18 @@
         font-size: 2.5rem;
     }
 
-    .hero__form {
+    .hero__controls {
         flex-direction: row;
-        flex-wrap: wrap;
-        align-items: flex-end;
-        gap: var(--space-2);
+        align-items: stretch;
     }
 
-    .hero__field {
-        flex: 1 1 200px;
-        margin: 0;
+    .hero__input {
+        flex: 1;
     }
 
     .hero__submit {
         width: auto;
     }
-
 }
 
 @media (min-width: 1024px) {
