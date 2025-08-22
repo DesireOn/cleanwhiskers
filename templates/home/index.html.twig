@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sections/popular-cities.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sections/popular-services.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/sections/testimonials.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -53,6 +54,33 @@
         </div>
     </section>
     {% include 'home/_featured_groomers.html.twig' %}
+    <section class="testimonials reveal-on-scroll">
+        <h2>From Our Pilot Users</h2>
+        <div class="testimonials__list">
+            <figure class="testimonial">
+                <blockquote class="testimonial__quote">
+                    <span class="testimonial__icon" aria-hidden="true">❝</span>
+                    <p>CleanWhiskers made booking a breeze and my cat loved it.</p>
+                </blockquote>
+                <figcaption class="testimonial__author">Jane D., Sofia</figcaption>
+            </figure>
+            <figure class="testimonial">
+                <blockquote class="testimonial__quote">
+                    <span class="testimonial__icon" aria-hidden="true">❝</span>
+                    <p>The groomer was on time and very gentle with my pup.</p>
+                </blockquote>
+                <figcaption class="testimonial__author">Mark T., Plovdiv</figcaption>
+            </figure>
+            <figure class="testimonial">
+                <blockquote class="testimonial__quote">
+                    <span class="testimonial__icon" aria-hidden="true">❝</span>
+                    <p>Beta testing let us try a great service before anyone else.</p>
+                </blockquote>
+                <figcaption class="testimonial__author">Sara K., Varna</figcaption>
+            </figure>
+        </div>
+        <p class="testimonials__note">Collected during beta testing</p>
+    </section>
     {% include 'home/_popular_cities.html.twig' %}
     {% include 'home/partials/_popular_services.html.twig' %}
 {% endblock %}
