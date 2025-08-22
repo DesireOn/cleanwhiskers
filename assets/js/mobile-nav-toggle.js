@@ -25,7 +25,7 @@
     doc.body.classList.add('js');
 
     function onDocumentClick(e) {
-      if (!nav.contains(e.target) && e.target !== toggle) {
+      if (!nav.contains(e.target) && !toggle.contains(e.target)) {
         closeMenu(doc, nav, toggle);
       }
     }
