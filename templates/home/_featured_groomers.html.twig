@@ -7,8 +7,9 @@
                 <button class="carousel__button carousel__button--prev" data-carousel-prev aria-label="Previous">&#10094;</button>
                 <div class="carousel__track" tabindex="0">
                     {% for item in featuredGroomers %}
-                        {% set g = item.profile %}
-                        <article class="carousel__card card-groomer">
+                    {% set g = item.profile %}
+                    {% set badges = ['New', 'Verified'] %}
+                        <article class="carousel__card card-groomer" data-badges="{{ badges|slice(0,2)|join(',')|lower }}">
                             <div class="card-groomer__image-wrapper">
                                 <img
                                     src="{{ g.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
@@ -21,6 +22,11 @@
                                 >
                             </div>
                             <div class="card-groomer__body">
+                                <div class="card-groomer__badges">
+                                    {% for badge in badges|slice(0,2) %}
+                                        <span class="badge badge--{{ badge|lower }}">{{ badge }}</span>
+                                    {% endfor %}
+                                </div>
                                 <h3 class="card-groomer__name">
                                     <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a>
                                 </h3>
@@ -59,7 +65,8 @@
             <div class="featured-groomers__grid">
                 {% for item in featuredGroomers %}
                     {% set g = item.profile %}
-                    <article class="card-groomer">
+                    {% set badges = ['New', 'Verified'] %}
+                    <article class="card-groomer" data-badges="{{ badges|slice(0,2)|join(',')|lower }}">
                         <div class="card-groomer__image-wrapper">
                             <img
                                 src="{{ g.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
@@ -72,6 +79,11 @@
                             >
                         </div>
                         <div class="card-groomer__body">
+                            <div class="card-groomer__badges">
+                                {% for badge in badges|slice(0,2) %}
+                                    <span class="badge badge--{{ badge|lower }}">{{ badge }}</span>
+                                {% endfor %}
+                            </div>
                             <h3 class="card-groomer__name">
                                 <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a>
                             </h3>
