@@ -24,15 +24,21 @@ final class GroomerProfileFieldsTest extends TestCase
         self::assertNull($profile->getPhone());
         self::assertNull($profile->getServicesOffered());
         self::assertNull($profile->getPriceRange());
+        self::assertSame([], $profile->getBadges());
+        self::assertSame([], $profile->getSpecialties());
 
         $profile->setServiceArea('Downtown');
         $profile->setPhone('123-456');
         $profile->setServicesOffered('Bathing');
         $profile->setPriceRange('$$');
+        $profile->setBadges(['New']);
+        $profile->setSpecialties(['Nail trimming']);
 
         self::assertSame('Downtown', $profile->getServiceArea());
         self::assertSame('123-456', $profile->getPhone());
         self::assertSame('Bathing', $profile->getServicesOffered());
         self::assertSame('$$', $profile->getPriceRange());
+        self::assertSame(['New'], $profile->getBadges());
+        self::assertSame(['Nail trimming'], $profile->getSpecialties());
     }
 }
