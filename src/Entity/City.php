@@ -27,6 +27,9 @@ class City
     #[ORM\Column(name: 'seo_intro', type: Types::TEXT, nullable: true)]
     private ?string $seoIntro = null;
 
+    #[ORM\Column(name: 'coverage_notes', type: Types::TEXT, nullable: true)]
+    private ?string $coverageNotes = null;
+
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
@@ -54,6 +57,16 @@ class City
     public function setSeoIntro(?string $seoIntro): void
     {
         $this->seoIntro = $seoIntro;
+    }
+
+    public function getCoverageNotes(): ?string
+    {
+        return $this->coverageNotes;
+    }
+
+    public function setCoverageNotes(?string $coverageNotes): void
+    {
+        $this->coverageNotes = $coverageNotes;
     }
 
     public function getCreatedAt(): \DateTimeImmutable
