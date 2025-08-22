@@ -2,37 +2,10 @@
 <header class="site-header">
   <div class="nav-container">
     <a href="{{ path('app_homepage') }}" class="site-logo">CleanWhiskers</a>
-
-    <button
-      id="nav-open"
-      class="nav-toggle nav-toggle--open"
-      aria-controls="primary-nav"
-      aria-expanded="false"
-      type="button"
-    >
-      <span class="sr-only">{{ 'Open menu'|trans }}</span>
+    <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" aria-label="{{ 'Menu'|trans }}" type="button">
       <span class="nav-toggle__icon" aria-hidden="true"></span>
     </button>
-
-    <button
-      id="nav-close"
-      class="nav-toggle nav-toggle--close"
-      aria-controls="primary-nav"
-      aria-expanded="true"
-      type="button"
-      hidden
-    >
-      <span class="sr-only">{{ 'Close menu'|trans }}</span>
-      <span class="nav-toggle__icon" aria-hidden="true"></span>
-    </button>
-
-    <nav
-      id="primary-nav"
-      class="nav"
-      aria-label="{{ 'Primary'|trans }}"
-      aria-hidden="true"
-      hidden
-    >
+    <nav id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true">
       <ul class="nav__list">
         <li class="nav__item"><a class="nav__link" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
         <li class="nav__item"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>

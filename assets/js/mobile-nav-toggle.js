@@ -1,57 +1,51 @@
 (function (global) {
-  function openMenu(doc, nav, openBtn, closeBtn) {
-    doc.body.classList.add('no-scroll');
+  function openMenu(doc, nav, toggle) {
+    doc.body.dataset.menuOpen = 'true';
+    doc.body.style.overflow = 'hidden';
     nav.classList.add('is-open');
-    nav.removeAttribute('hidden');
+    toggle.setAttribute('aria-expanded', 'true');
     nav.setAttribute('aria-hidden', 'false');
-    openBtn.setAttribute('aria-expanded', 'true');
-    openBtn.hidden = true;
-    closeBtn.hidden = false;
-    closeBtn.setAttribute('aria-expanded', 'true');
   }
 
-  function closeMenu(doc, nav, openBtn, closeBtn) {
-    doc.body.classList.remove('no-scroll');
+  function closeMenu(doc, nav, toggle) {
+    delete doc.body.dataset.menuOpen;
+    doc.body.style.overflow = '';
     nav.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
     nav.setAttribute('aria-hidden', 'true');
-    nav.setAttribute('hidden', '');
-    openBtn.setAttribute('aria-expanded', 'false');
-    openBtn.hidden = false;
-    closeBtn.hidden = true;
-    closeBtn.setAttribute('aria-expanded', 'false');
   }
 
   function init(doc) {
     doc = doc || document;
-    var openBtn = doc.getElementById('nav-open');
-    var closeBtn = doc.getElementById('nav-close');
+    var toggle = doc.getElementById('nav-toggle');
     var nav = doc.getElementById('primary-nav');
-    if (!openBtn || !closeBtn || !nav) {
+    if (!toggle || !nav) {
       return;
     }
+    doc.body.classList.add('js');
 
     function onDocumentClick(e) {
-      if (!nav.contains(e.target) && e.target !== openBtn && e.target !== closeBtn) {
-        closeMenu(doc, nav, openBtn, closeBtn);
+      if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+        closeMenu(doc, nav, toggle);
       }
     }
 
     function onKeyDown(e) {
       if (e.key === 'Escape') {
-        closeMenu(doc, nav, openBtn, closeBtn);
-        if (typeof openBtn.focus === 'function') {
-          openBtn.focus();
-          doc.activeElement = openBtn;
+        closeMenu(doc, nav, toggle);
+        if (typeof toggle.focus === 'function') {
+          toggle.focus();
+          doc.activeElement = toggle;
         }
       }
     }
 
-    openBtn.addEventListener('click', function () {
-      openMenu(doc, nav, openBtn, closeBtn);
-    });
-
-    closeBtn.addEventListener('click', function () {
-      closeMenu(doc, nav, openBtn, closeBtn);
+    toggle.addEventListener('click', function () {
+      if (nav.classList.contains('is-open')) {
+        closeMenu(doc, nav, toggle);
+      } else {
+        openMenu(doc, nav, toggle);
+      }
     });
 
     doc.addEventListener('click', onDocumentClick);
