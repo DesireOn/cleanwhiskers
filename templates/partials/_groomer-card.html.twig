@@ -1,0 +1,61 @@
+{%- set g = profile -%}
+{%- set badges = badges|default([]) -%}
+{%- set extraClass = class|default('') -%}
+<article class="{{ [extraClass, 'card-groomer']|join(' ')|trim }}" data-badges="{{ badges|slice(0,2)|join(',')|lower }}">
+    <div class="card-groomer__image-wrapper">
+        <img
+            src="{{ g.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
+            alt="{{ g.businessName }} logo"
+            loading="lazy"
+            decoding="async"
+            width="320"
+            height="240"
+            data-skeleton
+        >
+    </div>
+    <div class="card-groomer__body">
+        <div class="card-groomer__badges">
+            {% for badge in badges|slice(0,2) %}
+                <span class="badge badge--{{ badge|lower }}">{{ badge }}</span>
+            {% endfor %}
+        </div>
+        <h3 class="card-groomer__name">
+            <a href="{{ path('app_groomer_show', {slug: g.slug}) }}">{{ g.businessName }}</a>
+        </h3>
+        {% set tags = g.services|default([])|slice(0,3) %}
+        {% if tags|length %}
+            <ul class="card-groomer__services">
+                {% for service in tags %}
+                    <li class="card-groomer__service">{{ service.name }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% set gallery = g.photos|default([])|slice(0,2) %}
+        {% if gallery|length %}
+            <ul class="card-groomer__gallery">
+                {% for photo in gallery %}
+                    <li class="card-groomer__gallery-item">
+                        <img
+                            src="{{ photo.url|default('https://placehold.co/80x80') }}"
+                            alt="{{ photo.alt|default(g.businessName ~ ' photo') }}"
+                            loading="lazy"
+                            decoding="async"
+                            width="80"
+                            height="80"
+                        >
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p class="card-groomer__city">{{ g.city.name }}</p>
+        <div class="card-groomer__rating" aria-label="Rating {{ rating|number_format(1) }} out of 5">
+            <span class="card-groomer__stars" style="--rating: {{ rating|number_format(1, '.', '') }}" aria-hidden="true"></span>
+            <span class="card-groomer__rating-number">{{ rating|number_format(1) }}</span>
+            <span class="card-groomer__review-count">({{ reviewCount }})</span>
+        </div>
+        {% if g.priceRange %}
+            <p class="card-groomer__price">Starting at {{ g.priceRange }}</p>
+        {% endif %}
+        <a class="card-groomer__cta card-groomer__book" href="{{ path('app_groomer_show', {slug: g.slug}) }}#book">Book Now</a>
+    </div>
+</article>

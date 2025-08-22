@@ -17,6 +17,7 @@
             console.assert(card.querySelector('.card-groomer__review-count'), 'review count present');
             console.assert(card.querySelector('.card-groomer__price'), 'price present');
             console.assert(card.querySelector('.card-groomer__services li'), 'service tag present');
+            console.assert(card.querySelector('.card-groomer__gallery img'), 'gallery image present');
             const cta = card.querySelector('.card-groomer__cta');
             console.assert(cta && cta.textContent.includes('Book Now'), 'CTA present');
             console.log('Card groomer markup tests passed');
@@ -32,6 +33,18 @@
             </div>
             <div class="card-groomer__body">
                 <h3 class="card-groomer__name"><a href="#">Fluffy Groomers</a></h3>
+                <ul class="card-groomer__services">
+                    <li class="card-groomer__service">Small dogs</li>
+                    <li class="card-groomer__service">Nail trimming</li>
+                </ul>
+                <ul class="card-groomer__gallery">
+                    <li class="card-groomer__gallery-item">
+                        <img src="https://placehold.co/80x80" alt="Work photo" loading="lazy">
+                    </li>
+                    <li class="card-groomer__gallery-item">
+                        <img src="https://placehold.co/80x80" alt="Work photo" loading="lazy">
+                    </li>
+                </ul>
                 <p class="card-groomer__city">Springfield</p>
                 <div class="card-groomer__rating" aria-label="Rating 4.8 out of 5">
                     <span class="card-groomer__stars" style="--rating:4.8" aria-hidden="true"></span>
@@ -39,9 +52,6 @@
                     <span class="card-groomer__review-count">(10)</span>
                 </div>
                 <p class="card-groomer__price">Starting at $20</p>
-                <ul class="card-groomer__services">
-                    <li aria-label="Baths">🛁</li>
-                </ul>
                 <a class="card-groomer__cta" href="#">Book Now</a>
             </div>
         </article>
