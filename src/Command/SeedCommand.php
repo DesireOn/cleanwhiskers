@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\City;
 use App\Entity\Testimonial;
+use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\TestimonialRepository;
+use App\Seed\SeedDataset;
+use App\Seed\Seeder;
 use App\Seeder\BlogSeed;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -18,11 +22,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'app:seed', description: 'Seed demo data')]
 final class SeedCommand extends Command
 {
+    /**
+     * @var array<int, array{name:string, coverageNotes:string}>
+     */
+    private const POPULAR_CITIES = [
+        ['name' => 'Sofia', 'coverageNotes' => 'Capital and biggest coverage area'],
+        ['name' => 'Plovdiv', 'coverageNotes' => 'Strong groomer presence'],
+        ['name' => 'Varna', 'coverageNotes' => 'Coastal coverage'],
+        ['name' => 'Ruse', 'coverageNotes' => 'Danube region'],
+        ['name' => 'Burgas', 'coverageNotes' => 'Black Sea coverage'],
+    ];
+
     public function __construct(
         private readonly BlogSeed $blogSeed,
         private readonly GroomerProfileRepository $groomerRepository,
         private readonly TestimonialRepository $testimonialRepository,
         private readonly EntityManagerInterface $em,
+        private readonly Seeder $seeder,
+        private readonly CityRepository $cityRepository,
     ) {
         parent::__construct();
     }
@@ -34,6 +51,8 @@ final class SeedCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->seedPopularCities($output);
+
         if ($input->getOption('blog')) {
             $this->blogSeed->seed();
             $output->writeln('<info>Blog content seeded.</info>');
@@ -43,6 +62,24 @@ final class SeedCommand extends Command
         $this->seedTestimonials($output);
 
         return Command::SUCCESS;
+    }
+
+    private function seedPopularCities(OutputInterface $output): void
+    {
+        $this->seeder->seed(SeedDataset::default());
+
+        foreach (self::POPULAR_CITIES as $cityData) {
+            $city = $this->cityRepository->findOneBy(['name' => $cityData['name']]);
+            if (null === $city) {
+                $city = new City($cityData['name']);
+                $city->refreshSlugFrom($cityData['name']);
+                $this->em->persist($city);
+            }
+            $city->setCoverageNotes($cityData['coverageNotes']);
+        }
+
+        $this->em->flush();
+        $output->writeln('<info>Popular cities seeded.</info>');
     }
 
     private function seedGroomerExtras(OutputInterface $output): void
