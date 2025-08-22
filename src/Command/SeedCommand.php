@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Testimonial;
 use App\Repository\GroomerProfileRepository;
+use App\Repository\TestimonialRepository;
 use App\Seeder\BlogSeed;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -19,6 +21,7 @@ final class SeedCommand extends Command
     public function __construct(
         private readonly BlogSeed $blogSeed,
         private readonly GroomerProfileRepository $groomerRepository,
+        private readonly TestimonialRepository $testimonialRepository,
         private readonly EntityManagerInterface $em,
     ) {
         parent::__construct();
@@ -37,6 +40,7 @@ final class SeedCommand extends Command
         }
 
         $this->seedGroomerExtras($output);
+        $this->seedTestimonials($output);
 
         return Command::SUCCESS;
     }
@@ -63,6 +67,28 @@ final class SeedCommand extends Command
 
         $this->em->flush();
         $output->writeln('<info>Groomer badges and specialties seeded.</info>');
+    }
+
+    private function seedTestimonials(OutputInterface $output): void
+    {
+        if (0 !== $this->testimonialRepository->count([])) {
+            $output->writeln('<info>Testimonials already exist, skipping.</info>');
+
+            return;
+        }
+
+        $testimonials = [
+            ['Anna D.', 'Denver', 'CleanWhiskers made booking easy and stress-free.'],
+            ['Marcus L.', 'Seattle', 'Our pup loved the groomer!'],
+            ['Priya K.', 'Austin', 'The best service we have tried so far.'],
+        ];
+
+        foreach ($testimonials as [$name, $city, $quote]) {
+            $this->em->persist(new Testimonial($name, $city, $quote));
+        }
+
+        $this->em->flush();
+        $output->writeln('<info>Testimonials seeded.</info>');
     }
 
     /**
