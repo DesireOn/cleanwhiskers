@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ asset('styles/forms.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/search-7jFZvVk.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/why-cleanwhiskers.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/carousel-mmGYQrl.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
@@ -31,6 +32,26 @@
     {% include 'home/partials/_hero.html.twig' %}
     {% include 'home/partials/_cta_banner.html.twig' %}
     {% include 'home/partials/_how_it_works.html.twig' %}
+    <section class="why-cleanwhiskers reveal-on-scroll">
+        <h2>{{ 'Why CleanWhiskers?'|trans }}</h2>
+        <div class="why-cleanwhiskers__cards">
+            <div class="why-cleanwhiskers__card">
+                <div class="why-cleanwhiskers__icon" aria-hidden="true">🐾</div>
+                <h3>{{ 'Local, Vetted Groomers'|trans }}</h3>
+                <p>{{ 'Every groomer is screened for quality and safety.'|trans }}</p>
+            </div>
+            <div class="why-cleanwhiskers__card">
+                <div class="why-cleanwhiskers__icon" aria-hidden="true">🚐</div>
+                <h3>{{ 'Mobile Grooming at Your Doorstep'|trans }}</h3>
+                <p>{{ 'Convenience for you and your pet.'|trans }}</p>
+            </div>
+            <div class="why-cleanwhiskers__card">
+                <div class="why-cleanwhiskers__icon" aria-hidden="true">📅</div>
+                <h3>{{ 'Stress-Free Booking'|trans }}</h3>
+                <p>{{ 'Easy scheduling with no phone calls.'|trans }}</p>
+            </div>
+        </div>
+    </section>
     {% include 'home/_featured_groomers.html.twig' %}
     {% include 'home/_popular_cities.html.twig' %}
     {% include 'home/partials/_popular_services.html.twig' %}
