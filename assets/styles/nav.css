@@ -8,47 +8,27 @@
   background: none;
   border: 0;
   cursor: pointer;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  position: relative;
 }
 
 .nav-toggle__icon,
 .nav-toggle__icon::before,
 .nav-toggle__icon::after {
-  position: absolute;
-  left: 0;
-  width: 100%;
+  display: block;
+  width: 24px;
   height: 2px;
   background: #333;
-  transition: transform 0.3s ease, top 0.3s ease, opacity 0.3s ease;
-}
-
-.nav-toggle__icon {
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
 }
 
 .nav-toggle__icon::before,
 .nav-toggle__icon::after {
   content: '';
+  position: absolute;
+  left: 0;
 }
 
-.nav-toggle--open .nav-toggle__icon::before { top: -6px; }
-.nav-toggle--open .nav-toggle__icon::after { top: 6px; }
-
-.nav-toggle--close .nav-toggle__icon {
-  background: transparent;
-}
-
-.nav-toggle--close .nav-toggle__icon::before {
-  transform: rotate(45deg);
-}
-
-.nav-toggle--close .nav-toggle__icon::after {
-  transform: rotate(-45deg);
-}
+.nav-toggle__icon::before { top: -6px; }
+.nav-toggle__icon::after { top: 6px; }
 
 .nav {
   --gap: 1.5rem;
@@ -74,58 +54,31 @@
   border-radius: 4px;
 }
 
-body.nav-open {
-  overflow: hidden;
-}
-
 @media (max-width: 767px) {
-  .nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: #fff;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    padding: 5rem 2rem;
-  }
-
-  .nav.is-open {
-    transform: translateX(0);
-  }
-
   .nav__list {
     flex-direction: column;
+    gap: 0;
+  }
+
+  body.js .nav {
+    display: none;
+  }
+
+  body.js .nav.is-open {
+    display: block;
   }
 
   .nav__link {
     display: block;
+    padding: 0.75rem 0;
   }
 
   .nav-toggle {
     display: block;
   }
-
-  .nav-toggle--close {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-  }
 }
 
 @media (min-width: 768px) {
-  .nav {
-    position: static;
-    transform: none;
-    height: auto;
-    padding: 0;
-  }
-
-  .nav__list {
-    flex-direction: row;
-  }
-
   .nav-toggle {
     display: none;
   }
