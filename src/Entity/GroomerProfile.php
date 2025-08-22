@@ -8,6 +8,7 @@ use App\Domain\Shared\SluggerTrait;
 use App\Repository\GroomerProfileRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GroomerProfileRepository::class)]
@@ -48,6 +49,18 @@ class GroomerProfile
 
     #[ORM\Column(name: 'price_range', length: 64, nullable: true)]
     private ?string $priceRange = null;
+
+    /**
+     * @var string[]|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $badges = null;
+
+    /**
+     * @var string[]|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $specialties = null;
 
     /** @var Collection<int, Service> */
     #[ORM\ManyToMany(targetEntity: Service::class)]
@@ -137,6 +150,42 @@ class GroomerProfile
     public function setPriceRange(?string $priceRange): self
     {
         $this->priceRange = $priceRange;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBadges(): array
+    {
+        return $this->badges ?? [];
+    }
+
+    /**
+     * @param string[] $badges
+     */
+    public function setBadges(array $badges): self
+    {
+        $this->badges = $badges;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSpecialties(): array
+    {
+        return $this->specialties ?? [];
+    }
+
+    /**
+     * @param string[] $specialties
+     */
+    public function setSpecialties(array $specialties): self
+    {
+        $this->specialties = $specialties;
 
         return $this;
     }
