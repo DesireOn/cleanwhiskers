@@ -223,4 +223,8 @@
     .footer-brand {
         justify-self: center;
     }
+
+    .footer-social {
+        margin-right: var(--space-4);
+    }
 }
