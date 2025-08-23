@@ -217,7 +217,14 @@
     }
 
     .footer-columns {
-        display: contents;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+        align-items: start;
+    }
+
+    .footer-search {
+        grid-column: 1 / -1;
     }
 
     .footer-brand {
