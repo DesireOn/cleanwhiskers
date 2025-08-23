@@ -185,6 +185,10 @@
 }
 
 @media (min-width: 768px) {
+    .footer-search {
+        max-width: none;
+    }
+
     .footer-top {
         flex-direction: row;
         justify-content: space-between;
@@ -225,6 +229,7 @@
 
     .footer-search {
         grid-column: 1 / -1;
+        max-width: none;
     }
 
     .footer-brand {
