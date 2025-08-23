@@ -41,16 +41,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const cityInput = document.getElementById('city');
     const dataList = document.getElementById('city-list');
-    if (cityInput && dataList) {
+    const cityInputs = document.querySelectorAll('input[list="city-list"]');
+    if (cityInputs.length && dataList) {
         const options = Array.from(dataList.options);
-        cityInput.addEventListener('input', () => {
-            const val = cityInput.value.toLowerCase();
+        const filterOptions = (val) => {
             dataList.innerHTML = '';
             options
                 .filter((opt) => opt.textContent.toLowerCase().includes(val) || opt.value.toLowerCase().includes(val))
                 .forEach((opt) => dataList.appendChild(opt));
+        };
+
+        cityInputs.forEach((input) => {
+            input.addEventListener('input', () => {
+                filterOptions(input.value.toLowerCase());
+            });
         });
     }
 });
