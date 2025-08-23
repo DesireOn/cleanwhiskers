@@ -27,7 +27,7 @@
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
             <script src="{{ asset('js/mobile-nav-toggle.js') }}" defer></script>
-            {% block importmap %}{{ importmap('js/city-search-init.js') }}{% endblock %}
+            <script src="{{ asset('js/city-search-init.js') }}" defer></script>
         {% endblock %}
     </head>
     <body id="top" data-route="{{ app.request.attributes.get('_route') }}">
