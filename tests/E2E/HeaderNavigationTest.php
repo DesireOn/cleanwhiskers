@@ -37,7 +37,7 @@ final class HeaderNavigationTest extends PantherTestCase
         self::assertSame('none', $display);
     }
 
-    public function testMobileNavigationAndEscClosesMenu(): void
+    public function testMobileNavigationEscAndLinkClose(): void
     {
         $client = self::createPantherClient();
         $client->manage()->window()->setSize(new WebDriverDimension(375, 667));
@@ -61,11 +61,20 @@ final class HeaderNavigationTest extends PantherTestCase
         $client->executeScript('document.getElementById("nav-toggle").click();');
         $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');
         self::assertSame('true', $expanded);
+        $overlayVisible = $client->executeScript('return document.getElementById("nav-overlay").classList.contains("is-open");');
+        self::assertTrue($overlayVisible);
 
         $client->getKeyboard()->sendKeys([WebDriverKeys::ESCAPE]);
         $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');
         self::assertSame('false', $expanded);
+        $overlayHidden = $client->executeScript('return document.getElementById("nav-overlay").classList.contains("is-open");');
+        self::assertFalse($overlayHidden);
         $active = $client->executeScript('return document.activeElement.id');
         self::assertSame('nav-toggle', $active);
+
+        $client->executeScript('document.getElementById("nav-toggle").click();');
+        $client->executeScript('const l = document.querySelector("#primary-nav a"); l.addEventListener("click", e => e.preventDefault()); l.click();');
+        $expanded = $client->executeScript('return document.getElementById("nav-toggle").getAttribute("aria-expanded");');
+        self::assertSame('false', $expanded);
     }
 }
