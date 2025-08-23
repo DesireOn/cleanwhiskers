@@ -206,11 +206,6 @@
         justify-content: space-between;
         align-items: center;
     }
-
-    .back-to-top {
-        position: static;
-        padding: 0;
-    }
 }
 
 @media (min-width: 1024px) {
