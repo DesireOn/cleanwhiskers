@@ -41,22 +41,114 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const cityInputs = ['city', 'sticky-city']
+    const cityInputs = ['city', 'sticky-city', 'footer-city']
         .map((id) => document.getElementById(id))
         .filter(Boolean);
-    const dataList = document.getElementById('city-list');
-    if (cityInputs.length && dataList) {
-        const options = Array.from(dataList.options);
-        const updateList = (input) => {
-            const val = input.value.toLowerCase();
-            dataList.innerHTML = '';
-            options
-                .filter((opt) => opt.textContent.toLowerCase().includes(val) || opt.value.toLowerCase().includes(val))
-                .forEach((opt) => dataList.appendChild(opt));
+    const listEl = document.getElementById('city-list');
+    if (cityInputs.length && listEl) {
+        const options = Array.from(listEl.querySelectorAll('.city-suggestion')).map((opt) => ({
+            value: opt.dataset.value,
+            label: opt.textContent,
+        }));
+        document.body.appendChild(listEl);
+        listEl.innerHTML = '';
+        listEl.hidden = true;
+        let activeIndex = -1;
+        let currentInput = null;
+
+        const hide = () => {
+            listEl.hidden = true;
+            if (currentInput) {
+                currentInput.setAttribute('aria-expanded', 'false');
+                currentInput.removeAttribute('aria-activedescendant');
+            }
+            activeIndex = -1;
+        };
+
+        const select = (opt) => {
+            if (currentInput) {
+                currentInput.value = opt.value;
+            }
+            hide();
+        };
+
+        const move = (dir) => {
+            const items = listEl.querySelectorAll('[role="option"]');
+            if (!items.length) {
+                return;
+            }
+            activeIndex = (activeIndex + dir + items.length) % items.length;
+            items.forEach((item, idx) => {
+                if (idx === activeIndex) {
+                    item.classList.add('active');
+                    currentInput.setAttribute('aria-activedescendant', item.id);
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        };
+
+        const render = (input, matches) => {
+            listEl.innerHTML = '';
+            activeIndex = -1;
+            matches.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.setAttribute('role', 'option');
+                div.id = `${input.id}-option-${index}`;
+                div.className = 'city-option';
+                div.textContent = opt.label;
+                div.dataset.value = opt.value;
+                div.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    select(opt);
+                });
+                listEl.appendChild(div);
+            });
+            if (matches.length) {
+                const rect = input.getBoundingClientRect();
+                listEl.style.position = 'absolute';
+                listEl.style.left = `${rect.left + window.scrollX}px`;
+                listEl.style.top = `${rect.bottom + window.scrollY}px`;
+                listEl.style.width = `${rect.width}px`;
+                listEl.hidden = false;
+                input.setAttribute('aria-expanded', 'true');
+                currentInput = input;
+            } else {
+                hide();
+            }
         };
 
         cityInputs.forEach((input) => {
-            input.addEventListener('input', () => updateList(input));
+            input.addEventListener('input', () => {
+                const val = input.value.toLowerCase();
+                const matches = options.filter(
+                    (o) => o.label.toLowerCase().includes(val) || o.value.toLowerCase().includes(val),
+                );
+                render(input, matches);
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (listEl.hidden) {
+                        render(input, options);
+                    }
+                    move(1);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    move(-1);
+                } else if (e.key === 'Enter') {
+                    if (activeIndex >= 0) {
+                        e.preventDefault();
+                        const item = listEl.querySelectorAll('[role="option"]')[activeIndex];
+                        select({ value: item.dataset.value, label: item.textContent });
+                    }
+                } else if (e.key === 'Escape') {
+                    hide();
+                }
+            });
+            input.addEventListener('blur', () => {
+                setTimeout(hide, 100);
+            });
         });
     }
 });

@@ -53,9 +53,9 @@ final class HeroSearchTest extends PantherTestCase
         $client = self::createPantherClient();
         $client->request('GET', '/');
 
-        self::assertSelectorExists('datalist#city-list');
+        self::assertSelectorExists('#city[role="combobox"][aria-controls="city-list"]');
 
-        $count = $client->executeScript("document.getElementById('city').value='va'; document.getElementById('city').dispatchEvent(new Event('input')); return document.querySelectorAll('#city-list option').length;");
+        $count = $client->executeScript('document.getElementById("city").value="va"; document.getElementById("city").dispatchEvent(new Event("input")); return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
         self::assertSame(1, $count);
 
         $client->executeScript(sprintf("document.querySelector('.hero__service[data-value=\"%s\"]').click();", $service->getSlug()));

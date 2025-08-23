@@ -4,12 +4,24 @@
         <form id="search-form" class="hero__form" method="get" action="/search" role="search">
             <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
             <div class="hero__controls">
-                <input class="hero__input" type="text" id="city" name="city" list="city-list" placeholder="{{ 'City'|trans }}" required>
-                <datalist id="city-list">
+                <input
+                    class="hero__input city-input"
+                    type="text"
+                    id="city"
+                    name="city"
+                    placeholder="{{ 'City'|trans }}"
+                    required
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded="false"
+                    aria-controls="city-list"
+                    aria-haspopup="listbox"
+                >
+                <div id="city-list" class="city-suggestions" role="listbox" hidden>
                     {% for city in cities %}
-                        <option value="{{ city.slug }}">{{ city.name }}</option>
+                        <div role="option" class="city-suggestion" data-value="{{ city.slug }}">{{ city.name }}</div>
                     {% endfor %}
-                </datalist>
+                </div>
                 <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
                     {{ ctaLinks.find.label|trans }}
                 </button>

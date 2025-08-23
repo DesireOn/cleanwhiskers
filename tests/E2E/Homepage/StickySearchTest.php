@@ -56,7 +56,7 @@ final class StickySearchTest extends WebTestCase
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
 
-        self::assertSelectorExists('#sticky-city[list="city-list"]');
-        self::assertSelectorExists(sprintf('#city-list option[value="%s"]', $city->getSlug()));
+        self::assertSelectorExists('#sticky-city[role="combobox"][aria-controls="city-list"]');
+        self::assertSelectorExists(sprintf('#city-list [data-value="%s"]', $city->getSlug()));
     }
 }
