@@ -10,7 +10,6 @@ Encore
   .setPublicPath('/')
   .addEntry('main', './assets/app.js')
 //  .addEntry('js/mobile-nav-toggle', './assets/js/mobile-nav-toggle.js')
-  .addEntry('city-search-init', './assets/js/city-search-init.js')
   .copyFiles({ from: './src/public', to: '[path][name].[ext]' })
   .splitEntryChunks()
   .enableSingleRuntimeChunk()
