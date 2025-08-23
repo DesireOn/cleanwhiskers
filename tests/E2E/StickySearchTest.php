@@ -28,6 +28,9 @@ final class StickySearchTest extends PantherTestCase
 
         self::assertSelectorNotExists('#sticky-search.search--compact');
 
+        $serviceHiddenInitial = $client->executeScript('return window.getComputedStyle(document.getElementById("sticky-service")).display === "none";');
+        self::assertTrue($serviceHiddenInitial);
+
         $client->executeScript('window.scrollTo(0, 250); window.dispatchEvent(new Event("scroll"));');
         $client->waitFor('#sticky-search.search--compact');
 

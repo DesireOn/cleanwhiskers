@@ -120,6 +120,17 @@
     flex: 0 0 auto;
 }
 
+@media (min-width: 1024px) {
+    .sticky-search label[for="sticky-service"],
+    .sticky-search .search-form__select--service {
+        display: none;
+    }
+
+    .sticky-search .search-form__input--city {
+        flex: 1 1 100%;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .sticky-search {
         transition: none;
