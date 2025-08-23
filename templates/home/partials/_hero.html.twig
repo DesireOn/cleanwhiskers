@@ -4,7 +4,7 @@
         <form id="search-form" class="hero__form" method="get" action="/search" role="search">
             <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
             <div class="hero__controls">
-                <input class="hero__input" type="text" id="city" name="city" list="city-list" placeholder="{{ 'City or ZIP'|trans }}" required>
+                <input class="hero__input" type="text" id="city" name="city" list="city-list" placeholder="{{ 'City'|trans }}" required>
                 <datalist id="city-list">
                     {% for city in cities %}
                         <option value="{{ city.slug }}">{{ city.name }}</option>
