@@ -34,7 +34,18 @@
         <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search">
           <h3 class="footer-heading">{{ 'Search'|trans }}</h3>
           <label for="footer-city" class="sr-only">{{ 'Search by city'|trans }}</label>
-          <input type="text" id="footer-city" name="city" list="city-list" placeholder="{{ 'City'|trans }}" required>
+          <input
+            type="text"
+            id="footer-city"
+            name="city"
+            placeholder="{{ 'City'|trans }}"
+            required
+            role="combobox"
+            aria-autocomplete="list"
+            aria-controls="footer-city-suggestions"
+            aria-expanded="false"
+          >
+          <div id="footer-city-suggestions" class="city-suggestions" role="listbox" hidden></div>
           <button type="submit" class="btn btn--accent">{{ 'Search'|trans }}</button>
         </form>
       </div>

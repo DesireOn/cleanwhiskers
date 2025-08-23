@@ -33,3 +33,18 @@
     font-size: 0.875rem;
     min-height: 1.25rem;
 }
+
+.city-suggestions {
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.city-suggestions [role='option'] {
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+}
+
+.city-suggestions [role='option'].is-active,
+.city-suggestions [role='option']:hover {
+    background-color: #eee;
+}
