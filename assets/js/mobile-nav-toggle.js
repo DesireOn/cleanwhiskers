@@ -41,7 +41,7 @@
     }
 
     function onKeyDown(e) {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && nav.classList.contains('is-open')) {
         closeMenu(doc, nav, toggle, overlay);
         if (typeof toggle.focus === 'function') {
           toggle.focus();
@@ -61,6 +61,13 @@
         closeMenu(doc, nav, toggle, overlay);
       });
     }
+
+    var links = nav.querySelectorAll('a');
+    links.forEach(function (link) {
+      link.addEventListener('click', function () {
+        closeMenu(doc, nav, toggle, overlay);
+      });
+    });
 
     toggle.addEventListener('click', function () {
       if (nav.classList.contains('is-open')) {
