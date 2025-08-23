@@ -52,6 +52,17 @@
     min-height: 36px;
 }
 
+@media (min-width: 1024px) {
+    .sticky-search label[for="sticky-service"],
+    .sticky-search .search-form__select--service {
+        display: none;
+    }
+
+    .sticky-search .search-form__input--city {
+        flex: 1 1 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .sticky-search {
         display: none;
