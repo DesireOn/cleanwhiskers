@@ -22,6 +22,8 @@ use App\Entity\City;
 use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\PantherTestCase;
 
 final class HeroSearchTest extends PantherTestCase
@@ -54,12 +56,28 @@ final class HeroSearchTest extends PantherTestCase
         $client->request('GET', '/');
 
         self::assertSelectorExists('#city[role="combobox"][aria-controls="city-list"]');
+        $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
+        self::assertTrue($hidden);
 
-        $count = $client->executeScript('document.getElementById("city").value="va"; document.getElementById("city").dispatchEvent(new Event("input")); return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
+        $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city'));
+        $input->sendKeys('va');
+        $client->waitFor('#city-list [role="option"]');
+        $visible = $client->executeScript('return !document.getElementById("city-list").hidden;');
+        self::assertTrue($visible);
+        $count = $client->executeScript('return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
         self::assertSame(1, $count);
 
+        $input->clear();
+        $input->sendKeys('so');
+        $client->waitFor('#city-list [role="option"]');
+        $input->sendKeys(WebDriverKeys::ARROW_DOWN);
+        $input->sendKeys(WebDriverKeys::ENTER);
+        $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
+        self::assertTrue($hidden);
+        $selected = $input->getAttribute('value');
+        self::assertSame($city->getSlug(), $selected);
+
         $client->executeScript(sprintf("document.querySelector('.hero__service[data-value=\"%s\"]').click();", $service->getSlug()));
-        $client->executeScript(sprintf("document.getElementById('city').value='%s';", $city->getSlug()));
 
         $client->waitForReload(function () use ($client) {
             $client->executeScript('document.getElementById("search-form").submit();');
