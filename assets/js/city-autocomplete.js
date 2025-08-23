@@ -10,8 +10,8 @@ function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export default function initCityAutocomplete() {
-    const inputs = Array.from(document.querySelectorAll('.city-input'));
+export default function initCityAutocomplete(inputsParam) {
+    const inputs = Array.from(inputsParam || []);
     const listEl = document.getElementById('city-list');
     if (!inputs.length || !listEl) {
         return;

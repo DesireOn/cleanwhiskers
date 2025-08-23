@@ -43,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    initCityAutocomplete();
+    const cityInputs = ['city', 'sticky-city', 'footer-city']
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+    if (cityInputs.length) {
+        initCityAutocomplete(cityInputs);
+    }
 });
 
