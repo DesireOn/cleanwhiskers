@@ -134,10 +134,7 @@
 
 /* Block: featured-groomers carousel */
 #featured-groomers {
-    padding: var(--space-6) var(--space-3);
-    background-color: var(--color-neutral);
-    clip-path: polygon(0 0, 100% 3vw, 100% 100%, 0 100%);
-    margin-top: var(--space-5);
+    padding: var(--space-5) var(--space-3);
 }
 
 /* Utility: reveal in */

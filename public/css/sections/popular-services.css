@@ -1,7 +1,5 @@
 .popular-services {
-    padding: var(--space-6) var(--space-3);
-    background-color: var(--color-neutral);
-    margin-top: var(--space-5);
+    padding: var(--space-4) 0;
 }
 
 .popular-services__spotlight {
