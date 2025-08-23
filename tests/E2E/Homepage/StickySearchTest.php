@@ -45,4 +45,18 @@ final class StickySearchTest extends WebTestCase
         $this->client->followRedirect();
         self::assertResponseIsSuccessful();
     }
+
+    public function testStickySearchHasCityAutocomplete(): void
+    {
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
+        $this->em->persist($city);
+        $this->em->flush();
+
+        $crawler = $this->client->request('GET', '/');
+        self::assertResponseIsSuccessful();
+
+        self::assertSelectorExists('#sticky-city[list="city-list"]');
+        self::assertSelectorExists(sprintf('#city-list option[value="%s"]', $city->getSlug()));
+    }
 }
