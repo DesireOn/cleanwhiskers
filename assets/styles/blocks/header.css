@@ -41,22 +41,21 @@
 .nav {
     list-style: none;
     margin: 0;
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-6) var(--space-4);
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    inset: 0;
     background: var(--color-cream);
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    transform: translateY(-100%);
+    gap: var(--space-4);
+    transform: translateX(100%);
     transition: transform 0.3s ease;
     z-index: 1000;
+    overflow-y: auto;
 }
 
 body[data-menu-open="true"] .nav {
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .nav__item {}
@@ -66,7 +65,8 @@ body[data-menu-open="true"] .nav {
     text-decoration: none;
     font-weight: 600;
     color: var(--color-text);
-    padding: var(--space-2) var(--space-3);
+    padding: 0;
+    font-size: 1.25rem;
     border-radius: var(--radius-sm);
 }
 
@@ -89,6 +89,33 @@ body[data-menu-open="true"] .nav {
     color: var(--color-text);
 }
 
+.nav__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    background: none;
+    border: 0;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 900;
+}
+
+.nav-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
 @media (min-width: 768px) {
     .nav-toggle {
         display: none;
@@ -100,6 +127,10 @@ body[data-menu-open="true"] .nav {
         background: none;
         padding: 0;
         gap: var(--space-4);
+        overflow: visible;
+    }
+    .nav__close {
+        display: none;
     }
 }
 
