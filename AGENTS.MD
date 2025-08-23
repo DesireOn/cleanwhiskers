@@ -204,9 +204,17 @@ composer stan
 
 composer test
 
-./vendor/bin/phpunit
 
-If tests fail: iterate until green; do not open PR with failing CI.
+Before completing a task, run all PHPUnit tests using the command:
+
+    ./vendor/bin/phpunit --log-junit /tmp/phpunit.log
+
+If any test fails:
+- DO NOT mark the task as complete.
+- Read the error(s), fix the code, and re-run the test.
+- Repeat this process until ALL tests pass.
+Only mark the task as complete when the PHPUnit test suite returns 100% success.
+
 
 If DB change is required: generate a migration and include it in the PR.
 
