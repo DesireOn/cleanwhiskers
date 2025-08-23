@@ -28,6 +28,7 @@
     var toggle = doc.getElementById('nav-toggle');
     var nav = doc.getElementById('primary-nav');
     var overlay = doc.getElementById('nav-overlay');
+    var closeBtn = nav.querySelector('.nav__close');
     if (!toggle || !nav) {
       return;
     }
@@ -51,6 +52,12 @@
 
     if (overlay) {
       overlay.addEventListener('click', function () {
+        closeMenu(doc, nav, toggle, overlay);
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
         closeMenu(doc, nav, toggle, overlay);
       });
     }

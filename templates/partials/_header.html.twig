@@ -6,6 +6,7 @@
       <span class="nav-toggle__icon" aria-hidden="true"></span>
     </button>
     <nav id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true">
+      <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">&times;</button>
       <ul class="nav__list">
         <li class="nav__item"><a class="nav__link" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
         <li class="nav__item"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
