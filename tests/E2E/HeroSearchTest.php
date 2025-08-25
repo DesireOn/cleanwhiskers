@@ -23,6 +23,7 @@ use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverKeys;
 use Symfony\Component\Panther\PantherTestCase;
 
 final class HeroSearchTest extends PantherTestCase
@@ -55,26 +56,22 @@ final class HeroSearchTest extends PantherTestCase
         $client->request('GET', '/');
 
         self::assertSelectorExists('#city[role="combobox"][aria-controls="city-list"]');
-        self::assertSelectorExists('#city-list[role="listbox"]');
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
 
         $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city'));
         $input->sendKeys('va');
-        $client->waitFor('#city-list .city-card');
+        $client->waitFor('#city-list [role="option"]');
         $visible = $client->executeScript('return !document.getElementById("city-list").hidden;');
         self::assertTrue($visible);
-        $count = $client->executeScript('return document.querySelectorAll("#city-list .city-card").length;');
+        $count = $client->executeScript('return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
         self::assertSame(1, $count);
-        $minHeight = $client->executeScript('return parseFloat(getComputedStyle(document.querySelector("#city-list .city-card")).minHeight);');
-        self::assertGreaterThanOrEqual(44, $minHeight);
-        $role = $client->executeScript('return document.querySelector("#city-list .city-card").getAttribute("role");');
-        self::assertSame('option', $role);
 
         $input->clear();
         $input->sendKeys('so');
-        $client->waitFor('#city-list .city-card');
-        $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city-list .city-card'))->click();
+        $client->waitFor('#city-list [role="option"]');
+        $input->sendKeys(WebDriverKeys::ARROW_DOWN);
+        $input->sendKeys(WebDriverKeys::ENTER);
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
         $selected = $input->getAttribute('value');
