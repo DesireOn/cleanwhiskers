@@ -48,7 +48,7 @@
 }
 
 .footer-heading {
-    font-size: 1.125rem;
+    font-size: calc(var(--fs-h3) * 3 / 4);
     font-weight: 700;
     margin: 0 0 var(--space-2);
 }

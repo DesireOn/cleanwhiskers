@@ -63,7 +63,7 @@
 
 .card-groomer__name {
     margin: 0 0 0.25rem;
-    font-size: 1rem;
+    font-size: calc(var(--fs-h3) * 2 / 3);
     font-weight: 600;
     line-height: 1.25;
     overflow: hidden;

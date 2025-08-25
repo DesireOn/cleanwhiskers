@@ -10,7 +10,7 @@
 }
 
 .hero__title {
-    font-size: 2rem;
+    font-size: calc(var(--fs-h1) * 8 / 7);
     margin-bottom: var(--space-4);
 }
 
@@ -75,7 +75,7 @@
 
 @media (min-width: 768px) {
     .hero__title {
-        font-size: 2.5rem;
+        font-size: calc(var(--fs-h1) * 10 / 7);
     }
 
     .hero__controls {
@@ -96,7 +96,7 @@
 
 @media (min-width: 1024px) {
     .hero__title {
-        font-size: 3rem;
+        font-size: calc(var(--fs-h1) * 12 / 7);
     }
 }
 
