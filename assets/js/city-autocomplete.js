@@ -28,6 +28,7 @@ export default function initCityAutocomplete(inputsParam) {
 
     let activeIndex = -1;
     let currentInput = null;
+    let navigating = false;
 
     const hide = () => {
         listEl.hidden = true;
@@ -38,18 +39,16 @@ export default function initCityAutocomplete(inputsParam) {
         activeIndex = -1;
     };
 
-    const select = (opt, item) => {
-        if (item) {
-            listEl.querySelectorAll('[role="option"]').forEach((el) => {
-                const isSelected = el === item;
-                el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-                el.classList.toggle('active', isSelected);
-            });
+    const navigate = (slug) => {
+        if (navigating) {
+            return;
         }
+        navigating = true;
         if (currentInput) {
-            currentInput.value = opt.value;
+            currentInput.value = slug;
         }
         hide();
+        window.location.href = `/cities/${slug}`;
     };
 
     const move = (dir) => {
@@ -81,8 +80,8 @@ export default function initCityAutocomplete(inputsParam) {
             card.setAttribute('aria-selected', 'false');
             card.id = `${input.id}-option-${index}`;
             card.className = 'city-card';
-            card.href = '#';
             card.dataset.value = opt.value;
+            card.href = `/cities/${opt.value}`;
 
             const icon = document.createElement('span');
             icon.className = 'city-card__icon';
@@ -93,17 +92,16 @@ export default function initCityAutocomplete(inputsParam) {
             label.innerHTML = regex ? opt.label.replace(regex, '<mark>$1</mark>') : opt.label;
             card.appendChild(label);
 
-            card.addEventListener('mousedown', (e) => {
+            const handleNavigation = (e) => {
                 e.preventDefault();
-                select(opt, card);
-            });
+                navigate(opt.value);
+            };
+            card.addEventListener('click', handleNavigation);
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    select(opt, card);
+                    handleNavigation(e);
                 }
             });
-            card.addEventListener('click', (e) => e.preventDefault());
 
             listEl.appendChild(card);
         });
@@ -148,7 +146,7 @@ export default function initCityAutocomplete(inputsParam) {
                 if (activeIndex >= 0) {
                     e.preventDefault();
                     const item = listEl.querySelectorAll('[role="option"]')[activeIndex];
-                    select({ value: item.dataset.value, label: item.textContent }, item);
+                    navigate(item.dataset.value);
                 }
             } else if (e.key === 'Escape') {
                 hide();
