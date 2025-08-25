@@ -10,7 +10,5 @@ import './styles/utilities.css';
 import './styles/blocks/carousel-mmGYQrl.css';
 import './styles/blocks/groomer-card.css';
 import './styles/components/badge.css';
-import './styles/components/city-cards.css';
-import './js/mobile-cta.js';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
