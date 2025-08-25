@@ -38,7 +38,7 @@
 }
 
 .card-groomer__service {
-    font-size: var(--fs-h2);
+    font-size: 1.25rem;
 }
 
 .card-groomer__cta {
