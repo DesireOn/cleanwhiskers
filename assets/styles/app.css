@@ -79,6 +79,7 @@ h3 { font-size: var(--fs-h3); }
     cursor: pointer;
     text-decoration: none;
     font-weight: 600;
+    font-size: var(--fs-base);
 }
 
 .btn--accent {
