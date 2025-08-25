@@ -61,16 +61,21 @@ final class HeroSearchTest extends PantherTestCase
 
         $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city'));
         $input->sendKeys('va');
-        $client->waitFor('#city-list [role="option"]');
+        $client->waitFor('#city-list .city-card');
+        self::assertSelectorExists('#city-list .city-card[role="option"]');
         $visible = $client->executeScript('return !document.getElementById("city-list").hidden;');
         self::assertTrue($visible);
-        $count = $client->executeScript('return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
+        $count = $client->executeScript('return document.querySelectorAll("#city-list .city-card").length;');
         self::assertSame(1, $count);
 
         $input->clear();
         $input->sendKeys('so');
-        $client->waitFor('#city-list [role="option"]');
+        $client->waitFor('#city-list .city-card');
+        $option = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city-list .city-card'));
+        self::assertSame('option', $option->getAttribute('role'));
+        self::assertSame('false', $option->getAttribute('aria-selected'));
         $input->sendKeys(WebDriverKeys::ARROW_DOWN);
+        self::assertSame('true', $option->getAttribute('aria-selected'));
         $input->sendKeys(WebDriverKeys::ENTER);
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
