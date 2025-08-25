@@ -88,6 +88,9 @@
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-md);
     transition: background 0.2s ease;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
 }
 
 .footer-social a:hover,
@@ -114,8 +117,7 @@
     margin-right: var(--space-1);
 }
 
-.footer-nav a,
-.footer-social a {
+.footer-nav a {
     min-height: 44px;
     display: flex;
     align-items: center;
