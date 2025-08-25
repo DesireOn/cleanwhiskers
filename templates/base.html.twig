@@ -38,5 +38,13 @@
         </main>
 
         {% include 'partials/_footer.html.twig' %}
+
+        {% block sticky_mobile_cta %}
+            <div class="sticky-mobile-cta mobile-only">
+                <a href="{{ path('app_search_redirect') }}" role="button" aria-label="Find a groomer">
+                    <span>{{ 'Find a Groomer'|trans }}</span>
+                </a>
+            </div>
+        {% endblock %}
     </body>
 </html>
