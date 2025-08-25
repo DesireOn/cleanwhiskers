@@ -206,14 +206,6 @@ composer test
 
 php bin/console asset-map:compile
 
-## Symfony AssetMapper Integration Guidelines
-
-When working with Symfony's AssetMapper and CSS modules:
-
-- ✅ Always import CSS files in the JavaScript entrypoint (e.g., `assets/app.js`) using `import './styles/components/component-name.css';`
-- ❌ Never use `@import './components/component-name.css';` inside CSS files, as AssetMapper fingerprints CSS assets and this will result in a 404.
-- ✅ All CSS should be tracked and bundled via JS imports to ensure correct hash generation and reference resolution.
-
 
 Before completing a task, run all PHPUnit tests using the command:
 
