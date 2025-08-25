@@ -32,6 +32,12 @@
     display: none;
 }
 
+@media (max-width: 375px) {
+    .hero__controls {
+        gap: var(--space-3);
+    }
+}
+
 .hero__label {
     display: block;
     margin: 0;
