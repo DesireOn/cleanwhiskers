@@ -20,6 +20,10 @@
       var pending = false;
 
       function addSpinner() {
+        var existing = button.querySelector('.spinner');
+        if (existing) {
+          return existing;
+        }
         var spinner = doc.createElement('span');
         spinner.className = 'spinner';
         spinner.setAttribute('role', 'status');

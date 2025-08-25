@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     form.addEventListener('submit', () => {
-        if (submit.disabled) {
+        if (submit.disabled || submit.querySelector('.spinner')) {
             return;
         }
         submit.setAttribute('aria-busy', 'true');
