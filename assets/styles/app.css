@@ -1,3 +1,6 @@
+@import "./components/spinner.css";
+@import "./components/mobile-cta.css";
+@import "./components/city-cards.css";
 
 *, *::before, *::after {
     box-sizing: border-box;
