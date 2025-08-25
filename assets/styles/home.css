@@ -102,7 +102,7 @@
 
 .sticky-search .search-form__input,
 .sticky-search .search-form__select {
-    font-size: 1rem;
+    font-size: var(--fs-base);
 }
 
 .sticky-search .search-form__input,

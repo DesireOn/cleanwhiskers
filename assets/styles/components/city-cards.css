@@ -24,20 +24,20 @@
 }
 
 .city-card__icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-surface-2, #f3f4f6);
-  font-size: 18px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-2, #f3f4f6);
+    font-size: var(--fs-h3);
 }
 
 .city-card__name {
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.25;
+    font-weight: 600;
+    font-size: var(--fs-base);
+    line-height: 1.25;
 }
 
 @media (min-width: 640px) {
