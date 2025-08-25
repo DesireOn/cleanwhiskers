@@ -20,7 +20,11 @@
       var pending = false;
 
       function addSpinner() {
-        var spinner = doc.createElement('span');
+        var spinner = button.querySelector('.spinner');
+        if (spinner) {
+          return spinner;
+        }
+        spinner = doc.createElement('span');
         spinner.className = 'spinner';
         spinner.setAttribute('role', 'status');
         spinner.setAttribute('aria-live', 'polite');

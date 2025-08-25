@@ -45,18 +45,23 @@ export default function initCityAutocomplete(inputsParam) {
         }
         navigating = true;
         listEl.setAttribute('aria-busy', 'true');
-        const spinner = document.createElement('span');
-        spinner.className = 'spinner';
-        spinner.setAttribute('role', 'status');
-        spinner.setAttribute('aria-live', 'polite');
-        const hidden = document.createElement('span');
-        hidden.className = 'visually-hidden';
-        hidden.textContent = 'Loading';
-        spinner.appendChild(hidden);
-        card.appendChild(spinner);
+        let spinner = card.querySelector('.spinner');
+        if (!spinner) {
+            spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            spinner.setAttribute('role', 'status');
+            spinner.setAttribute('aria-live', 'polite');
+            const hidden = document.createElement('span');
+            hidden.className = 'visually-hidden';
+            hidden.textContent = 'Loading';
+            spinner.appendChild(hidden);
+            card.appendChild(spinner);
+        }
 
         const cleanup = () => {
-            spinner.remove();
+            if (spinner && spinner.parentNode) {
+                spinner.remove();
+            }
             listEl.removeAttribute('aria-busy');
             navigating = false;
         };

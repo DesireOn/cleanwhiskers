@@ -17,14 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         submit.setAttribute('aria-busy', 'true');
         submit.disabled = true;
-        const spinner = document.createElement('span');
-        spinner.className = 'spinner';
-        spinner.setAttribute('role', 'status');
-        spinner.setAttribute('aria-live', 'polite');
-        const hidden = document.createElement('span');
-        hidden.className = 'visually-hidden';
-        hidden.textContent = 'Loading';
-        spinner.appendChild(hidden);
-        submit.insertBefore(spinner, submit.firstChild);
+        let spinner = submit.querySelector('.spinner');
+        if (!spinner) {
+            spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            spinner.setAttribute('role', 'status');
+            spinner.setAttribute('aria-live', 'polite');
+            const hidden = document.createElement('span');
+            hidden.className = 'visually-hidden';
+            hidden.textContent = 'Loading';
+            spinner.appendChild(hidden);
+            submit.insertBefore(spinner, submit.firstChild);
+        }
     });
 });
