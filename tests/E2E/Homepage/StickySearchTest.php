@@ -23,7 +23,6 @@ use App\Entity\City;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverKeys;
 
 final class StickySearchTest extends PantherTestCase
 {
@@ -51,22 +50,26 @@ final class StickySearchTest extends PantherTestCase
         $client->request('GET', '/');
 
         self::assertSelectorExists('#sticky-city[role="combobox"][aria-controls="city-list"]');
+        self::assertSelectorExists('#city-list[role="listbox"]');
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
 
         $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#sticky-city'));
         $input->sendKeys('va');
-        $client->waitFor('#city-list [role="option"]');
+        $client->waitFor('#city-list .city-card');
         $visible = $client->executeScript('return !document.getElementById("city-list").hidden;');
         self::assertTrue($visible);
-        $count = $client->executeScript('return document.querySelectorAll("#city-list [role=\\"option\\"]").length;');
+        $count = $client->executeScript('return document.querySelectorAll("#city-list .city-card").length;');
         self::assertSame(1, $count);
+        $minHeight = $client->executeScript('return parseFloat(getComputedStyle(document.querySelector("#city-list .city-card")).minHeight);');
+        self::assertGreaterThanOrEqual(44, $minHeight);
+        $role = $client->executeScript('return document.querySelector("#city-list .city-card").getAttribute("role");');
+        self::assertSame('option', $role);
 
         $input->clear();
         $input->sendKeys('so');
-        $client->waitFor('#city-list [role="option"]');
-        $input->sendKeys(WebDriverKeys::ARROW_DOWN);
-        $input->sendKeys(WebDriverKeys::ENTER);
+        $client->waitFor('#city-list .city-card');
+        $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city-list .city-card'))->click();
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
         $selected = $input->getAttribute('value');
@@ -85,11 +88,10 @@ final class StickySearchTest extends PantherTestCase
 
         $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#sticky-city'));
         $input->sendKeys('so');
-        $client->waitFor('#city-list [role="option"]');
+        $client->waitFor('#city-list .city-card');
         $visible = $client->executeScript('return !document.getElementById("city-list").hidden;');
         self::assertTrue($visible);
-        $input->sendKeys(WebDriverKeys::ARROW_DOWN);
-        $input->sendKeys(WebDriverKeys::ENTER);
+        $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#city-list .city-card'))->click();
         $hidden = $client->executeScript('return document.getElementById("city-list").hidden;');
         self::assertTrue($hidden);
 
