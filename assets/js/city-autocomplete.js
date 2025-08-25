@@ -1,3 +1,5 @@
+import { setLoading } from './loading.js';
+
 function debounce(fn, delay = 200) {
     let timer;
     return (...args) => {
@@ -55,13 +57,18 @@ export default function initCityAutocomplete(inputsParam) {
             name.className = 'city-card__name';
             name.textContent = opt.label;
 
-            card.append(icon, name);
+            const spin = document.createElement('span');
+            spin.className = 'spinner';
+            spin.hidden = true;
+
+            card.append(icon, name, spin);
             listbox.appendChild(card);
 
             const select = () => {
                 input.value = opt.value;
                 card.setAttribute('aria-selected', 'true');
                 hide();
+                setLoading(card, true);
 
                 const url = opt.url || (typeof routes !== 'undefined' && routes.cityShow ? routes.cityShow.replace(':slug', opt.value) : null);
                 if (url) window.location.assign(url);

@@ -22,8 +22,9 @@
                         <div role="option" class="city-suggestion" data-value="{{ city.slug }}">{{ city.name }}</div>
                     {% endfor %}
                 </div>
-                <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
-                    {{ ctaLinks.find.label|trans }}
+                <button id="search-submit" class="hero__submit search-form__button btn btn--accent" type="submit" aria-live="polite" aria-busy="false">
+                    <span class="btn__label">{{ ctaLinks.find.label|trans }}</span>
+                    <span class="spinner" hidden></span>
                 </button>
             </div>
         </form>

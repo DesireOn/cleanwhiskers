@@ -12,5 +12,8 @@ import './styles/blocks/groomer-card.css';
 import './styles/components/badge.css';
 import './styles/components/mobile-cta.css';
 import './js/mobile-cta.js';
+import './js/loading.js';
+import './js/nav-loading.js';
+import './js/search-loading.js';
 
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
