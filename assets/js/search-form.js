@@ -17,14 +17,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         submit.setAttribute('aria-busy', 'true');
         submit.disabled = true;
-        const spinner = document.createElement('span');
-        spinner.className = 'spinner';
-        spinner.setAttribute('role', 'status');
-        spinner.setAttribute('aria-live', 'polite');
-        const hidden = document.createElement('span');
-        hidden.className = 'visually-hidden';
-        hidden.textContent = 'Loading';
-        spinner.appendChild(hidden);
-        submit.insertBefore(spinner, submit.firstChild);
+        let existing = null;
+        if (typeof submit.querySelector === 'function') {
+            existing = submit.querySelector('.spinner');
+        } else if (submit.children) {
+            for (let i = 0; i < submit.children.length; i++) {
+                if (submit.children[i].className === 'spinner') {
+                    existing = submit.children[i];
+                    break;
+                }
+            }
+        }
+        if (!existing) {
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner';
+            spinner.setAttribute('role', 'status');
+            spinner.setAttribute('aria-live', 'polite');
+            const hidden = document.createElement('span');
+            hidden.className = 'visually-hidden';
+            hidden.textContent = 'Loading';
+            spinner.appendChild(hidden);
+            submit.insertBefore(spinner, submit.firstChild);
+        }
     });
 });
