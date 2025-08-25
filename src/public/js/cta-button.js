@@ -18,6 +18,28 @@
       button.after(errorEl);
       button.removeAttribute('aria-disabled');
       var pending = false;
+
+      function addSpinner() {
+        var spinner = doc.createElement('span');
+        spinner.className = 'spinner';
+        spinner.setAttribute('role', 'status');
+        spinner.setAttribute('aria-live', 'polite');
+        var hidden = doc.createElement('span');
+        hidden.className = 'visually-hidden';
+        hidden.textContent = 'Loading';
+        spinner.appendChild(hidden);
+        button.insertBefore(spinner, button.firstChild);
+        button.setAttribute('aria-busy', 'true');
+        return spinner;
+      }
+
+      function removeSpinner(spinner) {
+        button.removeAttribute('aria-busy');
+        if (spinner && spinner.parentNode === button) {
+          button.removeChild(spinner);
+        }
+      }
+
       button.addEventListener('click', function (e) {
         if (pending) {
           if (e && typeof e.preventDefault === 'function') {
@@ -27,6 +49,7 @@
         }
         pending = true;
         button.setAttribute('aria-disabled', 'true');
+        var spinner = addSpinner();
         var href = button.getAttribute('href');
         if (fetchFn) {
           fetchFn(href, { method: 'HEAD' })
@@ -36,6 +59,7 @@
             .catch(function () {
               pending = false;
               button.removeAttribute('aria-disabled');
+              removeSpinner(spinner);
               errorEl.textContent = 'Please try again';
               errorEl.hidden = false;
             });
