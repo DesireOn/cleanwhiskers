@@ -28,9 +28,9 @@
 
     /* Typography */
     --font-body: 'Quicksand', system-ui, sans-serif;
-    --fs-base: 1rem;
-    --fs-h1: 2.5rem;
-    --fs-h2: 2rem;
+    --fs-base: 1rem; /* ≈16px */
+    --fs-h1: 1.75rem; /* ≈28px */
+    --fs-h2: 1.25rem; /* ≈20px */
     --fs-h3: 1.5rem;
     --lh-body: 1.5;
     --lh-heading: 1.2;
