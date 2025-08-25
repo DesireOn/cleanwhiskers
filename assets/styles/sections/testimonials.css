@@ -9,7 +9,7 @@
     gap: var(--space-3);
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
     .testimonials__list {
         flex-direction: row;
     }

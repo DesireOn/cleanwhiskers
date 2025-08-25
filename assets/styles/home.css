@@ -54,7 +54,7 @@
     align-self: center;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
     .search-form {
         flex-direction: row;
         align-items: flex-end;
@@ -175,7 +175,7 @@
     column-count: 2;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
     .popular-grid {
         column-count: 3;
     }

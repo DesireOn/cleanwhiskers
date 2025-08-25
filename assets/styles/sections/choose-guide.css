@@ -10,13 +10,13 @@
     gap: var(--space-3);
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
     .choose-guide__list {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
     .choose-guide__list {
         grid-template-columns: repeat(4, 1fr);
     }
