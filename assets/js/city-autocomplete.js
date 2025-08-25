@@ -54,9 +54,11 @@ export default function initCityAutocomplete(inputsParam) {
         items.forEach((item, idx) => {
             if (idx === activeIndex) {
                 item.classList.add('active');
+                item.setAttribute('aria-selected', 'true');
                 currentInput.setAttribute('aria-activedescendant', item.id);
             } else {
                 item.classList.remove('active');
+                item.setAttribute('aria-selected', 'false');
             }
         });
     };
@@ -66,17 +68,37 @@ export default function initCityAutocomplete(inputsParam) {
         activeIndex = -1;
         const regex = term ? new RegExp(`(${escapeRegExp(term)})`, 'i') : null;
         matches.forEach((opt, index) => {
-            const div = document.createElement('div');
-            div.setAttribute('role', 'option');
-            div.id = `${input.id}-option-${index}`;
-            div.className = 'city-option';
-            div.dataset.value = opt.value;
-            div.innerHTML = regex ? opt.label.replace(regex, '<mark>$1</mark>') : opt.label;
-            div.addEventListener('mousedown', (e) => {
+            const card = document.createElement('a');
+            card.setAttribute('role', 'option');
+            card.setAttribute('tabindex', '-1');
+            card.setAttribute('aria-selected', 'false');
+            card.id = `${input.id}-option-${index}`;
+            card.className = 'city-card';
+            card.href = '#';
+            card.dataset.value = opt.value;
+
+            const icon = document.createElement('span');
+            icon.className = 'city-card__icon';
+            card.appendChild(icon);
+
+            const label = document.createElement('span');
+            label.className = 'city-card__label';
+            label.innerHTML = regex ? opt.label.replace(regex, '<mark>$1</mark>') : opt.label;
+            card.appendChild(label);
+
+            card.addEventListener('mousedown', (e) => {
                 e.preventDefault();
                 select(opt);
             });
-            listEl.appendChild(div);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    select(opt);
+                }
+            });
+            card.addEventListener('click', (e) => e.preventDefault());
+
+            listEl.appendChild(card);
         });
         if (matches.length) {
             const rect = input.getBoundingClientRect();
