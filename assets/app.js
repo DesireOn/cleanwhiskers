@@ -10,5 +10,6 @@ import './styles/utilities.css';
 import './styles/blocks/carousel-mmGYQrl.css';
 import './styles/blocks/groomer-card.css';
 import './styles/components/badge.css';
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+import './styles/components/city-card.css';
+import './styles/components/spinner.css';
+import './styles/components/sticky-cta.css';
