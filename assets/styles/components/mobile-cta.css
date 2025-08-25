@@ -1,0 +1,40 @@
+/* Mobile sticky CTA */
+#mobile-cta {
+  position: fixed;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+  z-index: 1000; /* above footer */
+}
+
+.mobile-cta__btn {
+  width: 100%;
+  min-height: 48px; /* ≥44px tap target */
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
+
+@media (min-width: 768px) {
+  #mobile-cta { display: none !important; }
+}
+
+/* Reserve space so fixed CTA doesn't cover content on very small screens */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Optional: simple fade-in utility */
+.mobile-cta--visible[hidden] { display: block; } /* allow transitions while toggling hidden */
+.mobile-cta--visible { animation: mobileCtaFade .2s ease-out; }
+@keyframes mobileCtaFade { from { opacity:.001; transform: translateY(6px) } to { opacity:1; transform: translateY(0) } }
+
+@media (max-width: 767px) {
+  .back-to-top { display: none !important; }
+}
