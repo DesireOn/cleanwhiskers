@@ -1,0 +1,23 @@
+.spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  display: inline-block;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}
+
+/* Button loading state */
+.btn.is-loading {
+  pointer-events: none;
+  opacity: .85;
+}
+.btn.is-loading .btn__label { visibility: hidden; }
+.btn.is-loading .spinner { display: inline-block; }
