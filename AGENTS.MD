@@ -204,6 +204,8 @@ composer stan
 
 composer test
 
+php bin/console asset-map:compile
+
 
 Before completing a task, run all PHPUnit tests using the command:
 
@@ -232,6 +234,8 @@ Definition of Done (DoD)
  Security, perf, and error handling considered
 
  Static asset links (CSS/JS) verified to point to existing files to prevent 404s
+
+ Asset map compiles without missing references: php bin/console asset-map:compile
 
  PR template completed
 
