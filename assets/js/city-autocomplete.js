@@ -39,16 +39,43 @@ export default function initCityAutocomplete(inputsParam) {
         activeIndex = -1;
     };
 
-    const navigate = (slug) => {
+    const navigate = (slug, card) => {
         if (navigating) {
             return;
         }
         navigating = true;
-        if (currentInput) {
-            currentInput.value = slug;
+        listEl.setAttribute('aria-busy', 'true');
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        spinner.setAttribute('role', 'status');
+        spinner.setAttribute('aria-live', 'polite');
+        const hidden = document.createElement('span');
+        hidden.className = 'visually-hidden';
+        hidden.textContent = 'Loading';
+        spinner.appendChild(hidden);
+        card.appendChild(spinner);
+
+        const cleanup = () => {
+            spinner.remove();
+            listEl.removeAttribute('aria-busy');
+            navigating = false;
+        };
+
+        try {
+            if (currentInput) {
+                currentInput.value = slug;
+            }
+            window.location.href = `/cities/${slug}`;
+        } catch (err) {
+            cleanup();
+            throw err;
         }
-        hide();
-        window.location.href = `/cities/${slug}`;
+
+        setTimeout(() => {
+            if (!document.hidden) {
+                cleanup();
+            }
+        }, 1000);
     };
 
     const move = (dir) => {
@@ -94,7 +121,7 @@ export default function initCityAutocomplete(inputsParam) {
 
             const handleNavigation = (e) => {
                 e.preventDefault();
-                navigate(opt.value);
+                navigate(opt.value, card);
             };
             card.addEventListener('click', handleNavigation);
             card.addEventListener('keydown', (e) => {
@@ -146,7 +173,7 @@ export default function initCityAutocomplete(inputsParam) {
                 if (activeIndex >= 0) {
                     e.preventDefault();
                     const item = listEl.querySelectorAll('[role="option"]')[activeIndex];
-                    navigate(item.dataset.value);
+                    navigate(item.dataset.value, item);
                 }
             } else if (e.key === 'Escape') {
                 hide();
