@@ -38,10 +38,6 @@
     --ls-heading: 0.02em;
 }
 
-@import "./components/city-card.css";
-@import "./components/spinner.css";
-@import "./components/sticky-cta.css";
-
 /* Base styles */
 html {
     scroll-behavior: smooth;
