@@ -16,13 +16,12 @@ final class LoadingStateTest extends WebTestCase
         $this->client = static::createClient();
     }
 
-    public function testSearchButtonIncludesSpinner(): void
+    public function testSearchButtonsDoNotIncludeSpinner(): void
     {
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
 
-        $spinners = $crawler->filter('#search-submit .spinner');
-        self::assertCount(1, $spinners);
-        self::assertSame('false', $crawler->filter('#search-submit')->attr('aria-busy'));
+        $spinners = $crawler->filter('.search-form__button .spinner');
+        self::assertCount(0, $spinners);
     }
 }
