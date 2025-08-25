@@ -12,6 +12,7 @@ import './styles/blocks/groomer-card.css';
 import './styles/components/badge.css';
 import './styles/components/mobile-cta.css';
 import './styles/components/city-cards.css';
+import '.styles/components/spinner.css'
 import './js/mobile-cta.js';
 import './js/loading.js';
 import './js/nav-loading.js';
