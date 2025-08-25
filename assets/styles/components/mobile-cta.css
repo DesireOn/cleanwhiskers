@@ -38,5 +38,3 @@
 @media (max-width: 767px) {
   .back-to-top { display: none !important; }
 }
-.mobile-cta__spinner { width: 16px; height: 16px; }
-.mobile-cta__spinner::before { content: ""; }
