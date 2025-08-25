@@ -51,18 +51,26 @@
         button.setAttribute('aria-disabled', 'true');
         var spinner = addSpinner();
         var href = button.getAttribute('href');
+
+        function reset() {
+          pending = false;
+          button.removeAttribute('aria-disabled');
+          removeSpinner(spinner);
+        }
+
         if (fetchFn) {
           fetchFn(href, { method: 'HEAD' })
             .then(function () {
               win.location.href = href;
             })
             .catch(function () {
-              pending = false;
-              button.removeAttribute('aria-disabled');
-              removeSpinner(spinner);
               errorEl.textContent = 'Please try again';
               errorEl.hidden = false;
-            });
+            })
+            .finally(reset);
+        } else {
+          reset();
+          win.location.href = href;
         }
       });
     }
