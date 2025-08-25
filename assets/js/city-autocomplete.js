@@ -38,7 +38,14 @@ export default function initCityAutocomplete(inputsParam) {
         activeIndex = -1;
     };
 
-    const select = (opt) => {
+    const select = (opt, item) => {
+        if (item) {
+            listEl.querySelectorAll('[role="option"]').forEach((el) => {
+                const isSelected = el === item;
+                el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+                el.classList.toggle('active', isSelected);
+            });
+        }
         if (currentInput) {
             currentInput.value = opt.value;
         }
@@ -88,12 +95,12 @@ export default function initCityAutocomplete(inputsParam) {
 
             card.addEventListener('mousedown', (e) => {
                 e.preventDefault();
-                select(opt);
+                select(opt, card);
             });
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    select(opt);
+                    select(opt, card);
                 }
             });
             card.addEventListener('click', (e) => e.preventDefault());
@@ -141,7 +148,7 @@ export default function initCityAutocomplete(inputsParam) {
                 if (activeIndex >= 0) {
                     e.preventDefault();
                     const item = listEl.querySelectorAll('[role="option"]')[activeIndex];
-                    select({ value: item.dataset.value, label: item.textContent });
+                    select({ value: item.dataset.value, label: item.textContent }, item);
                 }
             } else if (e.key === 'Escape') {
                 hide();
