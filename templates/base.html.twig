@@ -41,8 +41,8 @@
 
         {% block sticky_mobile_cta %}
             <div class="sticky-mobile-cta mobile-only">
-                <a href="{{ path('app_search_redirect') }}" role="button" aria-label="Find a groomer">
-                    <span>{{ 'Find a Groomer'|trans }}</span>
+                <a href="{{ path('app_search_redirect') }}" class="sticky-cta__btn btn btn--accent" role="button" aria-label="Find a groomer">
+                    <span class="btn__label">{{ 'Find a Groomer'|trans }}</span>
                 </a>
                 <span id="mobile-cta-feedback" class="sr-only" aria-live="polite"></span>
             </div>
