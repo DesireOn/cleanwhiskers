@@ -33,7 +33,7 @@
     <body id="top" data-route="{{ app.request.attributes.get('_route') }}">
         <a href="#main-content" class="skip-link">Skip to main content</a>
         {% include 'partials/_header.html.twig' %}
-        <main id="main-content" tabindex="-1">
+        <main id="main-content" tabindex="-1" class="has-sticky-cta">
             {% block body %}{% endblock %}
         </main>
 
