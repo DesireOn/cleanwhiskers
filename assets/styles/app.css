@@ -96,6 +96,17 @@ h3 { font-size: var(--fs-h3); }
     color: var(--color-text);
 }
 
+/* Generic interactive min-height */
+a.btn, button.btn, .nav__link, .popular-cities__link, .city-card {
+    min-height: 44px;
+}
+
+/* Minimum spacing between stacked interactive elements on small screens */
+@media (max-width: 767px) {
+    .stack-sm > * + * { margin-top: var(--space-2); }
+    .gap-sm { gap: var(--space-2); }
+}
+
 /* Components */
 .hero {
     background: var(--color-pastel) no-repeat center/cover;
