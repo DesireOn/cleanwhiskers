@@ -93,7 +93,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && sudo rm -rf var/cache && mkdir var/cache/prod"
+          "cd /var/www/staging.cleanwhiskers.com && sudo rm -rf var/cache/prod && mkdir var/cache/prod"
 
       - name: Set Cache Directory Permissions on Staging Server
         run: |
