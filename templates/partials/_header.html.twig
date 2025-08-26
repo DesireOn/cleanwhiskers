@@ -10,7 +10,7 @@
       <nav class="nav__content" role="navigation" aria-label="{{ 'Primary'|trans }}">
         <ul class="nav__list">
           <li class="nav__item"><a class="nav__link" href="{{ path('app_search_redirect') }}">{{ 'Find a Groomer'|trans }}</a></li>
-          <li class="nav__item"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
+          <li class="nav__item nav__item--cta"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
           <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
         </ul>
       </nav>
