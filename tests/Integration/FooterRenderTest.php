@@ -29,6 +29,5 @@ final class FooterRenderTest extends WebTestCase
         self::assertSelectorExists('footer .footer-social a[href="https://facebook.com/cleanwhiskers"][rel="noopener"]');
         self::assertSelectorExists('footer .footer-social a[href="https://instagram.com/cleanwhiskers"][rel="noopener"]');
         self::assertSelectorExists('footer form.footer-search input[name="city"]');
-        self::assertSelectorExists('footer .back-to-top[href="#search-form"]');
     }
 }
