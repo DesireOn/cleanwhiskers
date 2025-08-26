@@ -22,6 +22,7 @@ if (!class_exists(PantherTestCase::class)) {
 use App\Entity\City;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Facebook\WebDriver\WebDriverBy;
 
 final class FooterMiniSearchTest extends PantherTestCase
 {
@@ -53,5 +54,21 @@ final class FooterMiniSearchTest extends PantherTestCase
         });
 
         self::assertSame('/groomers/'.$city->getSlug(), parse_url($client->getCurrentURL(), PHP_URL_PATH));
+    }
+
+    public function testFooterCityAutocompleteShowsSuggestions(): void
+    {
+        $city = new City('Sofia');
+        $city->refreshSlugFrom($city->getName());
+        $this->em->persist($city);
+        $this->em->flush();
+
+        $client = self::createPantherClient();
+        $client->request('GET', '/');
+
+        $input = $client->getWebDriver()->findElement(WebDriverBy::cssSelector('#footer-city'));
+        $input->sendKeys('so');
+        $client->waitFor('#city-list .city-card');
+        self::assertSelectorExists('#city-list .city-card[role="option"]');
     }
 }

@@ -17,11 +17,6 @@
                     aria-controls="city-list"
                     aria-haspopup="listbox"
                 >
-                <div id="city-list" class="city-suggestions" role="listbox" hidden>
-                    {% for city in cities %}
-                        <div role="option" aria-selected="false" class="city-suggestion" data-value="{{ city.slug }}">{{ city.name }}</div>
-                    {% endfor %}
-                </div>
                 <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
                     {{ ctaLinks.find.label|trans }}
                 </button>
