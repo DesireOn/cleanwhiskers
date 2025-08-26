@@ -209,7 +209,7 @@ composer test
 php bin/console asset-map:compile
 
 For any new JS/CSS intended for the browser, place the source under assets/, run the compile command above, and commit the generated file in public/.
-
+When referencing these assets in Twig, load ES modules with `type="module"` and verify each referenced file exists to avoid missing scripts.
 
 Before completing a task, run all PHPUnit tests using the command:
 
