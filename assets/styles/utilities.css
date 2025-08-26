@@ -31,18 +31,9 @@
 /* Margin utilities */
 .mb-4 { margin-bottom: 1rem; }
 .mt-6 { margin-top: 1.5rem; }
-
 /* Tap target utility */
 .tap-target {
     min-height: 48px;
     display: inline-flex;
     align-items: center;
-}
-
-/* Sticky CTA spacer */
-@media (max-width: 767px) {
-    .has-sticky-cta {
-        --sticky-cta-h: 64px;
-        padding-bottom: calc(var(--sticky-cta-h) + env(safe-area-inset-bottom));
-    }
 }

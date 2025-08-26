@@ -3,7 +3,7 @@
 
 const initBackToTop = () => {
     const btn = document.querySelector('.back-to-top');
-    if (!btn || window.getComputedStyle(btn).display === 'none') {
+    if (!btn) {
         return;
     }
 
