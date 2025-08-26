@@ -263,3 +263,10 @@
         align-items: center;
     }
 }
+
+@media (min-width: 1024px) {
+    .footer-links ul {
+        flex-direction: row;
+        gap: 24px;
+    }
+}
