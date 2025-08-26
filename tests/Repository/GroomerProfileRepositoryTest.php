@@ -124,4 +124,40 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
         self::assertSame(5.0, $result[0]['rating']);
         self::assertSame(1, $result[0]['reviewCount']);
     }
+
+    public function testFindFeaturedRespectsLimit(): void
+    {
+        $city = new City('Burgas');
+        $city->refreshSlugFrom($city->getName());
+        $this->em->persist($city);
+
+        $author = (new User())
+            ->setEmail('author@example.com')
+            ->setPassword('hash');
+        $this->em->persist($author);
+
+        for ($i = 0; $i < 5; ++$i) {
+            $user = (new User())
+                ->setEmail(sprintf('g%d@example.com', $i))
+                ->setRoles([User::ROLE_GROOMER])
+                ->setPassword('hash');
+            $profile = new GroomerProfile($user, $city, 'Groomer '.$i, 'About');
+            $profile->refreshSlugFrom($profile->getBusinessName());
+
+            $this->em->persist($user);
+            $this->em->persist($profile);
+        }
+
+        $this->em->flush();
+
+        $profiles = $this->em->getRepository(GroomerProfile::class)->findAll();
+        foreach ($profiles as $profile) {
+            $this->em->persist(new Review($profile, $author, 5, 'Great'));
+        }
+        $this->em->flush();
+        $this->em->clear();
+
+        $result = $this->repository->findFeatured(4);
+        self::assertCount(4, $result);
+    }
 }

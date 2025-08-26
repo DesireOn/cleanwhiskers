@@ -26,30 +26,39 @@ final class HomepageFeaturedGroomersTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testFeaturedGroomersSectionRendersProfiles(): void
+    public function testFeaturedGroomersSectionShowsAtMostFourProfiles(): void
     {
         $city = new City('Sofia');
-        $groomerUser = (new User())
-            ->setEmail('g@example.com')
-            ->setPassword('hash')
-            ->setRoles([User::ROLE_GROOMER]);
+        $city->refreshSlugFrom($city->getName());
         $author = (new User())
-            ->setEmail('a@example.com')
+            ->setEmail('author@example.com')
             ->setPassword('hash');
-        $profile = new GroomerProfile($groomerUser, $city, 'Fancy Groomers', 'About');
-        $profile->setPriceRange('$$');
 
         $this->em->persist($city);
-        $this->em->persist($groomerUser);
         $this->em->persist($author);
-        $this->em->persist($profile);
-        $this->em->persist(new Review($profile, $author, 5, 'Great'));
+
+        for ($i = 0; $i < 5; ++$i) {
+            $groomerUser = (new User())
+                ->setEmail(sprintf('g%d@example.com', $i))
+                ->setPassword('hash')
+                ->setRoles([User::ROLE_GROOMER]);
+            $profile = new GroomerProfile($groomerUser, $city, 'Biz '.$i, 'About');
+            $profile->refreshSlugFrom($profile->getBusinessName());
+
+            $this->em->persist($groomerUser);
+            $this->em->persist($profile);
+        }
+
         $this->em->flush();
 
-        $slug = $profile->getSlug();
+        $profiles = $this->em->getRepository(GroomerProfile::class)->findAll();
+        foreach ($profiles as $profile) {
+            $this->em->persist(new Review($profile, $author, 5, 'Great'));
+        }
+        $this->em->flush();
+
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists(sprintf('#featured-groomers a[href="/groomers/%s"]', $slug));
-        self::assertSelectorTextContains('#featured-groomers', 'Fancy Groomers');
+        self::assertSame(4, $crawler->filter('#featured-groomers .featured-groomer-card')->count());
     }
 }

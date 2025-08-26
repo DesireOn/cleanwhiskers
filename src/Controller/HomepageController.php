@@ -39,7 +39,7 @@ class HomepageController extends AbstractController
 
         $popularCities = $this->cityRepository->findTop(6);
         $popularServices = $this->serviceRepository->findTop(6);
-        $featuredGroomers = $this->groomerProfileRepository->findFeatured(8);
+        $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
 
         $cities = $this->cityRepository->findBy([], ['name' => 'ASC']);
         $services = $this->serviceRepository->findBy([], ['name' => 'ASC']);
