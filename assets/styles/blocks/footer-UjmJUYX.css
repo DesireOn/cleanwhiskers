@@ -175,6 +175,15 @@
     .footer-search button {
         width: 100%;
     }
+
+    .footer-nav {
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-nav nav {
+        text-align: center;
+    }
 }
 
 .footer-bottom {
