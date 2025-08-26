@@ -2,7 +2,7 @@
 
 {% block body %}
     <h1>Groomers in {{ city.name }} for {{ service.name }}</h1>
-    <form method="get">
+    <form method="get" autocomplete="off">
         <label for="rating">Minimum rating:</label>
         <select id="rating" name="rating">
             <option value="">Any</option>
