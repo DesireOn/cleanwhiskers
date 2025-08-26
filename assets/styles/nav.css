@@ -101,7 +101,8 @@
   }
 
   .nav__item--cta {
-    margin-top: var(--space-4);
+    margin-block-start: var(--space-4);
+    margin-block-end: var(--space-4);
   }
 
   .nav__link--cta {
