@@ -13,12 +13,19 @@ final class RobotsController extends AbstractController
     #[Route('/robots.txt', name: 'app_robots', methods: ['GET'])]
     public function __invoke(): Response
     {
-        $baseDir = $this->getParameter('kernel.project_dir');
-        $baseDir = \is_string($baseDir) ? $baseDir : \dirname(__DIR__, 2);
-        $path = $baseDir.'/public/robots.txt';
+        $environment = $this->getParameter('kernel.environment');
+        $environment = \is_string($environment) ? $environment : '';
 
-        $content = @file_get_contents($path);
-        $content = \is_string($content) ? $content : '';
+        if ('staging' === $environment) {
+            $content = "User-agent: *\nDisallow: /\n";
+        } else {
+            $baseDir = $this->getParameter('kernel.project_dir');
+            $baseDir = \is_string($baseDir) ? $baseDir : \dirname(__DIR__, 2);
+            $path = $baseDir.'/public/robots.txt';
+
+            $content = @file_get_contents($path);
+            $content = \is_string($content) ? $content : '';
+        }
 
         return new Response($content, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
     }
