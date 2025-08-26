@@ -86,7 +86,7 @@ const button = {
   addEventListener(ev, handler) { this.handler = handler; }
 };
 const doc = {
-  querySelector() { return button; },
+  querySelectorAll() { return [button]; },
   createElement() { return { className: '', hidden: false, setAttribute() {}, appendChild() {}, after() {} }; }
 };
 function fakeFetch() { return Promise.reject(new Error('fail')); }
