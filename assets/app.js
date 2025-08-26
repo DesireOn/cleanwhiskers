@@ -7,7 +7,6 @@ import './bootstrap.js';
  */
 import './styles/app.css';
 import './styles/utilities.css';
-import './styles/blocks/carousel-mmGYQrl.css';
 import './styles/blocks/groomer-card.css';
 import './styles/components/badge.css';
 import './styles/components/city-card.css';

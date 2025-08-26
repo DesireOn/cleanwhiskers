@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-final class FeaturedGroomersCarouselTest extends WebTestCase
+final class FeaturedGroomersSectionTest extends WebTestCase
 {
     private EntityManagerInterface $em;
     private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
@@ -27,7 +27,7 @@ final class FeaturedGroomersCarouselTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testCarouselMarkupAppearsWhenMoreThanFourGroomers(): void
+    public function testFeaturedGroomersGridRendersCards(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
@@ -57,9 +57,7 @@ final class FeaturedGroomersCarouselTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('#featured-groomers [data-carousel]');
-        self::assertCount(5, $crawler->filter('#featured-groomers .carousel__card'));
-        self::assertSelectorExists('#featured-groomers .card-groomer__price');
-        self::assertSelectorTextContains('#featured-groomers .card-groomer__book', 'Book Now');
+        self::assertSelectorCount(5, '#featured-groomers .card-groomer');
+        self::assertSelectorNotExists('#featured-groomers [data-carousel]');
     }
 }
