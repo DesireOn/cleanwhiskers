@@ -113,10 +113,6 @@ export default function initCityAutocomplete(inputsParam) {
             card.dataset.value = opt.value;
             card.href = `/cities/${opt.value}`;
 
-            const icon = document.createElement('span');
-            icon.className = 'city-card__icon';
-            card.appendChild(icon);
-
             const label = document.createElement('span');
             label.className = 'city-card__label';
             label.innerHTML = regex ? opt.label.replace(regex, '<mark>$1</mark>') : opt.label;
