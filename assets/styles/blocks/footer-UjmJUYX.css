@@ -194,6 +194,14 @@
     transform: translateY(-2px);
 }
 
+.footer-bottom .btn--accent,
+.footer-bottom .btn--accent:hover,
+.footer-bottom .btn--accent:focus,
+.footer-bottom .btn--accent:active,
+.footer-bottom .btn--accent:visited {
+    color: var(--color-cream);
+}
+
 @media (min-width: 768px) {
     .footer-search {
         max-width: none;
