@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{ asset('css/sections/popular-cities.css') }}">
     <link rel="stylesheet" href="{{ asset('css/sections/popular-services.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/sections/choose-guide.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/pages/_homepage.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -32,7 +31,7 @@
     {% include 'home/partials/_hero.html.twig' %}
     {% include 'home/partials/_cta_banner.html.twig' %}
     {% include 'home/partials/_how_it_works.html.twig' %}
-    <section class="choose-guide reveal-on-scroll section">
+    <section class="choose-guide reveal-on-scroll">
         <h2>{{ 'How to Choose a Groomer'|trans }}</h2>
         <ul class="choose-guide__list">
             <li class="choose-guide__item">
@@ -53,7 +52,7 @@
             </li>
         </ul>
     </section>
-    <section class="why-cleanwhiskers reveal-on-scroll section">
+    <section class="why-cleanwhiskers reveal-on-scroll">
         <h2>{{ 'Why CleanWhiskers?'|trans }}</h2>
         <div class="why-cleanwhiskers__cards">
             <div class="why-cleanwhiskers__card">
