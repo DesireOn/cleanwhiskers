@@ -24,6 +24,15 @@
     opacity: 0.8;
 }
 
+.site-footer .btn--accent,
+.site-footer .btn--accent:hover,
+.site-footer .btn--accent:focus,
+.site-footer .btn--accent:active,
+.site-footer .btn--accent:visited {
+    color: var(--color-cream);
+    text-decoration: none;
+}
+
 .footer-top {
     display: flex;
     flex-direction: column;
