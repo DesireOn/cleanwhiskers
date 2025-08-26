@@ -2,9 +2,8 @@
 <header class="site-header">
   <div class="nav-container">
     <a href="{{ path('app_homepage') }}" class="site-logo">CleanWhiskers</a>
-    <button id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" type="button">
+    <button id="nav-toggle" class="nav-toggle" aria-label="{{ 'Menu'|trans }}" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" type="button">
       <span class="nav-toggle__icon" aria-hidden="true"></span>
-      <span class="sr-only">{{ 'Menu'|trans }}</span>
     </button>
     <div id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true" role="dialog" aria-modal="true">
       <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">&times;</button>
