@@ -1,5 +1,14 @@
 <section class="hero">
     <div class="hero__container">
+        <img
+            class="hero__image"
+            src="{{ asset('assets/illustrations/hero-grooming.svg') }}"
+            alt="{{ 'Happy dog enjoying a warm bath'|trans }}"
+            width="512"
+            height="256"
+            loading="lazy"
+            decoding="async"
+        >
         <h1 class="hero__title">{{ 'Book mobile pet grooming in minutes — trusted local professionals.'|trans }}</h1>
         <form id="search-form" class="hero__form" method="get" action="/search" role="search">
             <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
