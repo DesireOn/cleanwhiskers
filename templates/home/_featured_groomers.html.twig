@@ -1,38 +1,17 @@
 {% if featuredGroomers|length %}
-    {% set isCarousel = featuredGroomers|length > 4 %}
     <section id="featured-groomers" class="featured-groomers">
         <h2 class="featured-groomers__title">Featured Groomers</h2>
-        {% if isCarousel %}
-            <div class="carousel" data-carousel>
-                <button class="carousel__button carousel__button--prev" data-carousel-prev aria-label="Previous">&#10094;</button>
-                <div class="carousel__track" tabindex="0">
-                    {% for item in featuredGroomers %}
-                        {% set g = item.profile %}
-                        {% set badges = ['New', 'Verified'] %}
-                        {{ include('partials/_groomer-card.html.twig', {
-                            profile: g,
-                            rating: item.rating,
-                            reviewCount: item.reviewCount,
-                            badges: badges,
-                            class: 'carousel__card'
-                        }) }}
-                    {% endfor %}
-                </div>
-                <button class="carousel__button carousel__button--next" data-carousel-next aria-label="Next">&#10095;</button>
-            </div>
-        {% else %}
-            <div class="featured-groomers__grid">
-                {% for item in featuredGroomers %}
-                    {% set g = item.profile %}
-                    {% set badges = ['New', 'Verified'] %}
-                    {{ include('partials/_groomer-card.html.twig', {
-                        profile: g,
-                        rating: item.rating,
-                        reviewCount: item.reviewCount,
-                        badges: badges
-                    }) }}
-                {% endfor %}
-            </div>
-        {% endif %}
+        <div class="featured-groomers__grid">
+            {% for item in featuredGroomers %}
+                {% set g = item.profile %}
+                {% set badges = ['New', 'Verified'] %}
+                {{ include('partials/_groomer-card.html.twig', {
+                    profile: g,
+                    rating: item.rating,
+                    reviewCount: item.reviewCount,
+                    badges: badges
+                }) }}
+            {% endfor %}
+        </div>
     </section>
 {% endif %}
