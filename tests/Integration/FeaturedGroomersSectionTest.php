@@ -57,7 +57,7 @@ final class FeaturedGroomersSectionTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(5, '#featured-groomers .card-groomer');
+        self::assertSelectorCount(4, '#featured-groomers .featured-groomer-card');
         self::assertSelectorNotExists('#featured-groomers [data-carousel]');
     }
 }

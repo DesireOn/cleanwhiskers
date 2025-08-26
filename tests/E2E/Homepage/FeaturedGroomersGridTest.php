@@ -38,7 +38,7 @@ final class FeaturedGroomersGridTest extends WebTestCase
         $this->em->persist($city);
         $this->em->persist($service);
 
-        for ($i = 0; $i < 2; ++$i) {
+        for ($i = 0; $i < 5; ++$i) {
             $user = (new User())
                 ->setEmail('g'.$i.'@example.com')
                 ->setRoles([User::ROLE_GROOMER])
@@ -67,7 +67,7 @@ final class FeaturedGroomersGridTest extends WebTestCase
 
         $section = $crawler->filter('#featured-groomers');
         self::assertSame(1, $section->count());
-        self::assertSame(2, $section->filter('.card-groomer')->count());
+        self::assertSame(4, $section->filter('.featured-groomer-card')->count());
 
         $hrefs = $section->filter('.card-groomer__cta')->each(fn (Crawler $link) => $link->attr('href'));
         foreach ($hrefs as $href) {
