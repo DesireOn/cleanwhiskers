@@ -3,9 +3,9 @@
 {% block title %}New Review{% endblock %}
 
 {% block body %}
-    {{ form_start(reviewForm) }}
-        {{ form_row(reviewForm.rating) }}
-        {{ form_row(reviewForm.comment) }}
+    {{ form_start(reviewForm, {'attr': {'autocomplete': 'off'}}) }}
+        {{ form_row(reviewForm.rating, {'attr': {'autocomplete': 'off'}}) }}
+        {{ form_row(reviewForm.comment, {'attr': {'autocomplete': 'off'}}) }}
         <button type="submit">Submit</button>
     {{ form_end(reviewForm) }}
 {% endblock %}

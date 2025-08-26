@@ -3,9 +3,9 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
+    {{ form_start(registrationForm, {'attr': {'autocomplete': 'off'}}) }}
+        {{ form_row(registrationForm.email, {'attr': {'autocomplete': 'off'}}) }}
+        {{ form_row(registrationForm.plainPassword, {'attr': {'autocomplete': 'off'}}) }}
         {{ form_row(registrationForm.role) }}
         <button type="submit">Register</button>
     {{ form_end(registrationForm) }}
