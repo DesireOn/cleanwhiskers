@@ -196,6 +196,23 @@
     .footer-nav nav {
         text-align: center;
     }
+
+    .footer-social ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-social .social-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-social .social-link::before {
+        margin-right: 0;
+        margin-bottom: var(--space-1);
+    }
 }
 
 .footer-bottom {
