@@ -3,8 +3,8 @@
     align-items: center;
     gap: var(--space-2);
     width: 100%;
-    padding: var(--space-3);
-    min-height: 48px;
+    padding: 12px 16px;
+    min-height: 44px;
     background-color: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 9999px;
@@ -25,27 +25,6 @@
 
 .city-card:focus {
     outline: none;
-}
-
-.city-card:hover .city-card__icon,
-.city-card:focus .city-card__icon,
-.city-card.active .city-card__icon,
-.city-card[aria-selected="true"] .city-card__icon {
-    background-color: #fff;
-    color: var(--color-accent, #2563eb);
-}
-
-.city-card__icon {
-    --icon-size: 2.75rem;
-    flex-shrink: 0;
-    width: var(--icon-size);
-    height: var(--icon-size);
-    border-radius: 50%;
-    background-color: #f3f4f6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #111;
 }
 
 .city-card__label {
