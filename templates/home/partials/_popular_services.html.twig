@@ -1,7 +1,7 @@
 {% set defaultCity = popularCities|first %}
 {% set activeGrooming = popularServices|filter(s => s.slug == 'grooming')|first %}
 {% if defaultCity and activeGrooming and (activeGrooming.active|default(true)) %}
-<section id="popular-services" class="popular-services">
+<section id="popular-services" class="popular-services section">
     <h2>Popular Services</h2>
     <a class="popular-services__spotlight" href="{{ path('app_groomer_list_by_city_service', {citySlug: defaultCity.slug, serviceSlug: activeGrooming.slug}) }}">
         <span class="popular-services__title">{{ activeGrooming.name }}</span>
