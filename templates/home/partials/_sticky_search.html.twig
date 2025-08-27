@@ -15,6 +15,7 @@
             aria-controls="city-list"
             aria-haspopup="listbox"
         >
+        <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
         <span id="sticky-service-error" class="form-error" aria-live="polite"></span>
         <button class="search-form__button btn btn--accent" type="submit">
             {{ ctaLinks.find.label }}

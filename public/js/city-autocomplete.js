@@ -17,6 +17,8 @@ export default function initCityAutocomplete(inputsParam) {
         return;
     }
 
+    const service = window.cwMobileService || 'mobile-dog-grooming';
+
     const options = Array.from(listEl.querySelectorAll('.city-suggestion')).map((opt) => ({
         value: opt.dataset.value,
         label: opt.textContent,
@@ -68,7 +70,7 @@ export default function initCityAutocomplete(inputsParam) {
             if (currentInput) {
                 currentInput.value = slug;
             }
-            window.location.href = `/cities/${slug}`;
+            window.location.href = `/groomers/${slug}/${service}`;
         } catch (err) {
             cleanup();
             throw err;
@@ -111,7 +113,7 @@ export default function initCityAutocomplete(inputsParam) {
             card.id = `${input.id}-option-${index}`;
             card.className = 'city-card';
             card.dataset.value = opt.value;
-            card.href = `/cities/${opt.value}`;
+            card.href = `/groomers/${opt.value}/${service}`;
 
             const label = document.createElement('span');
             label.className = 'city-card__label';

@@ -19,6 +19,7 @@
                     aria-controls="city-list"
                     aria-haspopup="listbox"
                 >
+                <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
                 <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
                     {{ ctaLinks.find.label|trans }}
                 </button>
