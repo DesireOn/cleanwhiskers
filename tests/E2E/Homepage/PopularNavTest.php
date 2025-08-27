@@ -27,11 +27,6 @@ final class PopularNavTest extends WebTestCase
 
     public function testLinksResolveAndFocusStylesPresent(): void
     {
-        foreach (['Bucharest', 'Ruse', 'Sofia'] as $name) {
-            $city = new City($name);
-            $this->em->persist($city);
-        }
-
         $mobile = (new Service())->setName('Mobile Dog Grooming');
         $mobile->refreshSlugFrom($mobile->getName());
         $this->em->persist($mobile);
@@ -39,6 +34,15 @@ final class PopularNavTest extends WebTestCase
         $service = (new Service())->setName('Grooming');
         $service->refreshSlugFrom($service->getName());
         $this->em->persist($service);
+
+        foreach (['Bucharest', 'Ruse', 'Sofia'] as $name) {
+            $city = new City($name);
+            $this->em->persist($city);
+
+            $groomer = new \App\Entity\GroomerProfile(null, $city, $name.' Groomer', 'About');
+            $groomer->getServices()->add($mobile);
+            $this->em->persist($groomer);
+        }
 
         $this->em->flush();
 

@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServiceRepository extends ServiceEntityRepository
 {
+    public const MOBILE_DOG_GROOMING = Service::MOBILE_DOG_GROOMING;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Service::class);
@@ -35,7 +37,7 @@ class ServiceRepository extends ServiceEntityRepository
 
     public function findMobileDogGroomingService(): ?Service
     {
-        return $this->findOneBySlug(Service::MOBILE_DOG_GROOMING);
+        return $this->findOneBySlug(self::MOBILE_DOG_GROOMING);
     }
 
     /**

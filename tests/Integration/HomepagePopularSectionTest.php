@@ -26,14 +26,22 @@ final class HomepagePopularSectionTest extends WebTestCase
 
     public function testPopularSectionLinksAreRendered(): void
     {
+        $mobileService = (new Service())->setName('Mobile Dog Grooming');
+        $mobileService->refreshSlugFrom('Mobile Dog Grooming');
+        $this->em->persist($mobileService);
+
+        $groomingService = (new Service())->setName('Grooming');
+        $this->em->persist($groomingService);
+
         foreach (['Bucharest', 'Ruse', 'Sofia'] as $name) {
             $city = new City($name);
             $city->setSeoIntro('Visit '.$name);
             $this->em->persist($city);
-        }
 
-        $service = (new Service())->setName('Grooming');
-        $this->em->persist($service);
+            $groomer = new \App\Entity\GroomerProfile(null, $city, $name.' Groomer', 'About');
+            $groomer->getServices()->add($mobileService);
+            $this->em->persist($groomer);
+        }
 
         $this->em->flush();
 

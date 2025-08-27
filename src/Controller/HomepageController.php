@@ -34,14 +34,18 @@ class HomepageController extends AbstractController
             ],
         ];
 
-        $footerCities = $this->cityRepository->findBy([], ['name' => 'ASC'], 5);
         $footerServices = $this->serviceRepository->findBy([], ['name' => 'ASC'], 5);
-
-        $popularCities = $this->cityRepository->findTop(6);
         $popularServices = $this->serviceRepository->findTop(6);
         $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
 
-        $cities = $this->cityRepository->findBy([], ['name' => 'ASC']);
+        $service = $this->serviceRepository->findMobileDogGroomingService();
+        $cities = [];
+        if (null !== $service) {
+            $cities = $this->cityRepository->findAllWithMobileGroomersUsingService((int) $service->getId());
+        }
+
+        $footerCities = $cities;
+        $popularCities = $cities;
         $services = $this->serviceRepository->findBy([], ['name' => 'ASC']);
 
         return $this->render('home/index.html.twig', [
