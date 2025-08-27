@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\City;
+use App\Entity\GroomerProfile;
+use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,6 +45,25 @@ class CityRepository extends ServiceEntityRepository
             ->select('partial c.{id, name, slug, seoIntro}')
             ->orderBy('c.name', 'ASC')
             ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $cities;
+    }
+
+    /**
+     * @return City[]
+     */
+    public function findByService(Service $service): array
+    {
+        /** @var City[] $cities */
+        $cities = $this->createQueryBuilder('c')
+            ->distinct()
+            ->innerJoin(GroomerProfile::class, 'gp', 'WITH', 'gp.city = c')
+            ->innerJoin('gp.services', 's')
+            ->where('s = :service')
+            ->setParameter('service', $service)
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult();
 

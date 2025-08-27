@@ -6,13 +6,16 @@ namespace App\Twig;
 
 use App\Entity\City;
 use App\Repository\CityRepository;
+use App\Repository\ServiceRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class CityListExtension extends AbstractExtension
 {
-    public function __construct(private CityRepository $cityRepository)
-    {
+    public function __construct(
+        private CityRepository $cityRepository,
+        private ServiceRepository $serviceRepository,
+    ) {
     }
 
     /**
@@ -20,7 +23,12 @@ final class CityListExtension extends AbstractExtension
      */
     public function getCityList(): array
     {
-        return $this->cityRepository->findBy([], ['name' => 'ASC']);
+        $service = $this->serviceRepository->findMobileDogGroomingService();
+        if (null === $service) {
+            return [];
+        }
+
+        return $this->cityRepository->findByService($service);
     }
 
     public function getFunctions(): array
