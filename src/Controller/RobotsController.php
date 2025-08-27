@@ -15,8 +15,9 @@ final class RobotsController extends AbstractController
     public function __invoke(Request $request): Response
     {
         $host = $request->getHost();
+        $productionHosts = ['cleanwhiskers.com', 'www.cleanwhiskers.com'];
 
-        if ('staging.cleanwhiskers.com' === $host) {
+        if (!\in_array($host, $productionHosts, true)) {
             $content = "User-agent: *\nDisallow: /\n";
         } else {
             $baseDir = $this->getParameter('kernel.project_dir');

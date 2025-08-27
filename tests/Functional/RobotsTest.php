@@ -11,7 +11,7 @@ final class RobotsTest extends WebTestCase
     public function testRobotsTxtServed(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/robots.txt');
+        $client->request('GET', '/robots.txt', server: ['HTTP_HOST' => 'cleanwhiskers.com']);
         self::assertResponseIsSuccessful();
         $content = (string) $client->getResponse()->getContent();
         self::assertStringContainsString('Disallow: /admin', $content);
