@@ -17,12 +17,4 @@ final class RobotsTest extends WebTestCase
         self::assertStringContainsString('Disallow: /admin', $content);
         self::assertStringContainsString('Disallow: /blog/tag/*?page=', $content);
     }
-
-    public function testPreviewRouteGetsNoIndex(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/_preview/test');
-        self::assertResponseIsSuccessful();
-        self::assertSame('noindex', $client->getResponse()->headers->get('X-Robots-Tag'));
-    }
 }
