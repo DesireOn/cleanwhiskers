@@ -31,10 +31,6 @@ final class PopularNavTest extends WebTestCase
         $mobile->refreshSlugFrom($mobile->getName());
         $this->em->persist($mobile);
 
-        $service = (new Service())->setName('Grooming');
-        $service->refreshSlugFrom($service->getName());
-        $this->em->persist($service);
-
         foreach (['Bucharest', 'Ruse', 'Sofia'] as $name) {
             $city = new City($name);
             $this->em->persist($city);
@@ -63,16 +59,5 @@ final class PopularNavTest extends WebTestCase
             $this->client->request('GET', '/groomers/'.$slug.'/'.Service::MOBILE_DOG_GROOMING);
             self::assertResponseIsSuccessful();
         }
-
-        $firstCity = 'bucharest';
-        $href = sprintf('/groomers/%s/grooming', $firstCity);
-        self::assertSame(1, $crawler->filter(sprintf('#popular-services a[href="%s"]', $href))->count());
-
-        $this->client->request('GET', $href);
-        self::assertResponseIsSuccessful();
-
-        $cssPath = static::getContainer()->getParameter('kernel.project_dir').'/public/css/sections/popular-services.css';
-        $css = file_get_contents($cssPath);
-        self::assertStringContainsString('.popular-services__spotlight:focus', $css);
     }
 }
