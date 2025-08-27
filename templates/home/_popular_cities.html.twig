@@ -4,7 +4,7 @@
     <ul class="popular-cities__grid" role="list">
         {% for city in popularCities %}
             <li class="popular-cities__item">
-                <a class="popular-cities__link" href="{{ path('app_city_show', {slug: city.slug}) }}" aria-label="Groomers in {{ city.name }}">
+                <a class="popular-cities__link" href="{{ path('app_groomer_list_by_city_service', {citySlug: city.slug, serviceSlug: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING')}) }}" aria-label="Groomers in {{ city.name }}">
                     <span class="popular-cities__avatar" aria-hidden="true">
                         {% if city.image is defined and city.image %}
                             <img src="{{ city.image }}" alt="" loading="lazy">
