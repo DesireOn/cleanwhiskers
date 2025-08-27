@@ -40,4 +40,20 @@ final class RobotsControllerTest extends WebTestCase
 
         self::assertSame($expected, $content);
     }
+
+    public function testWwwDomainServesRobotsWithSitemap(): void
+    {
+        $host = 'www.cleanwhiskers.com';
+        $this->client->request('GET', '/robots.txt', server: ['HTTP_HOST' => $host]);
+        self::assertResponseIsSuccessful();
+
+        $content = (string) $this->client->getResponse()->getContent();
+        $projectDir = static::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = \is_string($projectDir) ? $projectDir : __DIR__.'/../..';
+        $expected = @file_get_contents($projectDir.'/public/robots.txt');
+        $expected = \is_string($expected) ? $expected : '';
+        $expected .= "\nSitemap: http://{$host}/sitemap.xml";
+
+        self::assertSame($expected, $content);
+    }
 }
