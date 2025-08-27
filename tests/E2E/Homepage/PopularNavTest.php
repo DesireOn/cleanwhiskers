@@ -32,7 +32,12 @@ final class PopularNavTest extends WebTestCase
             $this->em->persist($city);
         }
 
+        $mobile = (new Service())->setName('Mobile Dog Grooming');
+        $mobile->refreshSlugFrom($mobile->getName());
+        $this->em->persist($mobile);
+
         $service = (new Service())->setName('Grooming');
+        $service->refreshSlugFrom($service->getName());
         $this->em->persist($service);
 
         $this->em->flush();
@@ -42,12 +47,16 @@ final class PopularNavTest extends WebTestCase
 
         $citySlugs = ['bucharest', 'ruse', 'sofia'];
         foreach ($citySlugs as $slug) {
-            $link = sprintf('.popular-cities__link[href="/cities/%s"]', $slug);
+            $link = sprintf(
+                '.popular-cities__link[href="/groomers/%s/%s"]',
+                $slug,
+                Service::MOBILE_DOG_GROOMING
+            );
             self::assertSame(1, $crawler->filter($link)->count());
         }
 
         foreach ($citySlugs as $slug) {
-            $this->client->request('GET', '/cities/'.$slug);
+            $this->client->request('GET', '/groomers/'.$slug.'/'.Service::MOBILE_DOG_GROOMING);
             self::assertResponseIsSuccessful();
         }
 

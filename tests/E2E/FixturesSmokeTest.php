@@ -20,7 +20,7 @@ class FixturesSmokeTest extends WebTestCase
             'command' => 'doctrine:fixtures:load',
             '--no-interaction' => true,
         ]));
-        $client->request('GET', '/cities/sofia');
+        $client->request('GET', '/groomers/sofia/'.\App\Entity\Service::MOBILE_DOG_GROOMING);
         self::assertResponseIsSuccessful();
 
         $groomerRepo = static::getContainer()->get(GroomerProfileRepository::class);

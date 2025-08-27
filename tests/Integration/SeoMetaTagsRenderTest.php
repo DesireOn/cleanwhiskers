@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration;
 
 use App\Entity\City;
+use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -24,46 +25,33 @@ final class SeoMetaTagsRenderTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testCityPageHasSeoMetadata(): void
-    {
-        $city = new City('Testopolis');
-        $city->refreshSlugFrom($city->getName());
-        $this->em->persist($city);
-        $this->em->flush();
-
-        $this->client->request('GET', '/cities/'.$city->getSlug());
-        self::assertResponseIsSuccessful();
-        $content = $this->client->getResponse()->getContent();
-
-        $expectedTitle = sprintf('<title>Mobile Dog Groomers in %s – CleanWhiskers</title>', $city->getName());
-        $expectedDescription = sprintf(
-            '<meta name="description" content="%s">',
-            htmlspecialchars(
-                sprintf('Explore top mobile dog groomers in %s. Book trusted pros on CleanWhiskers.', $city->getName()),
-                ENT_QUOTES
-            )
-        );
-
-        $this->assertStringContainsString($expectedTitle, $content);
-        $this->assertStringContainsString($expectedDescription, $content);
-    }
-
     public function testGroomerListingHasSeoMetadata(): void
     {
         $city = new City('Gotham');
         $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom($service->getName());
         $this->em->persist($city);
+        $this->em->persist($service);
         $this->em->flush();
 
-        $this->client->request('GET', '/groomers/'.$city->getSlug());
+        $this->client->request('GET', '/groomers/'.$city->getSlug().'/'.$service->getSlug());
         self::assertResponseIsSuccessful();
         $content = $this->client->getResponse()->getContent();
 
-        $expectedTitle = sprintf('<title>Mobile Dog Groomers in %s – CleanWhiskers</title>', $city->getName());
+        $expectedTitle = sprintf(
+            '<title>Mobile Dog Groomers in %s for %s – CleanWhiskers</title>',
+            $city->getName(),
+            $service->getName()
+        );
         $expectedDescription = sprintf(
             '<meta name="description" content="%s">',
             htmlspecialchars(
-                sprintf('Browse mobile dog groomers serving %s. Read reviews and schedule your pet\'s groom today.', $city->getName()),
+                sprintf(
+                    'Find mobile dog groomers in %s for %s. Book experienced groomers on CleanWhiskers.',
+                    $city->getName(),
+                    $service->getName()
+                ),
                 ENT_QUOTES
             )
         );
