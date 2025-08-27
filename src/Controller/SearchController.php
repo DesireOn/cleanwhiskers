@@ -45,8 +45,14 @@ final class SearchController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('app_groomer_list_by_city', [
+        $mobileService = $this->serviceRepository->findMobileDogGroomingService();
+        if (null === $mobileService) {
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        return $this->redirectToRoute('app_groomer_list_by_city_service', [
             'citySlug' => $city->getSlug(),
+            'serviceSlug' => $mobileService->getSlug(),
         ]);
     }
 }
