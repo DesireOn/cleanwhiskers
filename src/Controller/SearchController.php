@@ -37,16 +37,20 @@ final class SearchController extends AbstractController
         $serviceSlug = (string) $request->query->get('service', '');
         if ('' !== $serviceSlug) {
             $service = $this->serviceRepository->findOneBySlug($serviceSlug);
-            if (null !== $service) {
-                return $this->redirectToRoute('app_groomer_list_by_city_service', [
-                    'citySlug' => $city->getSlug(),
-                    'serviceSlug' => $service->getSlug(),
-                ]);
+            if (null === $service) {
+                $service = $this->serviceRepository->findMobileDogGroomingService();
             }
+        } else {
+            $service = $this->serviceRepository->findMobileDogGroomingService();
         }
 
-        return $this->redirectToRoute('app_groomer_list_by_city', [
+        if (null === $service) {
+            return $this->redirectToRoute('app_homepage');
+        }
+
+        return $this->redirectToRoute('app_groomer_list_by_city_service', [
             'citySlug' => $city->getSlug(),
+            'serviceSlug' => $service->getSlug(),
         ]);
     }
 }

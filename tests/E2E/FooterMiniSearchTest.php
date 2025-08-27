@@ -20,6 +20,7 @@ if (!class_exists(PantherTestCase::class)) {
 }
 
 use App\Entity\City;
+use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Facebook\WebDriver\WebDriverBy;
@@ -53,7 +54,10 @@ final class FooterMiniSearchTest extends PantherTestCase
             $client->executeScript('document.getElementById("footer-search").submit();');
         });
 
-        self::assertSame('/groomers/'.$city->getSlug(), parse_url($client->getCurrentURL(), PHP_URL_PATH));
+        self::assertSame(
+            '/groomers/'.$city->getSlug().'/'.Service::MOBILE_DOG_GROOMING,
+            parse_url($client->getCurrentURL(), PHP_URL_PATH)
+        );
     }
 
     public function testFooterCityAutocompleteShowsSuggestions(): void

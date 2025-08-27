@@ -25,16 +25,19 @@ final class SearchControllerTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testSubmittingCityOnlyRedirectsToCityListing(): void
+    public function testSubmittingCityOnlyRedirectsToDefaultServiceListing(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom($service->getName());
         $this->em->persist($city);
+        $this->em->persist($service);
         $this->em->flush();
 
         $this->client->request('GET', '/search', ['city' => $city->getSlug()]);
 
-        self::assertResponseRedirects('/groomers/'.$city->getSlug());
+        self::assertResponseRedirects('/groomers/'.$city->getSlug().'/'.Service::MOBILE_DOG_GROOMING);
     }
 
     public function testSubmittingCityAndServiceRedirectsToCityServiceListing(): void
@@ -55,11 +58,14 @@ final class SearchControllerTest extends WebTestCase
         self::assertResponseRedirects('/groomers/'.$city->getSlug().'/'.$service->getSlug());
     }
 
-    public function testUnknownServiceFallsBackToCityListing(): void
+    public function testUnknownServiceFallsBackToDefaultServiceListing(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom($service->getName());
         $this->em->persist($city);
+        $this->em->persist($service);
         $this->em->flush();
 
         $this->client->request('GET', '/search', [
@@ -67,7 +73,7 @@ final class SearchControllerTest extends WebTestCase
             'service' => 'unknown',
         ]);
 
-        self::assertResponseRedirects('/groomers/'.$city->getSlug());
+        self::assertResponseRedirects('/groomers/'.$city->getSlug().'/'.Service::MOBILE_DOG_GROOMING);
     }
 
     public function testUnknownCityRedirectsHome(): void

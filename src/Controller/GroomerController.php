@@ -68,42 +68,6 @@ final class GroomerController extends AbstractController
         ]);
     }
 
-    #[Route(
-        '/groomers/{citySlug}',
-        name: 'app_groomer_list_by_city',
-        methods: ['GET'],
-        requirements: ['citySlug' => '[a-z0-9]+']
-    )]
-    public function listByCity(
-        string $citySlug,
-        Request $request,
-        CityRepository $cityRepository,
-        GroomerProfileRepository $groomerProfileRepository,
-    ): Response {
-        $city = $cityRepository->findOneBySlug($citySlug);
-        if (null === $city) {
-            throw $this->createNotFoundException();
-        }
-
-        $page = max(1, $request->query->getInt('page', 1));
-        $groomers = $groomerProfileRepository->findByCitySlug($citySlug, $page);
-
-        $seoTitle = sprintf('Mobile Dog Groomers in %s – CleanWhiskers', $city->getName());
-        $seoDescription = $this->truncate(
-            sprintf(
-                'Browse mobile dog groomers serving %s. Read reviews and schedule your pet\'s groom today.',
-                $city->getName()
-            )
-        );
-
-        return $this->render('groomer/list_by_city.html.twig', [
-            'groomers' => $groomers,
-            'city' => $city,
-            'seo_title' => $seoTitle,
-            'seo_description' => $seoDescription,
-        ]);
-    }
-
     #[Route('/groomers/{slug}', name: 'app_groomer_show', methods: ['GET'], requirements: ['slug' => '[^/]+-[^/]+'])]
     public function profile(string $slug, GroomerProfileRepository $groomerProfileRepository, ReviewRepository $reviewRepository): Response
     {
