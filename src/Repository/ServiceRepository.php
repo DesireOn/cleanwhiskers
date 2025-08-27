@@ -33,6 +33,11 @@ class ServiceRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findMobileDogGroomingService(): ?Service
+    {
+        return $this->findOneBySlug(Service::MOBILE_DOG_GROOMING);
+    }
+
     /**
      * @return Service[]
      */
