@@ -69,4 +69,23 @@ class CityRepository extends ServiceEntityRepository
 
         return $cities;
     }
+
+    /**
+     * @return City[]
+     */
+    public function findAllWithMobileGroomersUsingService(int $serviceId): array
+    {
+        /** @var City[] $cities */
+        $cities = $this->createQueryBuilder('c')
+            ->distinct()
+            ->innerJoin(GroomerProfile::class, 'gp', 'WITH', 'gp.city = c')
+            ->innerJoin('gp.services', 's')
+            ->where('s.id = :serviceId')
+            ->setParameter('serviceId', $serviceId)
+            ->orderBy('c.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $cities;
+    }
 }

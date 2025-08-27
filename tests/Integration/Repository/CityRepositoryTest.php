@@ -87,4 +87,31 @@ class CityRepositoryTest extends KernelTestCase
         self::assertCount(1, $cities);
         self::assertSame('Sofia', $cities[0]->getName());
     }
+
+    public function testFindAllWithMobileGroomersUsingServiceReturnsCities(): void
+    {
+        $service = new Service();
+        $service->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom('Mobile Dog Grooming');
+        $this->em->persist($service);
+
+        $cityWith = new City('Sofia');
+        $cityWith->refreshSlugFrom('Sofia');
+        $this->em->persist($cityWith);
+
+        $cityWithout = new City('Plovdiv');
+        $cityWithout->refreshSlugFrom('Plovdiv');
+        $this->em->persist($cityWithout);
+
+        $groomer = new GroomerProfile(null, $cityWith, 'Biz', 'About');
+        $groomer->getServices()->add($service);
+        $this->em->persist($groomer);
+
+        $this->em->flush();
+
+        $cities = $this->repository->findAllWithMobileGroomersUsingService((int) $service->getId());
+
+        self::assertCount(1, $cities);
+        self::assertSame('Sofia', $cities[0]->getName());
+    }
 }
