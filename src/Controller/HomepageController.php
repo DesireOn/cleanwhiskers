@@ -34,8 +34,6 @@ class HomepageController extends AbstractController
             ],
         ];
 
-        $footerServices = $this->serviceRepository->findBy([], ['name' => 'ASC'], 5);
-        $popularServices = $this->serviceRepository->findTop(6);
         $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
 
         $service = $this->serviceRepository->findMobileDogGroomingService();
@@ -51,9 +49,7 @@ class HomepageController extends AbstractController
         return $this->render('home/index.html.twig', [
             'ctaLinks' => $ctaLinks,
             'footerCities' => $footerCities,
-            'footerServices' => $footerServices,
             'popularCities' => $popularCities,
-            'popularServices' => $popularServices,
             'featuredGroomers' => $featuredGroomers,
             'cities' => $cities,
             'services' => $services,
