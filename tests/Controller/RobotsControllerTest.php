@@ -25,6 +25,20 @@ final class RobotsControllerTest extends WebTestCase
         self::assertSame("User-agent: *\nDisallow: /\n", $content);
     }
 
+    public function testForwardedHostDisallowsAll(): void
+    {
+        $server = [
+            'HTTP_HOST' => 'internal',
+            'HTTP_X_FORWARDED_HOST' => 'staging.cleanwhiskers.com',
+        ];
+
+        $this->client->request('GET', '/robots.txt', server: $server);
+        self::assertResponseIsSuccessful();
+
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertSame("User-agent: *\nDisallow: /\n", $content);
+    }
+
     public function testOtherDomainsServeRobotsWithSitemap(): void
     {
         $host = 'cleanwhiskers.com';

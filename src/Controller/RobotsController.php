@@ -14,7 +14,8 @@ final class RobotsController extends AbstractController
     #[Route('/robots.txt', name: 'app_robots', methods: ['GET'])]
     public function __invoke(Request $request): Response
     {
-        $host = $request->getHost();
+        $host = $request->headers->get('x-forwarded-host') ?: $request->getHost();
+        $host = strtolower(rtrim($host, '.'));
 
         if ('staging.cleanwhiskers.com' === $host) {
             $content = "User-agent: *\nDisallow: /\n";
