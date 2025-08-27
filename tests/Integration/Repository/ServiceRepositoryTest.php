@@ -56,4 +56,19 @@ final class ServiceRepositoryTest extends KernelTestCase
 
         self::assertCount(6, $services);
     }
+
+    public function testFindMobileDogGroomingService(): void
+    {
+        $service = (new Service())
+            ->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom('Mobile Dog Grooming');
+        $this->em->persist($service);
+        $this->em->flush();
+        $this->em->clear();
+
+        $found = $this->repository->findMobileDogGroomingService();
+
+        self::assertNotNull($found);
+        self::assertSame('Mobile Dog Grooming', $found->getName());
+    }
 }
