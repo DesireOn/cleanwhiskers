@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class RobotsController extends AbstractController
 {
     #[Route('/robots.txt', name: 'app_robots', methods: ['GET'])]
-    public function __invoke(): Response
+    public function __invoke(Request $request): Response
     {
-        $environment = $this->getParameter('kernel.environment');
-        $environment = \is_string($environment) ? $environment : '';
+        $host = $request->getHost();
 
-        if ('staging' === $environment) {
+        if ('staging.cleanwhiskers.com' === $host) {
             $content = "User-agent: *\nDisallow: /\n";
         } else {
             $baseDir = $this->getParameter('kernel.project_dir');
@@ -25,6 +25,7 @@ final class RobotsController extends AbstractController
 
             $content = @file_get_contents($path);
             $content = \is_string($content) ? $content : '';
+            $content .= "\nSitemap: ".$request->getScheme().'://'.$host.'/sitemap.xml';
         }
 
         return new Response($content, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
