@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('styles/blocks/card.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/seo-content.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/email-capture.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -16,6 +17,7 @@
     <script type="module" src="{{ asset('controllers/heroScroll.js') }}" defer></script>
     <script type="module" src="{{ asset('controllers/sortHandler.js') }}" defer></script>
     <script type="module" src="{{ asset('controllers/tooltip.js') }}" defer></script>
+    <script type="module" src="{{ asset('controllers/emailCapture.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -137,4 +139,25 @@
             </div>
         </section>
     {% endif %}
+
+    <section class="email-capture" aria-labelledby="email-capture-title">
+        <h2 id="email-capture-title" class="email-capture__prompt">Not ready to book yet? Leave your email and we’ll send you top 3 trusted groomers in {{ city.name }}.</h2>
+        <form class="email-capture__form" data-city="{{ city.id }}" data-service="{{ service.id }}">
+            <label>
+                Name
+                <input type="text" name="name" required>
+            </label>
+            <label>
+                Email
+                <input type="email" name="email" required>
+            </label>
+            <label>
+                Dog breed (optional)
+                <input type="text" name="dogBreed">
+            </label>
+            <input type="text" name="website" class="email-capture__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button type="submit" class="btn btn--accent">Notify Me</button>
+            <p class="email-capture__message" hidden></p>
+        </form>
+    </section>
 {% endblock %}

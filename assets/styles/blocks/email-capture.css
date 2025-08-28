@@ -1,0 +1,29 @@
+.email-capture {
+    padding: var(--space-5) var(--space-3);
+    background: var(--color-pastel);
+    text-align: center;
+}
+
+.email-capture__form {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.email-capture__form input {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+}
+
+.email-capture__hp {
+    display: none;
+}
+
+.email-capture__message {
+    margin-top: var(--space-2);
+}
+
