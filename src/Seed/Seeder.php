@@ -139,38 +139,23 @@ final class Seeder
                 ));
 
                 if (count($petOwners) > 0) {
-                    $ownerIndex = 0;
                     foreach ($profiles as $meta) {
                         /** @var GroomerProfile $profile */
                         $profile = $meta['profile'];
                         /** @var array<int,int>|null $ratings */
                         $ratings = $meta['ratings'];
 
-                        if (is_array($ratings) && count($ratings) > 0) {
-                            foreach ($ratings as $rating) {
-                                $author = $petOwners[$ownerIndex % count($petOwners)];
-                                $ownerIndex++;
+                        // Exactly one sample review per profile for idempotency
+                        $author = $petOwners[0];
+                        $rating = (is_array($ratings) && count($ratings) > 0) ? (int) $ratings[0] : 5;
 
-                                $existingReview = $this->reviewRepository->findOneBy([
-                                    'groomer' => $profile,
-                                    'author' => $author,
-                                ]);
-                                if (null === $existingReview) {
-                                    $review = new Review($profile, $author, $rating, sprintf('Sample %d-star review', $rating));
-                                    $this->em->persist($review);
-                                }
-                            }
-                        } else {
-                            // Fallback: single 5-star sample with first owner
-                            $author = $petOwners[0];
-                            $existingReview = $this->reviewRepository->findOneBy([
-                                'groomer' => $profile,
-                                'author' => $author,
-                            ]);
-                            if (null === $existingReview) {
-                                $review = new Review($profile, $author, 5, 'Sample review');
-                                $this->em->persist($review);
-                            }
+                        $existingReview = $this->reviewRepository->findOneBy([
+                            'groomer' => $profile,
+                            'author' => $author,
+                        ]);
+                        if (null === $existingReview) {
+                            $review = new Review($profile, $author, $rating, 'Sample review');
+                            $this->em->persist($review);
                         }
 
                         // Also create a booking sample with the first owner for convenience
