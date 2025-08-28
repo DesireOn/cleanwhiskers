@@ -93,12 +93,12 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
         $a = new GroomerProfile($u, $city, 'A', 'About');
         $a->refreshSlugFrom($a->getBusinessName());
         $a->addService($service);
-        $a->setPriceRange('$10');
+        $a->setPrice(10);
 
         $b = new GroomerProfile($u, $city, 'B', 'About');
         $b->refreshSlugFrom($b->getBusinessName());
         $b->addService($service);
-        $b->setPriceRange('$20');
+        $b->setPrice(20);
 
         $c = new GroomerProfile($u, $city, 'C', 'About');
         $c->refreshSlugFrom($c->getBusinessName());

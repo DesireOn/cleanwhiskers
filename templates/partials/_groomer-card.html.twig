@@ -53,7 +53,9 @@
             <span class="card-groomer__rating-number">{{ rating|number_format(1) }}</span>
             <span class="card-groomer__review-count">({{ reviewCount }})</span>
         </div>
-        {% if g.priceRange %}
+        {% if g.price is not null %}
+            <p class="card-groomer__price">Starting at ${{ g.price|number_format(0, '.', ',') }}</p>
+        {% elseif g.priceRange %}
             <p class="card-groomer__price">Starting at {{ g.priceRange }}</p>
         {% endif %}
         <a class="card-groomer__cta card-groomer__book" href="{{ path('app_groomer_show', {slug: g.slug}) }}#book">Book Now</a>

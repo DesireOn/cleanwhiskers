@@ -66,7 +66,8 @@ final class SeedCommand extends Command
 
     private function seedPopularCities(OutputInterface $output): void
     {
-        $this->seeder->seed(SeedDataset::default());
+        // Seed baseline data with sample reviews to enable sorting diversity
+        $this->seeder->seed(SeedDataset::default(), true);
 
         foreach (self::POPULAR_CITIES as $cityData) {
             $city = $this->cityRepository->findOneBy(['name' => $cityData['name']]);

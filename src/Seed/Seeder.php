@@ -80,6 +80,7 @@ final class Seeder
                 $users[$userData['email']] = $user;
             }
 
+            // Keep track of created profiles along with seed metadata
             $profiles = [];
             foreach ($dataset->groomerProfiles as $profileData) {
                 $user = $users[$profileData['userEmail']] ?? null;
@@ -100,6 +101,9 @@ final class Seeder
                             $profile->addService($services[$serviceSlug]);
                         }
                     }
+                    if (array_key_exists('price', $profileData)) {
+                        $profile->setPrice(is_int($profileData['price']) ? $profileData['price'] : null);
+                    }
                     $this->em->persist($profile);
                 } else {
                     // ensure services
@@ -117,35 +121,65 @@ final class Seeder
                             $profile->addService($services[$serviceSlug]);
                         }
                     }
+                    if (array_key_exists('price', $profileData)) {
+                        $profile->setPrice(is_int($profileData['price']) ? $profileData['price'] : null);
+                    }
                 }
-                $profiles[] = $profile;
+                $profiles[] = [
+                    'profile' => $profile,
+                    'ratings' => $profileData['ratings'] ?? null,
+                ];
             }
 
             if ($withSamples) {
-                $petOwner = null;
-                foreach ($users as $candidate) {
-                    if (in_array(User::ROLE_PET_OWNER, $candidate->getRoles(), true)) {
-                        $petOwner = $candidate;
-                        break;
-                    }
-                }
-                if (null !== $petOwner) {
-                    foreach ($profiles as $profile) {
-                        $existingReview = $this->reviewRepository->findOneBy([
-                            'groomer' => $profile,
-                            'author' => $petOwner,
-                        ]);
-                        if (null === $existingReview) {
-                            $review = new Review($profile, $petOwner, 5, 'Sample review');
-                            $this->em->persist($review);
+                // collect pet owners to author sample reviews
+                $petOwners = array_values(array_filter(
+                    $users,
+                    static fn (User $u): bool => in_array(User::ROLE_PET_OWNER, $u->getRoles(), true)
+                ));
+
+                if (count($petOwners) > 0) {
+                    $ownerIndex = 0;
+                    foreach ($profiles as $meta) {
+                        /** @var GroomerProfile $profile */
+                        $profile = $meta['profile'];
+                        /** @var array<int,int>|null $ratings */
+                        $ratings = $meta['ratings'];
+
+                        if (is_array($ratings) && count($ratings) > 0) {
+                            foreach ($ratings as $rating) {
+                                $author = $petOwners[$ownerIndex % count($petOwners)];
+                                $ownerIndex++;
+
+                                $existingReview = $this->reviewRepository->findOneBy([
+                                    'groomer' => $profile,
+                                    'author' => $author,
+                                ]);
+                                if (null === $existingReview) {
+                                    $review = new Review($profile, $author, $rating, sprintf('Sample %d-star review', $rating));
+                                    $this->em->persist($review);
+                                }
+                            }
+                        } else {
+                            // Fallback: single 5-star sample with first owner
+                            $author = $petOwners[0];
+                            $existingReview = $this->reviewRepository->findOneBy([
+                                'groomer' => $profile,
+                                'author' => $author,
+                            ]);
+                            if (null === $existingReview) {
+                                $review = new Review($profile, $author, 5, 'Sample review');
+                                $this->em->persist($review);
+                            }
                         }
 
+                        // Also create a booking sample with the first owner for convenience
                         $existingBooking = $this->bookingRequestRepository->findOneBy([
                             'groomer' => $profile,
-                            'petOwner' => $petOwner,
+                            'petOwner' => $petOwners[0],
                         ]);
                         if (null === $existingBooking) {
-                            $booking = new BookingRequest($profile, $petOwner);
+                            $booking = new BookingRequest($profile, $petOwners[0]);
                             $service = $profile->getServices()->first();
                             if ($service instanceof Service) {
                                 $booking->setService($service);

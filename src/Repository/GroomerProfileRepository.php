@@ -85,10 +85,10 @@ class GroomerProfileRepository extends ServiceEntityRepository
         $sort = in_array($sort, ['recommended', 'price_asc', 'rating_desc'], true) ? $sort : 'recommended';
 
         if ('price_asc' === $sort) {
-            // Nulls last, then ascending lexicographic by priceRange
-            $qb->addSelect('CASE WHEN g.priceRange IS NULL THEN 1 ELSE 0 END AS HIDDEN price_nulls')
+            // Nulls last, then ascending numeric price
+            $qb->addSelect('CASE WHEN g.price IS NULL THEN 1 ELSE 0 END AS HIDDEN price_nulls')
                ->addOrderBy('price_nulls', 'ASC')
-               ->addOrderBy('g.priceRange', 'ASC')
+               ->addOrderBy('g.price', 'ASC')
                ->addOrderBy('g.id', 'ASC');
         } else {
             // rating-based sorts using scalar subqueries (avoids GROUP BY issues on MySQL)

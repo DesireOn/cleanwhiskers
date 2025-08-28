@@ -22,7 +22,9 @@
     {% if groomer.servicesOffered %}
         <p>Services offered: {{ groomer.servicesOffered }}</p>
     {% endif %}
-    {% if groomer.priceRange %}
+    {% if groomer.price is not null %}
+        <p>Price: ${{ groomer.price|number_format(0, '.', ',') }}</p>
+    {% elseif groomer.priceRange %}
         <p>Price range: {{ groomer.priceRange }}</p>
     {% endif %}
 
