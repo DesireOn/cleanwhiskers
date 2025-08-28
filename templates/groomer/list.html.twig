@@ -48,11 +48,14 @@
             {% endfor %}
             </ul>
             <div class="pagination">
-                {% if previousOffset is not null %}
-                    <a href="?offset={{ previousOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Previous</a>
+                {% set q = app.request.query.all %}
+                {% if has_prev %}
+                    {% set q = q|merge({'page': page - 1, 'sort': currentSort}) %}
+                    <a href="?{{ q|url_encode }}">Previous</a>
                 {% endif %}
-                {% if nextOffset is not null %}
-                    <a href="?offset={{ nextOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Next</a>
+                {% if has_next %}
+                    {% set q2 = app.request.query.all|merge({'page': page + 1, 'sort': currentSort}) %}
+                    <a href="?{{ q2|url_encode }}">Next</a>
                 {% endif %}
             </div>
         {% else %}

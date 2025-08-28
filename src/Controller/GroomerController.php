@@ -33,15 +33,19 @@ final class GroomerController extends AbstractController
         if (null === $service) {
             throw $this->createNotFoundException();
         }
-        $limit = 20;
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $minRating = $request->query->getInt('rating');
-        $minRating = $minRating > 0 ? $minRating : null;
+        $perPage = 20;
+        $page = max(1, $request->query->getInt('page', 1));
+        $sort = (string) $request->query->get('sort', 'recommended');
+        $allowed = ['recommended', 'price_asc', 'rating_desc'];
+        if (!in_array($sort, $allowed, true)) {
+            $sort = 'recommended';
+        }
 
-        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset);
-
-        $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
-        $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;
+        $paginator = $groomerProfileRepository->findByFilters($city, $service, $sort, $page, $perPage);
+        $total = count($paginator);
+        $totalPages = (int) ceil($total / $perPage);
+        $hasPrev = $page > 1;
+        $hasNext = $page < $totalPages;
 
         $seoTitle = sprintf(
             'Mobile Dog Groomers in %s for %s – CleanWhiskers',
@@ -57,12 +61,14 @@ final class GroomerController extends AbstractController
         );
 
         return $this->render('groomer/list.html.twig', [
-            'groomers' => $groomers,
+            'groomers' => iterator_to_array($paginator->getIterator()),
             'city' => $city,
             'service' => $service,
-            'rating' => $minRating,
-            'nextOffset' => $nextOffset,
-            'previousOffset' => $previousOffset,
+            'sort' => $sort,
+            'page' => $page,
+            'total_pages' => $totalPages,
+            'has_prev' => $hasPrev,
+            'has_next' => $hasNext,
             'seo_title' => $seoTitle,
             'seo_description' => $seoDescription,
         ]);
