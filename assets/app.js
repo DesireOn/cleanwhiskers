@@ -12,5 +12,6 @@ import './styles/components/badge.css';
 import './styles/components/city-card.css';
 import './styles/components/spinner.css';
 import './styles/components/sticky-cta.css';
+import './styles/blocks/trust-box.css';
 // Register controllers (side-effect imports)
 import './controllers/index.js';
