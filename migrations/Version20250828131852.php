@@ -43,10 +43,13 @@ final class Version20250828131852 extends AbstractMigration
         $this->addSql('ALTER TABLE groomer_profile_service RENAME INDEX idx_groomer_profile_service_groomer_profile_id TO IDX_F6BAE94B54D7E576');
         $this->addSql('ALTER TABLE groomer_profile_service RENAME INDEX idx_groomer_profile_service_service_id TO IDX_F6BAE94BED5CA9E6');
         $this->addSql('CREATE INDEX idx_review_rating ON review (rating)');
-        $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE28BAC62AF');
-        $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE2ED5CA9E6');
-        $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE28BAC62AF FOREIGN KEY (city_id) REFERENCES city (id)');
-        $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE2ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id)');
+        // Only adjust seo_content constraints if the table already exists
+        if ($schema->hasTable('seo_content')) {
+            $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE28BAC62AF');
+            $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE2ED5CA9E6');
+            $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE28BAC62AF FOREIGN KEY (city_id) REFERENCES city (id)');
+            $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE2ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id)');
+        }
         $this->addSql('CREATE INDEX idx_service_slug ON service (slug)');
     }
 
@@ -76,10 +79,13 @@ final class Version20250828131852 extends AbstractMigration
         $this->addSql('ALTER TABLE groomer_profile_service RENAME INDEX idx_f6bae94b54d7e576 TO IDX_GROOMER_PROFILE_SERVICE_GROOMER_PROFILE_ID');
         $this->addSql('ALTER TABLE groomer_profile_service RENAME INDEX idx_f6bae94bed5ca9e6 TO IDX_GROOMER_PROFILE_SERVICE_SERVICE_ID');
         $this->addSql('DROP INDEX idx_review_rating ON review');
-        $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE28BAC62AF');
-        $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE2ED5CA9E6');
-        $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE28BAC62AF FOREIGN KEY (city_id) REFERENCES city (id) ON UPDATE NO ACTION ON DELETE CASCADE');
-        $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE2ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id) ON UPDATE NO ACTION ON DELETE CASCADE');
+        // Only adjust seo_content constraints if the table already exists
+        if ($schema->hasTable('seo_content')) {
+            $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE28BAC62AF');
+            $this->addSql('ALTER TABLE seo_content DROP FOREIGN KEY FK_57FC0AE2ED5CA9E6');
+            $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE28BAC62AF FOREIGN KEY (city_id) REFERENCES city (id) ON UPDATE NO ACTION ON DELETE CASCADE');
+            $this->addSql('ALTER TABLE seo_content ADD CONSTRAINT FK_57FC0AE2ED5CA9E6 FOREIGN KEY (service_id) REFERENCES service (id) ON UPDATE NO ACTION ON DELETE CASCADE');
+        }
         $this->addSql('DROP INDEX idx_service_slug ON service');
     }
 }
