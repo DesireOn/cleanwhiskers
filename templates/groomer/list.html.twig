@@ -1,32 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Groomers in {{ city.name }} for {{ service.name }}</h1>
-    <form method="get" autocomplete="off">
-        <label for="rating">Minimum rating:</label>
-        <select id="rating" name="rating">
-            <option value="">Any</option>
-            {% for i in 5..1 %}
-                <option value="{{ i }}"{% if rating == i %} selected{% endif %}>{{ i }}+</option>
+    {# Page anchors/regions, in order #}
+    <section id="hero" aria-label="Hero"></section>
+
+    <section id="how-it-works" aria-label="How It Works"></section>
+
+    <section id="trust-info" aria-label="Trust & Safety Information"></section>
+
+    <section id="controls" aria-label="Listing Controls">
+        <h1 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h1>
+    </section>
+
+    <section id="groomer-listings" aria-label="Groomer Listings">
+        {% if groomers %}
+            <ul>
+            {% for groomer in groomers %}
+                <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
             {% endfor %}
-        </select>
-        <button type="submit">Filter</button>
-    </form>
-    {% if groomers %}
-        <ul>
-        {% for groomer in groomers %}
-            <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
-        {% endfor %}
-        </ul>
-        <div class="pagination">
-            {% if previousOffset is not null %}
-                <a href="?offset={{ previousOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Previous</a>
-            {% endif %}
-            {% if nextOffset is not null %}
-                <a href="?offset={{ nextOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Next</a>
-            {% endif %}
-        </div>
-    {% else %}
-        <p>No results yet.</p>
-    {% endif %}
+            </ul>
+            <div class="pagination">
+                {% if previousOffset is not null %}
+                    <a href="?offset={{ previousOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Previous</a>
+                {% endif %}
+                {% if nextOffset is not null %}
+                    <a href="?offset={{ nextOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Next</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No results yet.</p>
+        {% endif %}
+    </section>
+
+    <section id="seo-content" aria-label="SEO Content"></section>
+
+    <section id="email-capture" aria-label="Email Capture"></section>
 {% endblock %}
