@@ -8,6 +8,7 @@ use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\ServiceRepository;
+use App\Repository\TestimonialRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,7 @@ final class GroomerController extends AbstractController
         CityRepository $cityRepository,
         ServiceRepository $serviceRepository,
         GroomerProfileRepository $groomerProfileRepository,
+        TestimonialRepository $testimonialRepository,
     ): Response {
         $city = $cityRepository->findOneBySlug($citySlug);
         if (null === $city) {
@@ -41,6 +43,14 @@ final class GroomerController extends AbstractController
         $sort = in_array($sort, ['recommended', 'price_asc', 'rating_desc'], true) ? $sort : 'recommended';
 
         $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset, $sort);
+
+        foreach ($groomers as $groomer) {
+            $testimonial = $testimonialRepository->findOneForGroomer($groomer);
+            if (null !== $testimonial) {
+                /* @phpstan-ignore-next-line */
+                $groomer->testimonial = $testimonial;
+            }
+        }
 
         $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
         $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;

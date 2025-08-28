@@ -8,6 +8,7 @@ use App\Entity\City;
 use App\Entity\GroomerProfile;
 use App\Entity\Review;
 use App\Entity\Service;
+use App\Entity\Testimonial;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -315,5 +316,57 @@ final class GroomerControllerTest extends WebTestCase
         $content = (string) $this->client->getResponse()->getContent();
         self::assertStringContainsString('Groomer 21', $content);
         self::assertStringNotContainsString('Groomer 1', $content);
+    }
+
+    public function testListByCityServiceShowsTestimonialsWithFallback(): void
+    {
+        $city = new City('Plovdiv');
+        $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Bath');
+        $service->refreshSlugFrom($service->getName());
+
+        $this->em->persist($city);
+        $this->em->persist($service);
+
+        $author = (new User())
+            ->setEmail('owner@example.com')
+            ->setPassword('hash');
+
+        $withReviewUser = (new User())
+            ->setEmail('with@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $withReview = new GroomerProfile($withReviewUser, $city, 'With Review', 'About');
+        $withReview->refreshSlugFrom($withReview->getBusinessName());
+        $withReview->addService($service);
+
+        $withoutReviewUser = (new User())
+            ->setEmail('without@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $withoutReview = new GroomerProfile($withoutReviewUser, $city, 'Without Review', 'About');
+        $withoutReview->refreshSlugFrom($withoutReview->getBusinessName());
+        $withoutReview->addService($service);
+
+        $this->em->persist($author);
+        $this->em->persist($withReviewUser);
+        $this->em->persist($withReview);
+        $this->em->persist($withoutReviewUser);
+        $this->em->persist($withoutReview);
+
+        $review = new Review($withReview, $author, 5, 'Real review testimonial');
+        $this->em->persist($review);
+
+        $placeholder = (new Testimonial('Jane', 'Plovdiv', 'Placeholder testimonial'))
+            ->markPlaceholder();
+        $this->em->persist($placeholder);
+        $this->em->flush();
+
+        $this->client->request('GET', '/groomers/'.$city->getSlug().'/'.$service->getSlug());
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertStringContainsString('Real review testimonial', $content);
+        self::assertStringContainsString('Placeholder testimonial', $content);
+        self::assertStringContainsString('This testimonial is a placeholder.', $content);
     }
 }
