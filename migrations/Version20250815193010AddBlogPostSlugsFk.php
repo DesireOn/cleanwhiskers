@@ -16,6 +16,11 @@ final class Version20250815193010AddBlogPostSlugsFk extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        $platform = $this->connection->getDatabasePlatform()->getName();
+        if ($platform !== 'mysql') {
+            $this->skipIf(true, sprintf('Skipping MySQL-specific migration on %s', $platform));
+            return;
+        }
         // Only add the FK if both tables exist and the FK is not already present
         $sql = <<<'SQL'
 SELECT COUNT(*)
@@ -41,6 +46,11 @@ SQL;
 
     public function down(Schema $schema): void
     {
+        $platform = $this->connection->getDatabasePlatform()->getName();
+        if ($platform !== 'mysql') {
+            $this->skipIf(true, sprintf('Skipping MySQL-specific migration on %s', $platform));
+            return;
+        }
         // Drop the FK if present
         $sql = <<<'SQL'
 SELECT CONSTRAINT_NAME

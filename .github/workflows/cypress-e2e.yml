@@ -25,7 +25,8 @@ jobs:
 
       - name: Prepare test DB (SQLite) and seed
         run: |
-          php bin/console --env=test doctrine:migrations:migrate --no-interaction --allow-no-migration
+          php bin/console --env=test doctrine:database:create --if-not-exists
+          php bin/console --env=test doctrine:schema:create --no-interaction
           php bin/console --env=test app:seed
 
       - name: Start PHP server
@@ -46,4 +47,3 @@ jobs:
           browser: chrome
           wait-on: 'http://127.0.0.1:8080/'
           env: CYPRESS_BASE_URL=http://127.0.0.1:8080
-
