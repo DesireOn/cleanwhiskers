@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -27,6 +28,16 @@
 
     <section id="controls" aria-label="Listing Controls">
         <h2 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h2>
+        {# Sorting dropdown #}
+        {% set currentSort = app.request.query.get('sort', 'recommended') %}
+        <div class="sort sort--dropdown" id="sort-control">
+          <label for="sort" class="sort__label">Sort by</label>
+          <select id="sort" class="sort__select" aria-label="Sort groomers">
+            <option value="recommended" {{ currentSort == 'recommended' ? 'selected' }}>Recommended</option>
+            <option value="price_asc" {{ currentSort == 'price_asc' ? 'selected' }}>Price (low to high)</option>
+            <option value="rating_desc" {{ currentSort == 'rating_desc' ? 'selected' }}>Rating (high to low)</option>
+          </select>
+        </div>
     </section>
 
     <section id="groomer-listings" aria-label="Groomer Listings">
