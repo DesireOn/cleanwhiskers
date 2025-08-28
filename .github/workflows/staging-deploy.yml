@@ -64,6 +64,13 @@ jobs:
           # If you need to unblock temporarily, swap to:
           # run: yarn install --ignore-engines
 
+      - name: Add hero placeholder image
+        run: |
+          node -e "const fs=require('fs'); fs.mkdirSync('src/public/images',{recursive:true}); fs.writeFileSync('src/public/images/hero-placeholder.jpg', Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAICAgICAgMCAgMDAwMDBAQEBAQEBAQFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBP/wAALCAAQABABAREA/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIQAxAAAAH/AP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAQUCf//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//Z','base64'));"
+
+      - name: Build Frontend Assets
+        run: yarn build
+
 
       - name: Compile Asset Map
         run: php bin/console asset-map:compile

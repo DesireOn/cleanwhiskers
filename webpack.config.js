@@ -11,6 +11,7 @@ Encore
   .addEntry('main', './assets/app.js')
 //  .addEntry('js/mobile-nav-toggle', './assets/js/mobile-nav-toggle.js')
   .copyFiles({ from: './src/public', to: '[path][name].[ext]' })
+  .copyFiles({ from: './assets/js', to: 'js/[name].[ext]' })
   .splitEntryChunks()
   .enableSingleRuntimeChunk()
   .enableSourceMaps(!Encore.isProduction())
