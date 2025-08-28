@@ -24,7 +24,7 @@ final class Version20250810180002 extends AbstractMigration
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['slug'], 'UNIQ_BLOG_POST_SLUGS_SLUG');
         $table->addIndex(['post_id'], 'IDX_BLOG_POST_SLUGS_POST_ID');
-        $table->addForeignKeyConstraint('blog_post', ['post_id'], ['id'], ['onDelete' => 'CASCADE']);
+        // FK added later to avoid dependency on blog_post creation order
     }
 
     public function down(Schema $schema): void
