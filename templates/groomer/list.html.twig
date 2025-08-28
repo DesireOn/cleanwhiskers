@@ -5,12 +5,14 @@
     <link rel="stylesheet" href="{{ asset('css/components/button.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/trust-box.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('controllers/heroScroll.js') }}" defer></script>
     <script type="module" src="{{ asset('controllers/sortHandler.js') }}" defer></script>
+    <script type="module" src="{{ asset('controllers/tooltip.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -24,6 +26,10 @@
     </section>
 
     <section id="groomer-listings">
+        <div class="trust-box">
+            <span class="trust-box__label" data-tooltip aria-describedby="verified-tooltip">🛡️ Verified groomer</span>
+            <span id="verified-tooltip" class="trust-box__tooltip" role="tooltip" aria-hidden="true">Verified groomer: Background checked and approved by CleanWhiskers.</span>
+        </div>
         <h2>Groomers in {{ city.name }} for {{ service.name }}</h2>
         <div class="sort-dropdown">
             <label for="sort" class="sort-dropdown__label">Sort by:</label>
