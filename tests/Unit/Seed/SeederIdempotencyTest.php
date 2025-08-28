@@ -43,13 +43,21 @@ final class SeederIdempotencyTest extends KernelTestCase
         $expectedServiceCount = count($dataset->services);
         $expectedUserCount = count($dataset->users);
         $expectedProfileCount = count($dataset->groomerProfiles);
-        $expectedSampleCount = $expectedProfileCount;
+
+        $expectedReviewCount = 0;
+        foreach ($dataset->groomerProfiles as $profileData) {
+            if (isset($profileData['reviews'])) {
+                $expectedReviewCount += count($profileData['reviews']);
+            } else {
+                ++$expectedReviewCount;
+            }
+        }
 
         self::assertSame($expectedCityCount, $this->em->getRepository(City::class)->count([]));
         self::assertSame($expectedServiceCount, $this->em->getRepository(Service::class)->count([]));
         self::assertSame($expectedUserCount, $this->em->getRepository(User::class)->count([]));
         self::assertSame($expectedProfileCount, $this->em->getRepository(GroomerProfile::class)->count([]));
-        self::assertSame($expectedSampleCount, $this->em->getRepository(Review::class)->count([]));
-        self::assertSame($expectedSampleCount, $this->em->getRepository(BookingRequest::class)->count([]));
+        self::assertSame($expectedReviewCount, $this->em->getRepository(Review::class)->count([]));
+        self::assertSame($expectedProfileCount, $this->em->getRepository(BookingRequest::class)->count([]));
     }
 }

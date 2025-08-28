@@ -94,10 +94,10 @@ final class SeedCommand extends Command
         ];
 
         foreach ($this->groomerRepository->findAll() as $profile) {
-            if (random_int(1, 10) <= 8) {
+            if ([] === $profile->getBadges() && random_int(1, 10) <= 8) {
                 $profile->setBadges($this->sample($badgePool, random_int(1, 2)));
             }
-            if (random_int(1, 10) <= 8) {
+            if ([] === $profile->getSpecialties() && random_int(1, 10) <= 8) {
                 $profile->setSpecialties($this->sample($specialtyPool, random_int(1, 3)));
             }
         }

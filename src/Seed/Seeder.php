@@ -82,10 +82,13 @@ final class Seeder
 
             $profiles = [];
             foreach ($dataset->groomerProfiles as $profileData) {
-                $user = $users[$profileData['userEmail']] ?? null;
+                $user = null;
+                if (!empty($profileData['userEmail']) && isset($users[$profileData['userEmail']])) {
+                    $user = $users[$profileData['userEmail']];
+                }
                 $citySlug = $this->slugify($profileData['city']);
                 $city = $cities[$citySlug] ?? null;
-                if (null === $user || null === $city) {
+                if (null === $city) {
                     continue; // skip invalid references
                 }
 
@@ -118,7 +121,42 @@ final class Seeder
                         }
                     }
                 }
-                $profiles[] = $profile;
+
+                if (isset($profileData['priceRange'])) {
+                    $profile->setPriceRange($profileData['priceRange']);
+                }
+                if (isset($profileData['badges'])) {
+                    $profile->setBadges($profileData['badges']);
+                }
+                if (isset($profileData['imagePath'])) {
+                    $profile->setImagePath($profileData['imagePath']);
+                }
+
+                if (isset($profileData['reviews'])) {
+                    foreach ($profileData['reviews'] as $reviewData) {
+                        $author = $users[$reviewData['authorEmail']] ?? null;
+                        if (null === $author) {
+                            continue;
+                        }
+                        $existingReview = $this->reviewRepository->findOneBy([
+                            'groomer' => $profile,
+                            'author' => $author,
+                            'comment' => $reviewData['comment'],
+                        ]);
+                        if (null === $existingReview) {
+                            $review = new Review($profile, $author, $reviewData['rating'], $reviewData['comment']);
+                            if (!empty($reviewData['verified'])) {
+                                $review->markVerified();
+                            }
+                            $this->em->persist($review);
+                        }
+                    }
+                }
+
+                $profiles[] = [
+                    'entity' => $profile,
+                    'hasReviews' => isset($profileData['reviews']),
+                ];
             }
 
             if ($withSamples) {
@@ -130,14 +168,17 @@ final class Seeder
                     }
                 }
                 if (null !== $petOwner) {
-                    foreach ($profiles as $profile) {
-                        $existingReview = $this->reviewRepository->findOneBy([
-                            'groomer' => $profile,
-                            'author' => $petOwner,
-                        ]);
-                        if (null === $existingReview) {
-                            $review = new Review($profile, $petOwner, 5, 'Sample review');
-                            $this->em->persist($review);
+                    foreach ($profiles as $profileInfo) {
+                        $profile = $profileInfo['entity'];
+                        if (!$profileInfo['hasReviews']) {
+                            $existingReview = $this->reviewRepository->findOneBy([
+                                'groomer' => $profile,
+                                'author' => $petOwner,
+                            ]);
+                            if (null === $existingReview) {
+                                $review = new Review($profile, $petOwner, 5, 'Sample review');
+                                $this->em->persist($review);
+                            }
                         }
 
                         $existingBooking = $this->bookingRequestRepository->findOneBy([

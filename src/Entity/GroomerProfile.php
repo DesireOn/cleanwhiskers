@@ -50,6 +50,9 @@ class GroomerProfile
     #[ORM\Column(name: 'price_range', length: 64, nullable: true)]
     private ?string $priceRange = null;
 
+    #[ORM\Column(name: 'image_path', length: 255, nullable: true)]
+    private ?string $imagePath = null;
+
     /**
      * @var string[]|null
      */
@@ -150,6 +153,22 @@ class GroomerProfile
     public function setPriceRange(?string $priceRange): self
     {
         $this->priceRange = $priceRange;
+
+        return $this;
+    }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): self
+    {
+        if (null !== $imagePath) {
+            $imagePath = str_replace(['..', '\\'], '', $imagePath);
+            $imagePath = ltrim($imagePath, '/\\');
+        }
+        $this->imagePath = $imagePath;
 
         return $this;
     }
