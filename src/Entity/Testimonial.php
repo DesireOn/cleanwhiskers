@@ -28,6 +28,9 @@ class Testimonial
     #[ORM\Column(type: Types::TEXT)]
     private string $quote;
 
+    #[ORM\Column(type: Types::BOOLEAN, name: 'is_placeholder', options: ['default' => false])]
+    private bool $isPlaceholder = false;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: 'created_at')]
     private \DateTimeImmutable $createdAt;
 
@@ -57,6 +60,18 @@ class Testimonial
     public function getQuote(): string
     {
         return $this->quote;
+    }
+
+    public function isPlaceholder(): bool
+    {
+        return $this->isPlaceholder;
+    }
+
+    public function markPlaceholder(): self
+    {
+        $this->isPlaceholder = true;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

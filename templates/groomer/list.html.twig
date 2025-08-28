@@ -53,7 +53,12 @@
         {% if groomers %}
             <ul>
             {% for groomer in groomers %}
-                <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
+                <li>
+                    <a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a>
+                    {% if testimonials[groomer.id] is defined %}
+                        <blockquote>{{ testimonials[groomer.id].quote }}</blockquote>
+                    {% endif %}
+                </li>
             {% endfor %}
             </ul>
             <div class="pagination">
