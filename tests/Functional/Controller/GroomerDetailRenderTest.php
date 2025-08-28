@@ -39,7 +39,7 @@ final class GroomerDetailRenderTest extends WebTestCase
         $profile->setServiceArea('Downtown');
         $profile->setPhone('123-456');
         $profile->setServicesOffered('Bathing');
-        $profile->setPriceRange('$$');
+        $profile->setPriceRange('$$'); // should be changeg to setPrice
 
         $this->em->persist($user);
         $this->em->persist($city);
