@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Controller;
 
 use App\Entity\City;
 use App\Entity\GroomerProfile;
+use App\Entity\SeoContent;
 use App\Entity\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,6 +52,36 @@ final class GroomerControllerListTest extends WebTestCase
         $this->client->request('GET', '/groomers/'.$city->getSlug().'/'.$service->getSlug());
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Best Groomers', (string) $this->client->getResponse()->getContent());
+    }
+
+    public function testSeoContentBlockIsRenderedWhenContentExists(): void
+    {
+        $user = (new User())
+            ->setEmail('seo@example.com')
+            ->setRoles([User::ROLE_GROOMER])
+            ->setPassword('hash');
+        $city = new City('Plovdiv');
+        $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Trim');
+        $service->refreshSlugFrom($service->getName());
+        $profile = new GroomerProfile($user, $city, 'SEO Groomer', 'About');
+        $profile->addService($service);
+        $profile->refreshSlugFrom($profile->getBusinessName());
+        $seoContent = new SeoContent($city, $service, 'SEO Title', 'SEO body');
+        $seoContent->setImagePath('images/seo.jpg');
+
+        $this->em->persist($user);
+        $this->em->persist($city);
+        $this->em->persist($service);
+        $this->em->persist($profile);
+        $this->em->persist($seoContent);
+        $this->em->flush();
+
+        $this->client->request('GET', '/groomers/'.$city->getSlug().'/'.$service->getSlug());
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertStringContainsString('SEO Title', $content);
+        self::assertStringContainsString('SEO body', $content);
     }
 
     public function testUnknownCityReturns404(): void
