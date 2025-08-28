@@ -17,17 +17,7 @@ final class RobotsController extends AbstractController
         $host = $request->getHost();
         $productionHosts = ['cleanwhiskers.com', 'www.cleanwhiskers.com'];
 
-        if (!\in_array($host, $productionHosts, true)) {
-            $content = "User-agent: *\nDisallow: /\n";
-        } else {
-            $baseDir = $this->getParameter('kernel.project_dir');
-            $baseDir = \is_string($baseDir) ? $baseDir : \dirname(__DIR__, 2);
-            $path = $baseDir.'/public/robots.txt';
-
-            $content = @file_get_contents($path);
-            $content = \is_string($content) ? $content : '';
-            $content .= "\nSitemap: ".$request->getScheme().'://'.$host.'/sitemap.xml';
-        }
+        $content = "User-agent: *\nDisallow: /\n";
 
         return new Response($content, Response::HTTP_OK, ['Content-Type' => 'text/plain']);
     }

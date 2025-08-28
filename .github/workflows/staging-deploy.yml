@@ -101,3 +101,10 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
           "cd /var/www/staging.cleanwhiskers.com && sudo chown -R www-data:www-data var/cache/prod && sudo chmod -R 775 var/cache/prod/"
+
+      - name: Ensure Logs Directory on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && mkdir -p var/log && sudo chown -R www-data:www-data var/log && sudo chmod -R 775 var/log"
