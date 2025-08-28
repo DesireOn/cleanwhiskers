@@ -59,7 +59,8 @@ final class ImportGroomersCsvCommand extends Command
                 continue;
             }
 
-            [$name, $citySlug, $phone, $serviceArea, $servicesOffered, $priceRange] = array_pad($row, 6, null);
+            // Keep reading a 6th column for backward compatibility, but ignore it
+            [$name, $citySlug, $phone, $serviceArea, $servicesOffered, $ignoredPriceRange] = array_pad($row, 6, null);
 
             if (!is_string($name) || !is_string($citySlug)) {
                 ++$skipped;
@@ -70,7 +71,7 @@ final class ImportGroomersCsvCommand extends Command
             $phone = is_string($phone) ? $phone : null;
             $serviceArea = is_string($serviceArea) ? $serviceArea : null;
             $servicesOffered = is_string($servicesOffered) ? $servicesOffered : null;
-            $priceRange = is_string($priceRange) ? $priceRange : null;
+            // priceRange removed: numeric price is the source of truth now
 
             $city = $this->cityRepository->findOneBySlug($citySlug);
             if (!$city instanceof City) {
@@ -82,7 +83,7 @@ final class ImportGroomersCsvCommand extends Command
             $existing = $this->findExisting($name, $city);
 
             if (null !== $existing) {
-                $this->applyDetails($existing, $phone, $serviceArea, $servicesOffered, $priceRange);
+                $this->applyDetails($existing, $phone, $serviceArea, $servicesOffered);
                 $this->em->flush();
                 ++$updated;
 
@@ -98,7 +99,7 @@ final class ImportGroomersCsvCommand extends Command
                 ++$suffix;
             }
 
-            $this->applyDetails($profile, $phone, $serviceArea, $servicesOffered, $priceRange);
+            $this->applyDetails($profile, $phone, $serviceArea, $servicesOffered);
 
             $this->em->persist($profile);
             $this->em->flush();
@@ -131,12 +132,10 @@ final class ImportGroomersCsvCommand extends Command
         ?string $phone,
         ?string $serviceArea,
         ?string $servicesOffered,
-        ?string $priceRange,
     ): void {
         $profile->setPhone($this->nullOrTrim($phone));
         $profile->setServiceArea($this->nullOrTrim($serviceArea));
         $profile->setServicesOffered($this->nullOrTrim($servicesOffered));
-        $profile->setPriceRange($this->nullOrTrim($priceRange));
     }
 
     private function nullOrTrim(?string $value): ?string

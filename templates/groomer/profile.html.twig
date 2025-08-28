@@ -24,8 +24,6 @@
     {% endif %}
     {% if groomer.price is not null %}
         <p>Price: ${{ groomer.price|number_format(0, '.', ',') }}</p>
-    {% elseif groomer.priceRange %}
-        <p>Price range: {{ groomer.priceRange }}</p>
     {% endif %}
 
     <h2>Reviews</h2>
