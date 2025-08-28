@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/trust-box.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/card.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -24,6 +25,24 @@
             <p class="hero__subtitle">Browse vetted local groomers that come straight to your doorstep.</p>
             <button class="hero__cta btn btn--accent" type="button" data-scroll-target="#groomer-listings">Find a Groomer Now</button>
         </div>
+    </section>
+
+    <section class="how-it-works" aria-labelledby="how-it-works-title">
+        <h2 id="how-it-works-title">How It Works</h2>
+        <ol class="how-it-works__steps">
+            <li class="how-it-works__step">
+                <img src="/assets/illustrations/search.svg" alt="Search icon" width="80" height="80" loading="lazy">
+                <p>Search for mobile groomers in your area.</p>
+            </li>
+            <li class="how-it-works__step">
+                <img src="/assets/illustrations/paw.svg" alt="Reviews icon" width="80" height="80" loading="lazy">
+                <p>Compare &amp; choose based on reviews.</p>
+            </li>
+            <li class="how-it-works__step">
+                <img src="/assets/illustrations/calendar.svg" alt="Book icon" width="80" height="80" loading="lazy">
+                <p>Book online — they come to your home!</p>
+            </li>
+        </ol>
     </section>
 
     <section id="groomer-listings">
