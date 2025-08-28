@@ -4,20 +4,11 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/components/button.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/trust-box.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/card.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/seo-content.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/email-capture.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('controllers/heroScroll.js') }}" defer></script>
-    <script type="module" src="{{ asset('controllers/sortHandler.js') }}" defer></script>
-    <script type="module" src="{{ asset('controllers/tooltip.js') }}" defer></script>
-    <script type="module" src="{{ asset('controllers/emailCapture.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -30,39 +21,8 @@
         </div>
     </section>
 
-    <section class="how-it-works" aria-labelledby="how-it-works-title">
-        <h2 id="how-it-works-title">How It Works</h2>
-        <ol class="how-it-works__steps">
-            <li class="how-it-works__step">
-                <img src="/assets/illustrations/search.svg" alt="Search icon" width="80" height="80" loading="lazy">
-                <p>Search for mobile groomers in your area.</p>
-            </li>
-            <li class="how-it-works__step">
-                <img src="/assets/illustrations/paw.svg" alt="Reviews icon" width="80" height="80" loading="lazy">
-                <p>Compare &amp; choose based on reviews.</p>
-            </li>
-            <li class="how-it-works__step">
-                <img src="/assets/illustrations/calendar.svg" alt="Book icon" width="80" height="80" loading="lazy">
-                <p>Book online — they come to your home!</p>
-            </li>
-        </ol>
-    </section>
-
     <section id="groomer-listings">
-        <div class="trust-box">
-            <span class="trust-box__label" data-tooltip aria-describedby="verified-tooltip">🛡️ Verified groomer</span>
-            <span id="verified-tooltip" class="trust-box__tooltip" role="tooltip" aria-hidden="true">Verified groomer: Background checked and approved by CleanWhiskers.</span>
-        </div>
         <h2>Groomers in {{ city.name }} for {{ service.name }}</h2>
-        <div class="sort-dropdown">
-            <label for="sort" class="sort-dropdown__label">Sort by:</label>
-            {% set currentSort = app.request.query.get('sort') %}
-            <select id="sort" class="sort-dropdown__select">
-                <option value="recommended"{% if currentSort is null or currentSort == 'recommended' %} selected{% endif %}>Recommended</option>
-                <option value="price"{% if currentSort == 'price' %} selected{% endif %}>Price (low to high)</option>
-                <option value="rating"{% if currentSort == 'rating' %} selected{% endif %}>Rating (high to low)</option>
-            </select>
-        </div>
         <form method="get" autocomplete="off">
             <label for="rating">Minimum rating:</label>
             <select id="rating" name="rating">
@@ -74,40 +34,9 @@
             <button type="submit">Filter</button>
         </form>
         {% if groomers %}
-            <ul class="cards">
+            <ul>
             {% for groomer in groomers %}
-                <li>
-                    <article class="card">
-                        <img
-                            class="card__photo"
-                            src="{{ groomer.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
-                            alt="{{ groomer.businessName }} logo"
-                            loading="lazy"
-                            decoding="async"
-                        >
-                        <div class="card__body">
-                            <h3 class="card__title">
-                                <a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a>
-                            </h3>
-                            <p class="card__description">{{ groomer.about }}</p>
-                            <div class="card__rating" aria-label="Rating {{ groomer.avgRating|default(0)|number_format(1) }} out of 5">
-                                <span class="card__rating-value">{{ groomer.avgRating|default(0)|number_format(1) }}</span>
-                                <span class="card__rating-count">({{ groomer.reviewCount|default(0) }})</span>
-                                {% if groomer.user is not null %}
-                                    <span class="card__badge" data-tooltip aria-describedby="verified-{{ loop.index }}">🛡️ Verified</span>
-                                    <span id="verified-{{ loop.index }}" class="card__tooltip" role="tooltip" aria-hidden="true">Verified groomer: Background checked and approved by CleanWhiskers.</span>
-                                {% endif %}
-                            </div>
-                            {% if groomer.testimonial is defined %}
-                                <blockquote class="card__testimonial" data-placeholder="{{ groomer.testimonial.is_placeholder ? 'true' : 'false' }}">&ldquo;{{ groomer.testimonial.excerpt|default('') }}&rdquo;</blockquote>
-                                {% if groomer.testimonial.is_placeholder %}
-                                    <p class="card__disclaimer">This testimonial is a placeholder.</p>
-                                {% endif %}
-                            {% endif %}
-                            <a class="card__cta btn btn--accent" href="/groomers/{{ groomer.slug }}">Book Now</a>
-                        </div>
-                    </article>
-                </li>
+                <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
             {% endfor %}
             </ul>
             <div class="pagination">
@@ -121,43 +50,5 @@
         {% else %}
             <p>No results yet.</p>
         {% endif %}
-    </section>
-
-    {% if seo_content %}
-        <section class="seo-content">
-            {% if seo_content.imagePath %}
-                <img
-                    src="{{ asset(seo_content.imagePath) }}"
-                    alt="{{ seo_content.title }}"
-                    loading="lazy"
-                    class="seo-content__image"
-                />
-            {% endif %}
-            <div class="seo-content__body">
-                <h2 class="seo-content__title">{{ seo_content.title }}</h2>
-                <p class="seo-content__text">{{ seo_content.content }}</p>
-            </div>
-        </section>
-    {% endif %}
-
-    <section class="email-capture" aria-labelledby="email-capture-title">
-        <h2 id="email-capture-title" class="email-capture__prompt">Not ready to book yet? Leave your email and we’ll send you top 3 trusted groomers in {{ city.name }}.</h2>
-        <form class="email-capture__form" data-city="{{ city.id }}" data-service="{{ service.id }}">
-            <label>
-                Name
-                <input type="text" name="name" required>
-            </label>
-            <label>
-                Email
-                <input type="email" name="email" required>
-            </label>
-            <label>
-                Dog breed (optional)
-                <input type="text" name="dogBreed">
-            </label>
-            <input type="text" name="website" class="email-capture__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <button type="submit" class="btn btn--accent">Notify Me</button>
-            <p class="email-capture__message" hidden></p>
-        </form>
     </section>
 {% endblock %}

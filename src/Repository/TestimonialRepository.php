@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\GroomerProfile;
-use App\Entity\Review;
 use App\Entity\Testimonial;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -32,43 +30,5 @@ class TestimonialRepository extends ServiceEntityRepository
             ->getResult();
 
         return $result;
-    }
-
-    /**
-     * @return array{excerpt: string, is_placeholder: bool}|null
-     */
-    public function findOneForGroomer(GroomerProfile $groomer): ?array
-    {
-        $review = $this->getEntityManager()->getRepository(Review::class)
-            ->findOneBy(['groomer' => $groomer], ['createdAt' => 'DESC']);
-
-        if ($review instanceof Review) {
-            return [
-                'excerpt' => $this->excerpt($review->getComment()),
-                'is_placeholder' => false,
-            ];
-        }
-
-        $testimonial = $this->createQueryBuilder('t')
-            ->where('t.isPlaceholder = :placeholder')
-            ->setParameter('placeholder', true)
-            ->orderBy('t.createdAt', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        if ($testimonial instanceof Testimonial) {
-            return [
-                'excerpt' => $this->excerpt($testimonial->getQuote()),
-                'is_placeholder' => true,
-            ];
-        }
-
-        return null;
-    }
-
-    private function excerpt(string $text, int $max = 120): string
-    {
-        return mb_strlen($text) > $max ? mb_substr($text, 0, $max - 3).'...' : $text;
     }
 }
