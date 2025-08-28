@@ -37,8 +37,10 @@ final class GroomerController extends AbstractController
         $offset = max(0, $request->query->getInt('offset', 0));
         $minRating = $request->query->getInt('rating');
         $minRating = $minRating > 0 ? $minRating : null;
+        $sort = $request->query->getString('sort', 'recommended');
+        $sort = in_array($sort, ['recommended', 'price_asc', 'rating_desc'], true) ? $sort : 'recommended';
 
-        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset);
+        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset, $sort);
 
         $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
         $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;
@@ -61,6 +63,7 @@ final class GroomerController extends AbstractController
             'city' => $city,
             'service' => $service,
             'rating' => $minRating,
+            'sort' => $sort,
             'nextOffset' => $nextOffset,
             'previousOffset' => $previousOffset,
             'seo_title' => $seoTitle,
