@@ -7,9 +7,7 @@ namespace App\Controller;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ReviewRepository;
-use App\Repository\SeoContentRepository;
 use App\Repository\ServiceRepository;
-use App\Repository\TestimonialRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,8 +23,6 @@ final class GroomerController extends AbstractController
         CityRepository $cityRepository,
         ServiceRepository $serviceRepository,
         GroomerProfileRepository $groomerProfileRepository,
-        TestimonialRepository $testimonialRepository,
-        SeoContentRepository $seoContentRepository,
     ): Response {
         $city = $cityRepository->findOneBySlug($citySlug);
         if (null === $city) {
@@ -41,18 +37,8 @@ final class GroomerController extends AbstractController
         $offset = max(0, $request->query->getInt('offset', 0));
         $minRating = $request->query->getInt('rating');
         $minRating = $minRating > 0 ? $minRating : null;
-        $sort = $request->query->getString('sort', 'recommended');
-        $sort = in_array($sort, ['recommended', 'price_asc', 'rating_desc'], true) ? $sort : 'recommended';
 
-        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset, $sort);
-
-        foreach ($groomers as $groomer) {
-            $testimonial = $testimonialRepository->findOneForGroomer($groomer);
-            if (null !== $testimonial) {
-                /* @phpstan-ignore-next-line */
-                $groomer->testimonial = $testimonial;
-            }
-        }
+        $groomers = $groomerProfileRepository->findByFilters($city, $service, $minRating, $limit, $offset);
 
         $nextOffset = count($groomers) === $limit ? $offset + $limit : null;
         $previousOffset = $offset > 0 ? max(0, $offset - $limit) : null;
@@ -70,19 +56,15 @@ final class GroomerController extends AbstractController
             )
         );
 
-        $seoContent = $seoContentRepository->findOneByCityAndService($city, $service);
-
         return $this->render('groomer/list.html.twig', [
             'groomers' => $groomers,
             'city' => $city,
             'service' => $service,
             'rating' => $minRating,
-            'sort' => $sort,
             'nextOffset' => $nextOffset,
             'previousOffset' => $previousOffset,
             'seo_title' => $seoTitle,
             'seo_description' => $seoDescription,
-            'seo_content' => $seoContent,
         ]);
     }
 

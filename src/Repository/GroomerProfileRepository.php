@@ -67,7 +67,6 @@ class GroomerProfileRepository extends ServiceEntityRepository
         ?int $minRating = null,
         int $limit = 20,
         int $offset = 0,
-        string $sort = 'recommended',
     ): array {
         $qb = $this->createQueryBuilder('g')
             ->innerJoin('g.services', 's')
@@ -78,37 +77,11 @@ class GroomerProfileRepository extends ServiceEntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        $needsReviewJoin = 'price_asc' !== $sort || null !== $minRating;
-        if ($needsReviewJoin) {
+        if (null !== $minRating) {
             $qb->leftJoin(Review::class, 'r', 'WITH', 'r.groomer = g')
-                ->addSelect('AVG(r.rating) AS HIDDEN avgRating')
-                ->groupBy('g.id');
-
-            if (null !== $minRating) {
-                $qb->having('AVG(r.rating) >= :minRating')
-                    ->setParameter('minRating', $minRating);
-            }
-        }
-
-        switch ($sort) {
-            case 'price_asc':
-                $qb->addOrderBy('CASE WHEN g.priceRange IS NULL THEN 1 ELSE 0 END', 'ASC')
-                    ->addOrderBy('g.priceRange + 0', 'ASC');
-
-                break;
-
-            case 'rating_desc':
-                $qb->orderBy('avgRating', 'DESC');
-
-                break;
-
-            case 'recommended':
-            default:
-                $qb->addSelect('CASE WHEN g.user IS NULL THEN 0 ELSE 1 END AS HIDDEN isVerified')
-                    ->orderBy('avgRating', 'DESC')
-                    ->addOrderBy('isVerified', 'DESC');
-
-                break;
+                ->groupBy('g.id')
+                ->having('AVG(r.rating) >= :minRating')
+                ->setParameter('minRating', $minRating);
         }
 
         /** @var array<int, GroomerProfile> $result */

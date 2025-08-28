@@ -31,9 +31,6 @@ class Testimonial
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: 'created_at')]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: Types::BOOLEAN, name: 'is_placeholder', options: ['default' => false])]
-    private bool $isPlaceholder = false;
-
     public function __construct(string $name, string $city, string $quote)
     {
         $this->name = $name;
@@ -65,17 +62,5 @@ class Testimonial
     public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function isPlaceholder(): bool
-    {
-        return $this->isPlaceholder;
-    }
-
-    public function markPlaceholder(): self
-    {
-        $this->isPlaceholder = true;
-
-        return $this;
     }
 }
