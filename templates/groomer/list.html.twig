@@ -4,11 +4,13 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/components/button.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('controllers/heroScroll.js') }}" defer></script>
+    <script type="module" src="{{ asset('controllers/sortHandler.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -23,6 +25,15 @@
 
     <section id="groomer-listings">
         <h2>Groomers in {{ city.name }} for {{ service.name }}</h2>
+        <div class="sort-dropdown">
+            <label for="sort" class="sort-dropdown__label">Sort by:</label>
+            {% set currentSort = app.request.query.get('sort') %}
+            <select id="sort" class="sort-dropdown__select">
+                <option value="recommended"{% if currentSort is null or currentSort == 'recommended' %} selected{% endif %}>Recommended</option>
+                <option value="price"{% if currentSort == 'price' %} selected{% endif %}>Price (low to high)</option>
+                <option value="rating"{% if currentSort == 'rating' %} selected{% endif %}>Rating (high to low)</option>
+            </select>
+        </div>
         <form method="get" autocomplete="off">
             <label for="rating">Minimum rating:</label>
             <select id="rating" name="rating">
