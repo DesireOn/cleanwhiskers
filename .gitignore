@@ -30,6 +30,8 @@
 /public/main*.css
 /public/js/
 /public/css
+# Note: Static CSS should live in src/public/css/** and will be copied to
+# public/css/** during CI via webpack.copyFiles(). Do not commit public/ output.
 /public/.js
 
 /node_modules
