@@ -47,8 +47,8 @@ class GroomerProfile
     #[ORM\Column(name: 'services_offered', type: 'text', nullable: true)]
     private ?string $servicesOffered = null;
 
-    #[ORM\Column(name: 'price_range', length: 64, nullable: true)]
-    private ?string $priceRange = null;
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $price = null;
 
     /**
      * @var string[]|null
@@ -142,14 +142,14 @@ class GroomerProfile
         return $this;
     }
 
-    public function getPriceRange(): ?string
+    public function getPrice(): ?int
     {
-        return $this->priceRange;
+        return $this->price;
     }
 
-    public function setPriceRange(?string $priceRange): self
+    public function setPrice(?int $price): self
     {
-        $this->priceRange = $priceRange;
+        $this->price = $price;
 
         return $this;
     }

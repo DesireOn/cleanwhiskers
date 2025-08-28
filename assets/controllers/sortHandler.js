@@ -1,15 +1,18 @@
-// Placeholder: hook up sorting dropdown when controls region exists
-import { qs, on } from '../helpers/dom.js';
-
+// Sort dropdown: updates URL ?sort= and reloads, preserving other params.
 (function initSortHandler() {
-  const controls = qs('#controls');
-  if (!controls) return;
-  const select = controls.querySelector('select#rating');
+  const select = document.querySelector('#sort-control select#sort');
   if (!select) return;
-  // Example: auto-submit on change (non-breaking)
-  on(select, 'change', () => {
-    const form = select.closest('form');
-    if (form) form.submit();
+
+  const allowed = new Set(['recommended', 'price_asc', 'rating_desc']);
+
+  select.addEventListener('change', () => {
+    const value = String(select.value || '').trim();
+    if (!allowed.has(value)) return; // ignore unexpected values
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', value);
+
+    // Reload with updated params, preserving path and other params
+    window.location.assign(url.toString());
   });
 })();
-

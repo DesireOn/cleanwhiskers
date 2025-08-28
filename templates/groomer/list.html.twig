@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -27,6 +28,16 @@
 
     <section id="controls" aria-label="Listing Controls">
         <h2 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h2>
+        {# Sorting dropdown #}
+        {% set currentSort = app.request.query.get('sort', 'recommended') %}
+        <div class="sort sort--dropdown" id="sort-control">
+          <label for="sort" class="sort__label">Sort by</label>
+          <select id="sort" class="sort__select" aria-label="Sort groomers">
+            <option value="recommended" {{ currentSort == 'recommended' ? 'selected' }}>Recommended</option>
+            <option value="price_asc" {{ currentSort == 'price_asc' ? 'selected' }}>Price (low to high)</option>
+            <option value="rating_desc" {{ currentSort == 'rating_desc' ? 'selected' }}>Rating (high to low)</option>
+          </select>
+        </div>
     </section>
 
     <section id="groomer-listings" aria-label="Groomer Listings">
@@ -37,11 +48,14 @@
             {% endfor %}
             </ul>
             <div class="pagination">
-                {% if previousOffset is not null %}
-                    <a href="?offset={{ previousOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Previous</a>
+                {% set q = app.request.query.all %}
+                {% if has_prev %}
+                    {% set q = q|merge({'page': page - 1, 'sort': currentSort}) %}
+                    <a href="?{{ q|url_encode }}">Previous</a>
                 {% endif %}
-                {% if nextOffset is not null %}
-                    <a href="?offset={{ nextOffset }}{% if rating %}&rating={{ rating }}{% endif %}">Next</a>
+                {% if has_next %}
+                    {% set q2 = app.request.query.all|merge({'page': page + 1, 'sort': currentSort}) %}
+                    <a href="?{{ q2|url_encode }}">Next</a>
                 {% endif %}
             </div>
         {% else %}

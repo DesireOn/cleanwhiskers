@@ -29,52 +29,93 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
         $this->repository = $this->em->getRepository(GroomerProfile::class);
     }
 
-    public function testFindByFiltersReturnsProfilesAboveRating(): void
+    public function testFindByFiltersSortingRecommendedAndRating(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
         $service = (new Service())->setName('Bath');
         $service->refreshSlugFrom($service->getName());
 
-        $highUser = (new User())
-            ->setEmail('high@example.com')
-            ->setRoles([User::ROLE_GROOMER])
-            ->setPassword('hash');
-        $highProfile = new GroomerProfile($highUser, $city, 'High', 'About');
-        $highProfile->refreshSlugFrom($highProfile->getBusinessName());
-        $highProfile->addService($service);
+        $u1 = (new User())->setEmail('a@example.com')->setRoles([User::ROLE_GROOMER])->setPassword('hash');
+        $u2 = (new User())->setEmail('b@example.com')->setRoles([User::ROLE_GROOMER])->setPassword('hash');
 
-        $lowUser = (new User())
-            ->setEmail('low@example.com')
-            ->setRoles([User::ROLE_GROOMER])
-            ->setPassword('hash');
-        $lowProfile = new GroomerProfile($lowUser, $city, 'Low', 'About');
-        $lowProfile->refreshSlugFrom($lowProfile->getBusinessName());
-        $lowProfile->addService($service);
+        $p1 = new GroomerProfile($u1, $city, 'Alpha', 'About'); // higher rating, has user
+        $p1->refreshSlugFrom($p1->getBusinessName());
+        $p1->addService($service);
 
-        $author = (new User())
-            ->setEmail('author@example.com')
-            ->setPassword('hash');
+        $p2 = new GroomerProfile(null, $city, 'Bravo', 'About'); // lower rating, no user
+        $p2->refreshSlugFrom($p2->getBusinessName());
+        $p2->addService($service);
+
+        $p3 = new GroomerProfile($u2, $city, 'Charlie', 'About'); // mid rating, has user, more reviews
+        $p3->refreshSlugFrom($p3->getBusinessName());
+        $p3->addService($service);
+
+        $author = (new User())->setEmail('author@example.com')->setPassword('hash');
 
         $this->em->persist($city);
         $this->em->persist($service);
-        $this->em->persist($highUser);
-        $this->em->persist($highProfile);
-        $this->em->persist($lowUser);
-        $this->em->persist($lowProfile);
+        $this->em->persist($u1);
+        $this->em->persist($u2);
+        $this->em->persist($p1);
+        $this->em->persist($p2);
+        $this->em->persist($p3);
         $this->em->persist($author);
         $this->em->flush();
 
-        $highReview = new Review($highProfile, $author, 5, 'Great');
-        $lowReview = new Review($lowProfile, $author, 3, 'Okay');
-        $this->em->persist($highReview);
-        $this->em->persist($lowReview);
+        // Ratings: p1=5 (1 rev), p2=3 (1 rev), p3=(4,4) -> 4 (2 revs)
+        $this->em->persist(new Review($p1, $author, 5, 'Great'));
+        $this->em->persist(new Review($p2, $author, 3, 'Ok'));
+        $this->em->persist(new Review($p3, $author, 4, 'Good'));
+        $this->em->persist(new Review($p3, $author, 4, 'Good again'));
         $this->em->flush();
         $this->em->clear();
 
-        $result = $this->repository->findByFilters($city, $service, 4);
-        self::assertCount(1, $result);
-        self::assertSame('High', $result[0]->getBusinessName());
+        // Recommended: avg desc, user_score desc, reviews_count desc
+        $recommended = $this->repository->findByFilters($city, $service, 'recommended', 1, 10);
+        $names = array_map(fn($g) => $g->getBusinessName(), iterator_to_array($recommended));
+        self::assertSame(['Alpha', 'Charlie', 'Bravo'], $names);
+
+        // Rating desc: avg desc, then reviews_count desc
+        $ratingDesc = $this->repository->findByFilters($city, $service, 'rating_desc', 1, 10);
+        $names2 = array_map(fn($g) => $g->getBusinessName(), iterator_to_array($ratingDesc));
+        self::assertSame(['Alpha', 'Charlie', 'Bravo'], $names2);
+    }
+
+    public function testFindByFiltersPriceAscNullsLast(): void
+    {
+        $city = new City('Varna');
+        $city->refreshSlugFrom($city->getName());
+        $service = (new Service())->setName('Clip');
+        $service->refreshSlugFrom($service->getName());
+
+        $u = (new User())->setEmail('u@example.com')->setRoles([User::ROLE_GROOMER])->setPassword('hash');
+        $a = new GroomerProfile($u, $city, 'A', 'About');
+        $a->refreshSlugFrom($a->getBusinessName());
+        $a->addService($service);
+        $a->setPrice(10);
+
+        $b = new GroomerProfile($u, $city, 'B', 'About');
+        $b->refreshSlugFrom($b->getBusinessName());
+        $b->addService($service);
+        $b->setPrice(20);
+
+        $c = new GroomerProfile($u, $city, 'C', 'About');
+        $c->refreshSlugFrom($c->getBusinessName());
+        $c->addService($service);
+        // no price set
+
+        $this->em->persist($city);
+        $this->em->persist($service);
+        $this->em->persist($u);
+        $this->em->persist($a);
+        $this->em->persist($b);
+        $this->em->persist($c);
+        $this->em->flush();
+
+        $p = $this->repository->findByFilters($city, $service, 'price_asc', 1, 10);
+        $names = array_map(fn($g) => $g->getBusinessName(), iterator_to_array($p));
+        self::assertSame(['A', 'B', 'C'], $names);
     }
 
     public function testFindFeaturedReturnsTopRatedProfiles(): void

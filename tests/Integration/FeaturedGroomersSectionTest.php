@@ -46,7 +46,7 @@ final class FeaturedGroomersSectionTest extends WebTestCase
                 ->setEmail(sprintf('a%d@example.com', $i))
                 ->setPassword('hash');
             $profile = new GroomerProfile($gUser, $city, 'Groomer '.$i, 'About');
-            $profile->setPriceRange('$10');
+            $profile->setPrice(10);
             $profile->addService($service);
             $this->em->persist($gUser);
             $this->em->persist($author);

@@ -59,35 +59,60 @@ class GroomerProfileRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<int, GroomerProfile>
+     * Find groomers by city + service, with sorting and pagination.
+     *
+     * @return Paginator<GroomerProfile>
      */
     public function findByFilters(
         City $city,
         Service $service,
-        ?int $minRating = null,
-        int $limit = 20,
-        int $offset = 0,
-    ): array {
+        string $sort = 'recommended',
+        int $page = 1,
+        int $perPage = 20,
+    ): Paginator {
+        $page = max(1, $page);
+        $perPage = max(1, $perPage);
+
         $qb = $this->createQueryBuilder('g')
             ->innerJoin('g.services', 's')
             ->where('g.city = :city')
             ->andWhere('s = :service')
             ->setParameter('city', $city)
             ->setParameter('service', $service)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
 
-        if (null !== $minRating) {
-            $qb->leftJoin(Review::class, 'r', 'WITH', 'r.groomer = g')
-                ->groupBy('g.id')
-                ->having('AVG(r.rating) >= :minRating')
-                ->setParameter('minRating', $minRating);
+        $sort = in_array($sort, ['recommended', 'price_asc', 'rating_desc'], true) ? $sort : 'recommended';
+
+        if ('price_asc' === $sort) {
+            // Nulls last, then ascending numeric price
+            $qb->addSelect('CASE WHEN g.price IS NULL THEN 1 ELSE 0 END AS HIDDEN price_nulls')
+               ->addOrderBy('price_nulls', 'ASC')
+               ->addOrderBy('g.price', 'ASC')
+               ->addOrderBy('g.id', 'ASC');
+        } else {
+            // rating-based sorts using scalar subqueries (avoids GROUP BY issues on MySQL)
+            $avgSubDql = '(SELECT AVG(r2.rating) FROM '.Review::class.' r2 WHERE r2.groomer = g)';
+            $countSubDql = '(SELECT COUNT(r3.id) FROM '.Review::class.' r3 WHERE r3.groomer = g)';
+
+            $qb->addSelect($avgSubDql.' AS HIDDEN avg_rating')
+               ->addSelect($countSubDql.' AS HIDDEN reviews_count')
+               // Prefer profiles with attached users as a proxy for verification
+               ->addSelect('CASE WHEN g.user IS NULL THEN 0 ELSE 1 END AS HIDDEN user_score');
+
+            if ('rating_desc' === $sort) {
+                $qb->addOrderBy('avg_rating', 'DESC')
+                   ->addOrderBy('reviews_count', 'DESC')
+                   ->addOrderBy('g.id', 'DESC');
+            } else { // recommended
+                $qb->addOrderBy('avg_rating', 'DESC')
+                   ->addOrderBy('user_score', 'DESC')
+                   ->addOrderBy('reviews_count', 'DESC')
+                   ->addOrderBy('g.id', 'DESC');
+            }
         }
 
-        /** @var array<int, GroomerProfile> $result */
-        $result = $qb->getQuery()->getResult();
-
-        return $result;
+        return new Paginator($qb->getQuery());
     }
 
     /**

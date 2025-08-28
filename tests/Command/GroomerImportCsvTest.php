@@ -38,8 +38,8 @@ final class GroomerImportCsvTest extends KernelTestCase
     public function testImportIsIdempotent(): void
     {
         $csv = <<<CSV
-name,city_slug,phone,service_area,services_offered,price_range
-Paw Parlour,sofia,12345,Downtown,Full service,"$$"
+name,city_slug,phone,service_area,services_offered,price
+Paw Parlour,sofia,12345,Downtown,Full service,25
 Other,unknown,999,,,
 CSV;
         $path = sys_get_temp_dir().'/groomers.csv';
@@ -55,6 +55,9 @@ CSV;
         self::assertStringContainsString('Updated: 0', $display1);
         self::assertStringContainsString('Skipped: 1', $display1);
         self::assertCount(1, $this->repository->findAll());
+        $inserted = $this->repository->findOneBy(['businessName' => 'Paw Parlour']);
+        self::assertNotNull($inserted);
+        self::assertSame(25, $inserted->getPrice());
 
         $status2 = $tester->execute(['csv' => $path]);
         self::assertSame(ImportGroomersCsvCommand::SUCCESS, $status2);

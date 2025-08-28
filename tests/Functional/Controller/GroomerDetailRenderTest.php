@@ -39,7 +39,7 @@ final class GroomerDetailRenderTest extends WebTestCase
         $profile->setServiceArea('Downtown');
         $profile->setPhone('123-456');
         $profile->setServicesOffered('Bathing');
-        $profile->setPriceRange('$$');
+        $profile->setPrice(20);
 
         $this->em->persist($user);
         $this->em->persist($city);
@@ -52,6 +52,6 @@ final class GroomerDetailRenderTest extends WebTestCase
         self::assertStringContainsString('Downtown', $content);
         self::assertStringContainsString('123-456', $content);
         self::assertStringContainsString('Bathing', $content);
-        self::assertStringContainsString('$$', $content);
+        self::assertStringContainsString('$20', $content);
     }
 }

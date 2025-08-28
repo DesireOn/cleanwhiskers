@@ -22,8 +22,8 @@
     {% if groomer.servicesOffered %}
         <p>Services offered: {{ groomer.servicesOffered }}</p>
     {% endif %}
-    {% if groomer.priceRange %}
-        <p>Price range: {{ groomer.priceRange }}</p>
+    {% if groomer.price is not null %}
+        <p>Price: ${{ groomer.price|number_format(0, '.', ',') }}</p>
     {% endif %}
 
     <h2>Reviews</h2>
