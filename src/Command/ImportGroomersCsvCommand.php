@@ -59,8 +59,8 @@ final class ImportGroomersCsvCommand extends Command
                 continue;
             }
 
-            // Keep reading a 6th column for backward compatibility, but ignore it
-            [$name, $citySlug, $phone, $serviceArea, $servicesOffered, $ignoredPriceRange] = array_pad($row, 6, null);
+            // 6th column is now numeric price (legacy files may still have price_range; we will parse or ignore)
+            [$name, $citySlug, $phone, $serviceArea, $servicesOffered, $priceRaw] = array_pad($row, 6, null);
 
             if (!is_string($name) || !is_string($citySlug)) {
                 ++$skipped;
@@ -71,7 +71,8 @@ final class ImportGroomersCsvCommand extends Command
             $phone = is_string($phone) ? $phone : null;
             $serviceArea = is_string($serviceArea) ? $serviceArea : null;
             $servicesOffered = is_string($servicesOffered) ? $servicesOffered : null;
-            // priceRange removed: numeric price is the source of truth now
+            // Parse numeric price if provided; legacy price_range strings will result in null here
+            $price = is_string($priceRaw) ? $this->parsePrice($priceRaw) : null;
 
             $city = $this->cityRepository->findOneBySlug($citySlug);
             if (!$city instanceof City) {
@@ -83,7 +84,7 @@ final class ImportGroomersCsvCommand extends Command
             $existing = $this->findExisting($name, $city);
 
             if (null !== $existing) {
-                $this->applyDetails($existing, $phone, $serviceArea, $servicesOffered);
+                $this->applyDetails($existing, $phone, $serviceArea, $servicesOffered, $price);
                 $this->em->flush();
                 ++$updated;
 
@@ -99,7 +100,7 @@ final class ImportGroomersCsvCommand extends Command
                 ++$suffix;
             }
 
-            $this->applyDetails($profile, $phone, $serviceArea, $servicesOffered);
+            $this->applyDetails($profile, $phone, $serviceArea, $servicesOffered, $price);
 
             $this->em->persist($profile);
             $this->em->flush();
@@ -132,10 +133,12 @@ final class ImportGroomersCsvCommand extends Command
         ?string $phone,
         ?string $serviceArea,
         ?string $servicesOffered,
+        ?int $price,
     ): void {
         $profile->setPhone($this->nullOrTrim($phone));
         $profile->setServiceArea($this->nullOrTrim($serviceArea));
         $profile->setServicesOffered($this->nullOrTrim($servicesOffered));
+        $profile->setPrice($price);
     }
 
     private function nullOrTrim(?string $value): ?string
@@ -150,5 +153,38 @@ final class ImportGroomersCsvCommand extends Command
         $normalized = preg_replace('/\s+/', ' ', mb_strtolower(trim($source))) ?? '';
 
         return (new AsciiSlugger())->slug($normalized)->lower()->toString();
+    }
+
+    /**
+     * Accepts formats like "25", "25.00", "$25", "1,200", "USD 25" and returns integer dollars.
+     */
+    private function parsePrice(string $raw): ?int
+    {
+        $raw = trim($raw);
+        if ('' === $raw) {
+            return null;
+        }
+
+        // Remove common non-numeric symbols and currency codes
+        $clean = preg_replace('/[^0-9.,]/', '', $raw) ?? '';
+        // Normalize thousands separators: remove commas and spaces
+        $clean = str_replace([',', ' '], '', $clean);
+
+        if ($clean === '') {
+            return null;
+        }
+
+        // If decimal part exists, cast to float then to int (truncate)
+        if (str_contains($clean, '.')) {
+            $float = (float) $clean;
+            return (int) floor($float);
+        }
+
+        // Pure integer string
+        if (ctype_digit($clean)) {
+            return (int) $clean;
+        }
+
+        return null;
     }
 }

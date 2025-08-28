@@ -103,7 +103,7 @@ final class GroomerProfileRepositoryTest extends KernelTestCase
         $c = new GroomerProfile($u, $city, 'C', 'About');
         $c->refreshSlugFrom($c->getBusinessName());
         $c->addService($service);
-        // no priceRange
+        // no price set
 
         $this->em->persist($city);
         $this->em->persist($service);
