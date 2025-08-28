@@ -24,7 +24,7 @@
 }
 
 .hero__title {
-    font-size: calc(var(--fs-h1) * 8 / 7);
+    font-size: clamp(var(--fs-h1), 2vw + 1rem, calc(var(--fs-h1) * 10 / 7));
     margin-bottom: var(--space-4);
 }
 
@@ -148,10 +148,14 @@
 
 .hero--listing .hero__title {
     margin-bottom: var(--space-3);
+    font-weight: 700;
+    letter-spacing: var(--ls-heading);
+    line-height: var(--lh-heading);
+    font-size: clamp(var(--fs-hero-title-min), 3vw + 1rem, var(--fs-hero-title-max));
 }
 
 .hero--listing .hero__subtitle {
-    font-size: 1.125rem;
+    font-size: clamp(var(--fs-hero-subtitle-min), 1.2vw + 0.75rem, var(--fs-hero-subtitle-max));
     margin-bottom: var(--space-4);
 }
 
@@ -180,11 +184,9 @@
     outline-offset: 2px;
 }
 
-@media (min-width: 768px) {
+/* Additional tweaks for larger screens if needed */
+@media (min-width: 1200px) {
     .hero--listing .hero__title {
-        font-size: calc(var(--fs-h1) * 10 / 7);
-    }
-    .hero--listing .hero__subtitle {
-        font-size: 1.25rem;
+        font-size: clamp(var(--fs-hero-title-min), 2vw + 1.25rem, calc(var(--fs-hero-title-max) * 1));
     }
 }
