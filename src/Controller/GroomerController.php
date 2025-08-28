@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ReviewRepository;
+use App\Repository\SeoContentRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\TestimonialRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ final class GroomerController extends AbstractController
         ServiceRepository $serviceRepository,
         GroomerProfileRepository $groomerProfileRepository,
         TestimonialRepository $testimonialRepository,
+        SeoContentRepository $seoContentRepository,
     ): Response {
         $city = $cityRepository->findOneBySlug($citySlug);
         if (null === $city) {
@@ -68,6 +70,8 @@ final class GroomerController extends AbstractController
             )
         );
 
+        $seoContent = $seoContentRepository->findOneByCityAndService($city, $service);
+
         return $this->render('groomer/list.html.twig', [
             'groomers' => $groomers,
             'city' => $city,
@@ -78,6 +82,7 @@ final class GroomerController extends AbstractController
             'previousOffset' => $previousOffset,
             'seo_title' => $seoTitle,
             'seo_description' => $seoDescription,
+            'seo_content' => $seoContent,
         ]);
     }
 

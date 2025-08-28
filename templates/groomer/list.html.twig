@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('styles/blocks/trust-box.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/card.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/seo-content.css') }}">
 {% endblock %}
 
 {% block javascripts %}
@@ -119,4 +120,21 @@
             <p>No results yet.</p>
         {% endif %}
     </section>
+
+    {% if seo_content %}
+        <section class="seo-content">
+            {% if seo_content.imagePath %}
+                <img
+                    src="{{ asset(seo_content.imagePath) }}"
+                    alt="{{ seo_content.title }}"
+                    loading="lazy"
+                    class="seo-content__image"
+                />
+            {% endif %}
+            <div class="seo-content__body">
+                <h2 class="seo-content__title">{{ seo_content.title }}</h2>
+                <p class="seo-content__text">{{ seo_content.content }}</p>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}
