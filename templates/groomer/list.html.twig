@@ -1,15 +1,32 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
+{% endblock %}
+
 {% block body %}
     {# Page anchors/regions, in order #}
-    <section id="hero" aria-label="Hero"></section>
+    <section id="hero" class="hero hero--listing" aria-label="Hero">
+      <div class="hero__inner">
+        <h1 class="hero__title">
+          Mobile Dog Grooming in {{ city.name }} — We Come to You!
+        </h1>
+        <p class="hero__subtitle">
+          Browse vetted local groomers that come straight to your doorstep.
+        </p>
+        <button class="hero__cta" data-scroll-target="#groomer-listings">
+          Find a Groomer Now →
+        </button>
+      </div>
+    </section>
 
     <section id="how-it-works" aria-label="How It Works"></section>
 
     <section id="trust-info" aria-label="Trust & Safety Information"></section>
 
     <section id="controls" aria-label="Listing Controls">
-        <h1 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h1>
+        <h2 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h2>
     </section>
 
     <section id="groomer-listings" aria-label="Groomer Listings">
