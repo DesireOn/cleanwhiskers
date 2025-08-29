@@ -58,7 +58,7 @@
         </div>
     </section>
 
-    <section id="groomer-listings" class="featured-groomers" aria-label="Groomer Listings">
+    <section id="groomer-listings" class="featured-groomers container" aria-label="Groomer Listings">
       <div class="featured-groomers__grid">
         {% for groomer in groomers %}
             {% set avg = ratings[groomer.id] ?? 0 %}
