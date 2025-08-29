@@ -23,6 +23,7 @@ final class GroomerController extends AbstractController
         CityRepository $cityRepository,
         ServiceRepository $serviceRepository,
         GroomerProfileRepository $groomerProfileRepository,
+        ReviewRepository $reviewRepository,
     ): Response {
         $city = $cityRepository->findOneBySlug($citySlug);
         if (null === $city) {
@@ -60,8 +61,20 @@ final class GroomerController extends AbstractController
             )
         );
 
+        $groomers = iterator_to_array($paginator->getIterator());
+        $ids = array_map(static fn($g) => $g->getId(), $groomers);
+        $ratingMap = [];
+        $countMap = [];
+        if ($ids) {
+            $stats = $reviewRepository->getAveragesForGroomers($ids);
+            foreach ($ids as $id) {
+                $ratingMap[$id] = $stats[$id]['avg'] ?? null;
+                $countMap[$id] = $stats[$id]['count'] ?? 0;
+            }
+        }
+
         return $this->render('groomer/list.html.twig', [
-            'groomers' => iterator_to_array($paginator->getIterator()),
+            'groomers' => $groomers,
             'city' => $city,
             'service' => $service,
             'sort' => $sort,
@@ -71,6 +84,8 @@ final class GroomerController extends AbstractController
             'has_next' => $hasNext,
             'seo_title' => $seoTitle,
             'seo_description' => $seoDescription,
+            'ratings' => $ratingMap,
+            'reviewCounts' => $countMap,
         ]);
     }
 

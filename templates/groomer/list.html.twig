@@ -87,9 +87,13 @@
 
             <p class="card__desc u-truncate-2">{{ groomer.about }}</p>
 
+            {% set avg = ratings[groomer.id] ?? null %}
+            {% set count = reviewCounts[groomer.id] ?? 0 %}
             <div class="card__meta">
-              <span class="card__rating" aria-label="Average rating —">★ —</span>
-              <span class="card__count">(0)</span>
+              <span class="card__rating" aria-label="Average rating {{ avg is not null ? (avg|number_format(1)) : 'no ratings yet' }}">
+                ★ {{ avg is not null ? (avg|number_format(1)) : '—' }}
+              </span>
+              <span class="card__count">({{ count }})</span>
               <span class="card__price">{{ groomer.price is not null ? groomer.price ~ ' BGN' : 'Price on request' }}</span>
             </div>
 
