@@ -1,5 +1,8 @@
 .hero {
     position: relative;
+    /* Create a stacking context so the absolutely-positioned
+       image with negative z-index paints above the background */
+    z-index: 0;
     display: flex;
     align-items: center;
     justify-content: center;
