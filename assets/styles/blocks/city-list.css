@@ -11,3 +11,20 @@ body[data-route="app_groomer_list_by_city_service"] .featured-groomers {
   clear: both;
 }
 
+/* Center the sort controls within the container */
+body[data-route="app_groomer_list_by_city_service"] .sort--dropdown {
+  justify-content: center;
+}
+
+/* Keep select compact on small screens for centered layout */
+body[data-route="app_groomer_list_by_city_service"] .sort__select {
+  width: auto;
+}
+
+/* On desktop, do not float the trust box on this route; keep it centered */
+@media (min-width: 992px) {
+  body[data-route="app_groomer_list_by_city_service"] .trust-box {
+    float: none;
+    margin: 16px auto;
+  }
+}
