@@ -138,7 +138,7 @@ h3 { font-size: var(--fs-h3); }
 .cta-banner {
     background-color: var(--color-neutral);
     text-align: center;
-    padding: var(--space-4) var(--space-3);
+    padding: var(--space-5) var(--space-3);
 }
 
 .cta-banner__link {
