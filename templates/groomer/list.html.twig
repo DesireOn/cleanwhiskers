@@ -4,6 +4,9 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
+    {# Reuse homepage groomer card/grid styles #}
+    <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -55,57 +58,26 @@
         </div>
     </section>
 
-    <section id="groomer-listings" class="cards" aria-label="Groomer Listings">
-      {% for groomer in groomers %}
-        <article class="card" itemscope itemtype="https://schema.org/LocalBusiness">
-          <a href="{{ path('app_groomer_show', {slug: groomer.slug}) }}" class="card__media">
-            <img
-              src="https://placehold.co/400x300?text=Groomer"
-              alt="{{ groomer.businessName }} photo"
-              loading="lazy"
-              decoding="async"
-              width="400"
-              height="300"
-            >
-          </a>
-          <div class="card__body">
-            <h3 class="card__title" itemprop="name">
-              <a href="{{ path('app_groomer_show', {slug: groomer.slug}) }}">{{ groomer.businessName }}</a>
-              {% if groomer.verified %}
-                {# Verified badge with tooltip (reuses assets/controllers/tooltip.js) #}
-                {% set tipId = 'verified-tip-' ~ loop.index %}
-                <button
-                  type="button"
-                  class="card__badge"
-                  data-tooltip="Verified groomer: Background checked and approved by CleanWhiskers."
-                  aria-label="Verified"
-                  aria-describedby="{{ tipId }}"
-                >🛡️</button>
-                <span id="{{ tipId }}" role="tooltip" class="tooltip tooltip--hidden"></span>
-              {% endif %}
-            </h3>
-
-            <p class="card__desc u-truncate-2">{{ groomer.about }}</p>
-
-            {% set avg = ratings[groomer.id] ?? null %}
+    <section id="groomer-listings" class="featured-groomers" aria-label="Groomer Listings">
+      <div class="featured-groomers__grid">
+        {% for groomer in groomers %}
+            {% set avg = ratings[groomer.id] ?? 0 %}
             {% set count = reviewCounts[groomer.id] ?? 0 %}
-            <div class="card__meta">
-              <span class="card__rating" aria-label="Average rating {{ avg is not null ? (avg|number_format(1)) : 'no ratings yet' }}">
-                ★ {{ avg is not null ? (avg|number_format(1)) : '—' }}
-              </span>
-              <span class="card__count">({{ count }})</span>
-              <span class="card__price">{{ groomer.price is not null ? groomer.price ~ ' BGN' : 'Price on request' }}</span>
-            </div>
-
-            {# Optional testimonial block — not rendered without data #}
-            {# Intentionally omitted as entity does not contain testimonial fields #}
-
-            <a class="card__cta" href="{{ path('app_groomer_show', {slug: groomer.slug}) }}">Book Now</a>
-          </div>
-        </article>
-      {% else %}
-        <p>No groomers found.</p>
-      {% endfor %}
+            {% set badges = [] %}
+            {% if groomer.verified %}
+                {% set badges = badges|merge(['Verified']) %}
+            {% endif %}
+            {{ include('partials/_groomer-card.html.twig', {
+                profile: groomer,
+                rating: avg,
+                reviewCount: count,
+                badges: badges,
+                class: 'city-list-groomer'
+            }) }}
+        {% else %}
+            <p>No groomers found.</p>
+        {% endfor %}
+      </div>
     </section>
 
     {% if groomers %}
