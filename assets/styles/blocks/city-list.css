@@ -28,3 +28,12 @@ body[data-route="app_groomer_list_by_city_service"] .sort__select {
     margin: 16px auto;
   }
 }
+
+/* Match desktop width to header nav container (1200px) */
+@media (min-width: 1024px) {
+  body[data-route="app_groomer_list_by_city_service"] #trust-info,
+  body[data-route="app_groomer_list_by_city_service"] #controls,
+  body[data-route="app_groomer_list_by_city_service"] #groomer-listings {
+    max-width: 1200px; /* align with .nav-container */
+  }
+}
