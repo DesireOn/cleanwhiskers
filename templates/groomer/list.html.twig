@@ -7,6 +7,7 @@
     {# Reuse homepage groomer card/grid styles #}
     <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -27,7 +28,7 @@
 
     <section id="how-it-works" aria-label="How It Works"></section>
 
-    <section id="trust-info" aria-label="Trust & Safety Information">
+    <section id="trust-info" class="container" aria-label="Trust & Safety Information">
       <aside class="trust-box" aria-labelledby="trust-title">
         <h2 id="trust-title" class="u-visually-hidden">Trust & Safety</h2>
         <div class="trust-box__item">
@@ -44,7 +45,7 @@
       </aside>
     </section>
 
-    <section id="controls" aria-label="Listing Controls">
+    <section id="controls" class="container" aria-label="Listing Controls">
         <h2 class="u-visually-hidden">Groomers in {{ city.name }} for {{ service.name }}</h2>
         {# Sorting dropdown #}
         {% set currentSort = app.request.query.get('sort', 'recommended') %}

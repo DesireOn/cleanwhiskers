@@ -1,0 +1,13 @@
+/* City Listing (scoped via route) */
+
+/* Align sections and prevent float overlap with listings */
+body[data-route="app_groomer_list_by_city_service"] #controls {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Ensure groomer grid starts below the floated trust box on desktop */
+body[data-route="app_groomer_list_by_city_service"] .featured-groomers {
+  clear: both;
+}
+
