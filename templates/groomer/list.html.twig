@@ -55,28 +55,68 @@
         </div>
     </section>
 
-    <section id="groomer-listings" aria-label="Groomer Listings">
-        {% if groomers %}
-            <ul>
-            {% for groomer in groomers %}
-                <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
-            {% endfor %}
-            </ul>
-            <div class="pagination">
-                {% set q = app.request.query.all %}
-                {% if has_prev %}
-                    {% set q = q|merge({'page': page - 1, 'sort': currentSort}) %}
-                    <a href="?{{ q|url_encode }}">Previous</a>
-                {% endif %}
-                {% if has_next %}
-                    {% set q2 = app.request.query.all|merge({'page': page + 1, 'sort': currentSort}) %}
-                    <a href="?{{ q2|url_encode }}">Next</a>
-                {% endif %}
+    <section id="groomer-listings" class="cards" aria-label="Groomer Listings">
+      {% for groomer in groomers %}
+        <article class="card" itemscope itemtype="https://schema.org/LocalBusiness">
+          <a href="{{ path('app_groomer_show', {slug: groomer.slug}) }}" class="card__media">
+            <img
+              src="https://placehold.co/400x300?text=Groomer"
+              alt="{{ groomer.businessName }} photo"
+              loading="lazy"
+              decoding="async"
+              width="400"
+              height="300"
+            >
+          </a>
+          <div class="card__body">
+            <h3 class="card__title" itemprop="name">
+              <a href="{{ path('app_groomer_show', {slug: groomer.slug}) }}">{{ groomer.businessName }}</a>
+              {% if groomer.user is not null %}
+                {# Verified badge with tooltip (reuses assets/controllers/tooltip.js) #}
+                {% set tipId = 'verified-tip-' ~ loop.index %}
+                <button
+                  type="button"
+                  class="card__badge"
+                  data-tooltip="Verified groomer: Background checked and approved by CleanWhiskers."
+                  aria-label="Verified"
+                  aria-describedby="{{ tipId }}"
+                >🛡️</button>
+                <span id="{{ tipId }}" role="tooltip" class="tooltip tooltip--hidden"></span>
+              {% endif %}
+            </h3>
+
+            <p class="card__desc u-truncate-2">{{ groomer.about }}</p>
+
+            <div class="card__meta">
+              <span class="card__rating" aria-label="Average rating —">★ —</span>
+              <span class="card__count">(0)</span>
+              <span class="card__price">{{ groomer.price is not null ? groomer.price ~ ' BGN' : 'Price on request' }}</span>
             </div>
-        {% else %}
-            <p>No results yet.</p>
-        {% endif %}
+
+            {# Optional testimonial block — not rendered without data #}
+            {# Intentionally omitted as entity does not contain testimonial fields #}
+
+            <a class="card__cta" href="{{ path('app_groomer_show', {slug: groomer.slug}) }}">Book Now</a>
+          </div>
+        </article>
+      {% else %}
+        <p>No groomers found.</p>
+      {% endfor %}
     </section>
+
+    {% if groomers %}
+      <div class="pagination">
+        {% set q = app.request.query.all %}
+        {% if has_prev %}
+          {% set q = q|merge({'page': page - 1, 'sort': currentSort}) %}
+          <a href="?{{ q|url_encode }}">Previous</a>
+        {% endif %}
+        {% if has_next %}
+          {% set q2 = app.request.query.all|merge({'page': page + 1, 'sort': currentSort}) %}
+          <a href="?{{ q2|url_encode }}">Next</a>
+        {% endif %}
+      </div>
+    {% endif %}
 
     <section id="seo-content" aria-label="SEO Content"></section>
 
