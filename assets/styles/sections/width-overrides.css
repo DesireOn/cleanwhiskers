@@ -1,6 +1,7 @@
 /* Width overrides to align homepage sections with header width */
 @media (min-width: 1024px) {
   .popular-cities,
+  .popular-services,
   #featured-groomers,
   .why-cleanwhiskers,
   .how-it-works,
