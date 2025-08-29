@@ -176,7 +176,7 @@ h3 { font-size: var(--fs-h3); }
 
 @media (min-width: 1024px) {
     .container {
-        max-width: 1024px;
+        max-width: var(--nav-max, 1200px);
     }
 }
 
