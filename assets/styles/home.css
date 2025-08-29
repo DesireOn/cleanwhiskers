@@ -170,10 +170,7 @@
     padding: var(--space-5) var(--space-3);
 }
 
-/* Section: popular-cities (homepage) */
-.popular-cities {
-    padding: var(--space-5) var(--space-3);
-}
+/* Section: popular-cities (moved to styles/sections/popular-cities.css) */
 
 .popular-grid {
     column-gap: var(--space-3);
