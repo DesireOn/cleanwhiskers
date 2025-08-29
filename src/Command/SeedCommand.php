@@ -95,11 +95,28 @@ final class SeedCommand extends Command
         ];
 
         foreach ($this->groomerRepository->findAll() as $profile) {
+            $existingBadges = $profile->getBadges();
             if (random_int(1, 10) <= 8) {
-                $profile->setBadges($this->sample($badgePool, random_int(1, 2)));
+                $sampled = $this->sample($badgePool, random_int(1, 2));
+                // Merge with existing without duplicates (preserve dataset-provided badges)
+                $merged = array_values(array_unique(array_merge($existingBadges, $sampled)));
+                if (count($merged) > 0) {
+                    $profile->setBadges($merged);
+                }
+            } elseif (count($existingBadges) > 0) {
+                // Keep existing badges if any
+                $profile->setBadges($existingBadges);
             }
+
+            $existingSpecs = $profile->getSpecialties();
             if (random_int(1, 10) <= 8) {
-                $profile->setSpecialties($this->sample($specialtyPool, random_int(1, 3)));
+                $sampledS = $this->sample($specialtyPool, random_int(1, 3));
+                $mergedS = array_values(array_unique(array_merge($existingSpecs, $sampledS)));
+                if (count($mergedS) > 0) {
+                    $profile->setSpecialties($mergedS);
+                }
+            } elseif (count($existingSpecs) > 0) {
+                $profile->setSpecialties($existingSpecs);
             }
         }
 

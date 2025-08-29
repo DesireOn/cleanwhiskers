@@ -17,7 +17,8 @@ use App\Entity\User;
  *     about:string,
  *     services:array<int,string>,
  *     price?:int,
- *     ratings?:array<int,int>
+ *     ratings?:array<int,int>,
+ *     badges?:array<int,string>
  * }
  */
 final class SeedDataset
@@ -104,6 +105,7 @@ final class SeedDataset
                     'services' => ['Mobile Dog Grooming'],
                     'price' => 25,
                     'ratings' => [5],
+                    'badges' => ['Verified'],
                 ],
                 [
                     'userEmail' => 'groomer6@example.com',
@@ -113,6 +115,7 @@ final class SeedDataset
                     'services' => ['Mobile Dog Grooming'],
                     'price' => 60,
                     'ratings' => [5, 5, 4],
+                    'badges' => ['Verified'],
                 ],
                 [
                     'userEmail' => 'groomer7@example.com',
@@ -131,6 +134,7 @@ final class SeedDataset
                     'services' => ['Mobile Dog Grooming'],
                     'price' => 30,
                     'ratings' => [4],
+                    'badges' => ['Verified'],
                 ],
                 [
                     'userEmail' => 'groomer9@example.com',

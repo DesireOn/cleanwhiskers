@@ -104,6 +104,11 @@ final class Seeder
                     if (array_key_exists('price', $profileData)) {
                         $profile->setPrice(is_int($profileData['price']) ? $profileData['price'] : null);
                     }
+                    if (array_key_exists('badges', $profileData) && is_array($profileData['badges'])) {
+                        /** @var array<int,string> $badges */
+                        $badges = $profileData['badges'];
+                        $profile->setBadges($badges);
+                    }
                     $this->em->persist($profile);
                 } else {
                     // ensure services
@@ -123,6 +128,11 @@ final class Seeder
                     }
                     if (array_key_exists('price', $profileData)) {
                         $profile->setPrice(is_int($profileData['price']) ? $profileData['price'] : null);
+                    }
+                    if (array_key_exists('badges', $profileData) && is_array($profileData['badges'])) {
+                        /** @var array<int,string> $badges */
+                        $badges = $profileData['badges'];
+                        $profile->setBadges($badges);
                     }
                 }
                 $profiles[] = [
