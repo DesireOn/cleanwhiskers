@@ -162,6 +162,12 @@ class GroomerProfile
         return $this->badges ?? [];
     }
 
+    public function isVerified(): bool
+    {
+        $badges = array_map(static fn($b) => is_string($b) ? mb_strtolower($b) : $b, $this->getBadges());
+        return in_array('verified', $badges, true);
+    }
+
     /**
      * @param string[] $badges
      */

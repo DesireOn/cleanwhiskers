@@ -71,7 +71,7 @@
           <div class="card__body">
             <h3 class="card__title" itemprop="name">
               <a href="{{ path('app_groomer_show', {slug: groomer.slug}) }}">{{ groomer.businessName }}</a>
-              {% if groomer.user is not null %}
+              {% if groomer.verified %}
                 {# Verified badge with tooltip (reuses assets/controllers/tooltip.js) #}
                 {% set tipId = 'verified-tip-' ~ loop.index %}
                 <button
