@@ -2,7 +2,9 @@
 @media (min-width: 1024px) {
   .popular-cities,
   #featured-groomers,
-  .why-cleanwhiskers {
+  .why-cleanwhiskers,
+  .how-it-works,
+  .choose-guide {
     max-width: var(--nav-max, 1200px);
     margin-left: auto;
     margin-right: auto;
