@@ -2,6 +2,17 @@
     padding: 1rem 0;
 }
 
+/* Constrain featured section to nav width on desktop */
+@media (min-width: 1024px) {
+    .featured-groomers {
+        max-width: var(--nav-max, 1200px);
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: var(--space-3);
+        padding-right: var(--space-3);
+    }
+}
+
 .featured-groomers__grid {
     display: grid;
     gap: 1rem;

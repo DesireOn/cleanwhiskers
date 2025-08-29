@@ -1,0 +1,12 @@
+/* Width overrides to align homepage sections with header width */
+@media (min-width: 1024px) {
+  .popular-cities,
+  #featured-groomers {
+    max-width: var(--nav-max, 1200px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+}
+
