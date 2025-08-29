@@ -34,7 +34,7 @@ final class GroomerController extends AbstractController
         if (null === $service) {
             throw $this->createNotFoundException();
         }
-        $perPage = 20;
+        $perPage = 12;
         $page = max(1, $request->query->getInt('page', 1));
         $sort = (string) $request->query->get('sort', 'recommended');
         $allowed = ['recommended', 'price_asc', 'rating_desc'];

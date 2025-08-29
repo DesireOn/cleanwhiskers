@@ -68,7 +68,7 @@ class GroomerProfileRepository extends ServiceEntityRepository
         Service $service,
         string $sort = 'recommended',
         int $page = 1,
-        int $perPage = 20,
+        int $perPage = 12,
     ): Paginator {
         $page = max(1, $page);
         $perPage = max(1, $perPage);
@@ -120,7 +120,7 @@ class GroomerProfileRepository extends ServiceEntityRepository
      */
     public function findByCitySlug(string $slug, int $page = 1): Paginator
     {
-        $limit = 20;
+        $limit = 12;
         $offset = max(0, ($page - 1) * $limit);
 
         $query = $this->createQueryBuilder('g')
