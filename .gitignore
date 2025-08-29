@@ -61,3 +61,5 @@ codex-x86_64-unknown-linux-musl
 public/242.fd855529.js
 public/*.js
 public/images/*
+public/styles/*
+public/styles/blocks/*
