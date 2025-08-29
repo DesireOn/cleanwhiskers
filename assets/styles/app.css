@@ -37,6 +37,9 @@
     --ls-body: 0;
     --ls-heading: 0.02em;
 
+    /* Layout widths */
+    --nav-max: 1200px; /* header/nav container + aligned sections */
+
     /* Brand scale: hero */
     --fs-hero-title-min: 1.875rem;  /* 30px */
     --fs-hero-title-max: 3rem;      /* 48px */

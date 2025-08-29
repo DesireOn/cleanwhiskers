@@ -34,6 +34,6 @@ body[data-route="app_groomer_list_by_city_service"] .sort__select {
   body[data-route="app_groomer_list_by_city_service"] #trust-info,
   body[data-route="app_groomer_list_by_city_service"] #controls,
   body[data-route="app_groomer_list_by_city_service"] #groomer-listings {
-    max-width: 1200px; /* align with .nav-container */
+    max-width: var(--nav-max, 1200px); /* align with .nav-container */
   }
 }
