@@ -63,3 +63,4 @@ public/*.js
 public/images/*
 public/styles/*
 public/styles/blocks/*
+public/styles/blocks/*.css
