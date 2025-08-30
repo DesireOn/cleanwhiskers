@@ -1,59 +1,97 @@
-
+/* Section: choose-guide (mobile-first, accessible) */
 .choose-guide {
     padding: var(--space-5) var(--space-3);
-    background-color: var(--color-neutral);
-    text-align: center;
+    background:
+        radial-gradient(26rem 26rem at 120% -10%, rgba(212,233,233,0.28), transparent 60%),
+        radial-gradient(24rem 24rem at -10% 110%, rgba(255,152,0,0.10), transparent 60%),
+        var(--color-neutral, #f7f7f7);
 }
 
-@media (min-width: 1024px) {
-    .choose-guide {
-        max-width: var(--nav-max, 1200px);
-        margin-left: auto;
-        margin-right: auto;
-    }
+.choose-guide__inner {
+    max-width: var(--nav-max, 1200px);
+    margin: 0 auto;
+}
+
+.choose-guide__header { text-align: center; }
+.choose-guide__header h2 { margin: 0; }
+.choose-guide__subtitle {
+    margin: var(--space-2) 0 0;
+    color: var(--color-text-muted, #5c5c5c);
 }
 
 .choose-guide__list {
+    list-style: none; /* we render our own step badges */
+    padding: 0;
+    margin: var(--space-4) 0 0;
     display: grid;
     gap: var(--space-3);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-@media (min-width: 768px) {
-    .choose-guide__list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .choose-guide__list {
-        grid-template-columns: repeat(4, 1fr);
-    }
+    grid-template-columns: 1fr; /* mobile */
 }
 
 .choose-guide__item {
-    background-color: #fff;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
-    padding: var(--space-3);
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
     gap: var(--space-2);
-    text-align: left;
+    background: #fff;
+    border-radius: var(--radius-lg, 14px);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: calc(var(--space-3) + 2px);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
 }
 
-@media (min-width: 768px) {
-    .choose-guide__item {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+.choose-guide__badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(180deg, var(--color-primary, var(--color-accent, #ff9800)), #ff8a00);
+    color: #fff;
+    box-shadow: var(--shadow-sm);
+    flex: 0 0 auto;
 }
 
-.choose-guide__icon {
-    font-size: 1.5rem;
-    line-height: 1;
-    color: var(--color-accent);
+.choose-guide__step { font-weight: 700; }
+
+.choose-guide__content { text-align: left; }
+.choose-guide__title {
+    margin: 0;
+    font-size: 1.0625rem;
+}
+.choose-guide__text {
+    margin: var(--space-1) 0 0;
+    color: var(--color-text-muted, #5c5c5c);
+}
+
+.choose-guide__item:hover,
+.choose-guide__item:focus-within {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(0,0,0,0.08);
+}
+
+/* Strong focus outline for keyboard users */
+.choose-guide__item:focus-within {
+    outline: 3px solid var(--color-primary, var(--color-accent, #ff9800));
+    outline-offset: 2px;
+}
+
+.choose-guide__cta {
+    text-align: center;
+    margin-top: var(--space-4);
+}
+
+@media (min-width: 600px) {
+    .choose-guide__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+    .choose-guide__list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .choose-guide__item { transition: none; }
 }

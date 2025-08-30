@@ -37,27 +37,7 @@
     {% include 'home/partials/_hero.html.twig' %}
     {% include 'home/partials/_cta_banner.html.twig' %}
     {% include 'home/partials/_how_it_works.html.twig' %}
-    <section class="choose-guide reveal-on-scroll">
-        <h2>{{ 'How to Choose a Groomer'|trans }}</h2>
-        <ul class="choose-guide__list">
-            <li class="choose-guide__item">
-                <span class="choose-guide__icon" aria-hidden="true">🐾</span>
-                <span>{{ 'Look for mobile options'|trans }}</span>
-            </li>
-            <li class="choose-guide__item">
-                <span class="choose-guide__icon" aria-hidden="true">❓</span>
-                <span>{{ 'Ask about breed experience'|trans }}</span>
-            </li>
-            <li class="choose-guide__item">
-                <span class="choose-guide__icon" aria-hidden="true">📅</span>
-                <span>{{ 'Check availability and scheduling'|trans }}</span>
-            </li>
-            <li class="choose-guide__item">
-                <span class="choose-guide__icon" aria-hidden="true">💬</span>
-                <span>{{ 'Read reviews from other pet owners'|trans }}</span>
-            </li>
-        </ul>
-    </section>
+    {% include 'home/partials/_choose_guide.html.twig' %}
     <section class="why-cleanwhiskers reveal-on-scroll">
         <h2>{{ 'Why CleanWhiskers?'|trans }}</h2>
         <div class="why-cleanwhiskers__cards">
