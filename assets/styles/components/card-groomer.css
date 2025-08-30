@@ -56,6 +56,7 @@
     aspect-ratio: 4 / 3;
     overflow: hidden;
     background-color: #f3f4f6;
+    position: relative;
 }
 
 .card-groomer__image-wrapper img {
@@ -63,6 +64,19 @@
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+/* Improve outline/contrast when no real photo is present */
+/* While image is loading (skeleton) or when placeholder source is used */
+.card-groomer__image-wrapper img.skeleton,
+.card-groomer__image-wrapper img[src*="placehold.co"] {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+/* Progressive enhancement: add wrapper outline if :has is supported */
+.card-groomer__image-wrapper:has(img.skeleton),
+.card-groomer__image-wrapper:has(img[src*="placehold.co"]) {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 .card-groomer__body {
