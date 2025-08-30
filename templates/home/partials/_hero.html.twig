@@ -1,8 +1,21 @@
-<section class="hero">
-    <img class="hero__image" src="{{ asset('images/hero-placeholder.jpg') }}" alt="" />
+<section class="hero" aria-labelledby="hero-title">
+    <img
+        class="hero__image"
+        src="{{ asset('images/hero-placeholder.jpg') }}"
+        alt=""
+        aria-hidden="true"
+        role="presentation"
+        fetchpriority="high"
+    />
     <div class="hero__container">
-        <h1 class="hero__title">{{ 'Book mobile pet grooming in minutes — trusted local professionals.'|trans }}</h1>
-        <form id="search-form" class="hero__form" method="get" action="/search" role="search">
+        <h1 id="hero-title" class="hero__title">
+            {{ 'Book mobile pet grooming in minutes — trusted local professionals.'|trans }}
+        </h1>
+        <p class="hero__subtitle">
+            {{ 'Convenient, at‑home grooming that reduces stress for you and your pet.'|trans }}
+        </p>
+
+        <form id="search-form" class="hero__form" method="get" action="/search" role="search" aria-describedby="city-help">
             <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
             <div class="hero__controls">
                 <input
@@ -10,20 +23,31 @@
                     type="text"
                     id="city"
                     name="city"
-                    placeholder="{{ 'City'|trans }}"
-                    autocomplete="off"
+                    placeholder="{{ 'Enter city (e.g., Seattle)'|trans }}"
+                    autocomplete="address-level2"
+                    inputmode="text"
                     required
                     role="combobox"
                     aria-autocomplete="list"
                     aria-expanded="false"
                     aria-controls="city-list"
                     aria-haspopup="listbox"
+                    aria-describedby="city-help"
                 >
                 <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
                 <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
                     {{ ctaLinks.find.label|trans }}
                 </button>
             </div>
+            <span id="city-help" class="visually-hidden">{{ 'Start typing to see suggestions for your city.'|trans }}</span>
         </form>
+
+        <div class="hero__meta" aria-label="Service highlights">
+            <span class="hero__badge" aria-label="Average rating 4.8 out of 5">
+                ⭐ 4.8/5
+            </span>
+            <span class="hero__badge">{{ '2,000+ happy pet parents'|trans }}</span>
+            <span class="hero__badge">{{ 'Vetted & insured groomers'|trans }}</span>
+        </div>
     </div>
 </section>
