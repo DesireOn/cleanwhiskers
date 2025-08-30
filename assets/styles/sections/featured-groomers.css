@@ -1,6 +1,11 @@
 /* Section: featured-groomers */
 .featured-groomers {
   padding: var(--space-5) var(--space-3);
+  /* Match background with 'How to Choose a Groomer' section */
+  background:
+    radial-gradient(26rem 26rem at 120% -10%, rgba(212,233,233,0.28), transparent 60%),
+    radial-gradient(24rem 24rem at -10% 110%, rgba(255,152,0,0.10), transparent 60%),
+    var(--color-neutral, #f7f7f7);
 }
 
 .featured-groomers__title {
