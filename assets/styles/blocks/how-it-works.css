@@ -40,6 +40,8 @@
 
 .how-it-works__item {
     counter-increment: hiw-step;
+    /* Ensure step badge positions relative to each item */
+    position: relative;
 }
 
 .how-it-works__card {
@@ -78,6 +80,8 @@
     font-weight: 700;
     font-size: 0.875rem;
     box-shadow: var(--shadow-sm);
+    z-index: 2; /* Render above the card */
+    pointer-events: none; /* Do not block card clicks */
 }
 
 /* Mobile timeline connector (decorative) */
