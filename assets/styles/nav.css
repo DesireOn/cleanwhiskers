@@ -1,5 +1,14 @@
-/* Navigation icon and small utilities.
-   The layout/visual styles live in assets/styles/blocks/header.css */
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-toggle {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
 
 .nav-toggle__icon,
 .nav-toggle__icon::before,
@@ -7,9 +16,9 @@
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--color-text);
+  background: #333;
   position: relative;
-  transition: transform 0.25s ease, opacity 0.25s ease, top 0.25s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .nav-toggle__icon::before,
@@ -17,6 +26,7 @@
   content: '';
   position: absolute;
   left: 0;
+  transition: top 0.3s ease, transform 0.3s ease;
 }
 
 .nav-toggle__icon::before { top: -6px; }
@@ -36,9 +46,108 @@
   transform: rotate(-45deg);
 }
 
-/* CTA tweaks for compact desktop spacing */
-@media (min-width: 768px) {
+.nav {
+  --gap: 1.5rem;
+}
+
+.nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: var(--gap);
+}
+
+.nav__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav__link--cta {
+  background: var(--color-accent);
+  color: var(--color-text);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 767px) {
+  .nav {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    padding: 4rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  .nav.is-open {
+    transform: translateX(0);
+  }
+
+  .nav__list {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 0;
+    font-size: 1.25rem;
+  }
+
+  .nav__item--cta {
+    margin-block-start: var(--space-4);
+    margin-block-end: var(--space-4);
+  }
+
   .nav__link--cta {
-    padding: calc(var(--space-2) - 2px) var(--space-3);
+    background: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    text-align: center;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 0;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 900;
+  }
+
+  .nav-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-toggle {
+    display: none;
   }
 }
