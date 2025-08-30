@@ -14,5 +14,6 @@ import './styles/components/spinner.css';
 import './styles/components/sticky-cta.css';
 import './styles/blocks/trust-box.css';
 import './styles/blocks/card.css';
+import './styles/blocks/hero.css';
 // Register controllers (side-effect imports)
 import './controllers/index.js';

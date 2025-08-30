@@ -1,160 +1,153 @@
+/*
+  Hero (from scratch)
+  — Accessible, responsive, and minimal. Keeps existing class names.
+*/
+
 .hero {
     position: relative;
-    /* Create a stacking context so the absolutely-positioned
-       image with negative z-index paints above the background */
-    z-index: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-5) var(--space-3);
-    background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
-    overflow: hidden;
+    isolation: isolate; /* create a new stacking context for overlays */
+    display: grid;
+    place-items: center;
+    min-block-size: min(80vh, 42rem);
+    padding-block: clamp(var(--space-4), 6vw, calc(var(--space-5) + 1rem));
+    padding-inline: var(--space-3);
+    color: var(--color-text);
+    background-color: var(--color-pastel);
+    overflow: clip;
 }
 
+/* Background image layer */
 .hero__image {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
+    z-index: -2;
+}
+
+/* Contrast overlay for readability */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
+    mix-blend-mode: multiply;
     z-index: -1;
 }
 
+/* Foreground container */
 .hero__container {
-    max-width: 60rem;
-    margin: 0 auto;
+    inline-size: min(100%, 64rem);
+    margin-inline: auto;
     text-align: center;
 }
 
 .hero__title {
-    font-size: clamp(var(--fs-h1), 2vw + 1rem, calc(var(--fs-h1) * 10 / 7));
-    margin-bottom: var(--space-4);
+    margin: 0 0 var(--space-4);
+    font-weight: 800;
+    letter-spacing: var(--ls-heading);
+    line-height: var(--lh-heading);
+    color: #111; /* ensure strong contrast on pastel */
+    font-size: clamp(1.875rem, 4vw + 1rem, 3.5rem); /* 30px → 56px */
 }
 
 .hero__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
     margin: 0;
+    display: grid;
+    gap: var(--space-3);
 }
 
 .hero__controls {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--space-2);
-    margin: 0;
 }
 
-.hero__controls datalist {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .hero {
-        height: 100vh;
-    }
-
-    .hero__image {
-        height: 100vh;
-    }
-}
-
-@media (max-width: 375px) {
-    .hero__controls {
-        gap: var(--space-3);
-    }
-}
+.hero__controls datalist { display: none; }
 
 .hero__label {
-    display: block;
     margin: 0;
     font-weight: 600;
 }
 
 .hero__input {
-    flex: 1 1 60%;
-    min-width: 60%;
-    width: 100%;
-    font-size: 1rem;
+    inline-size: 100%;
+    min-block-size: 44px; /* tap target */
     padding: var(--space-2) var(--space-3);
+    font-size: 1rem;
+    color: #111;
+    background-color: #fff;
     border: 1px solid var(--color-neutral);
-    border-radius: var(--radius-sm);
-    min-height: 44px;
+    border: 1px solid color-mix(in oklab, var(--color-neutral), #000 12%);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.hero__input:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline: 3px solid color-mix(in oklab, var(--color-accent), #000 10%);
+    outline-offset: 2px;
 }
 
 .hero__submit {
-    flex: 0 0 auto;
-    width: 100%;
+    inline-size: 100%;
+    min-block-size: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: var(--space-2) var(--space-4);
-    min-height: 44px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    align-self: stretch;
-    transition: filter 0.2s ease, background-color 0.2s ease;
+    transition: transform 120ms ease, filter 160ms ease;
 }
-.hero__submit:hover,
-.hero__submit:focus {
-    filter: brightness(1.1);
-}
-.hero__submit:focus {
-    outline: 2px solid var(--color-accent);
+
+.hero__submit:hover { filter: brightness(1.05); }
+.hero__submit:active { transform: translateY(1px); }
+.hero__submit:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline: 3px solid color-mix(in oklab, var(--color-accent), #000 10%);
     outline-offset: 2px;
 }
-.hero__submit:active {
-    filter: brightness(0.9);
-}
 
-@media (min-width: 768px) {
-    .hero__title {
-        font-size: calc(var(--fs-h1) * 10 / 7);
-    }
-
+/* Breakpoints */
+@media (min-width: 680px) {
     .hero__controls {
-        flex-direction: row;
-        align-items: center;
+        grid-template-columns: 1fr auto;
+        align-items: stretch;
     }
-
-    .hero__input {
-        flex: 1 1 60%;
-        min-width: 60%;
-    }
-
-    .hero__submit {
-        width: auto;
-        align-self: stretch;
-    }
+    .hero__submit { inline-size: auto; }
 }
 
 @media (min-width: 1024px) {
-    .hero__title {
-        font-size: calc(var(--fs-h1) * 12 / 7);
-    }
+    .hero { min-block-size: 70vh; }
+    .hero__title { font-size: clamp(2.25rem, 3vw + 1rem, 4rem); }
 }
 
-/* Listing variant */
-.hero--listing {
-    background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
-    color: var(--color-text);
-    padding-top: var(--space-5);
-    padding-bottom: var(--space-5);
+@media (prefers-reduced-motion: reduce) {
+    .hero__submit { transition: none; }
 }
+
+/* Listing variant: simple, readable block hero */
+.hero.hero--listing {
+    background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
+    padding-block: clamp(var(--space-4), 5vw, var(--space-5));
+}
+
+.hero.hero--listing::before { display: none; }
 
 .hero--listing .hero__inner {
-    width: 100%;
-    max-width: 70rem;
-    margin: 0 auto;
+    inline-size: min(100%, 70rem);
+    margin-inline: auto;
     text-align: center;
-    padding: 0 var(--space-3);
+    padding-inline: var(--space-3);
 }
 
 .hero--listing .hero__title {
     margin-bottom: var(--space-3);
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: var(--ls-heading);
     line-height: var(--lh-heading);
-    font-size: clamp(var(--fs-hero-title-min), 3vw + 1rem, var(--fs-hero-title-max));
+    font-size: clamp(var(--fs-hero-title-min), 3vw + 1rem, 3rem);
 }
 
 .hero--listing .hero__subtitle {
@@ -173,23 +166,20 @@
     color: var(--color-text);
     font-weight: 700;
     cursor: pointer;
-    min-height: 44px;
-    transition: filter 0.2s ease, background-color 0.2s ease;
+    min-block-size: 44px;
+    transition: filter 160ms ease, transform 120ms ease;
 }
 
-.hero--listing .hero__cta:hover,
-.hero--listing .hero__cta:focus {
-    filter: brightness(1.1);
-}
-
-.hero--listing .hero__cta:focus {
-    outline: 2px solid var(--color-text);
+.hero--listing .hero__cta:hover { filter: brightness(1.05); }
+.hero--listing .hero__cta:active { transform: translateY(1px); }
+.hero--listing .hero__cta:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline: 3px solid color-mix(in oklab, var(--color-accent), #000 10%);
     outline-offset: 2px;
 }
 
-/* Additional tweaks for larger screens if needed */
 @media (min-width: 1200px) {
     .hero--listing .hero__title {
-        font-size: clamp(var(--fs-hero-title-min), 2vw + 1.25rem, calc(var(--fs-hero-title-max) * 1));
+        font-size: clamp(2.25rem, 2vw + 1.25rem, 3.25rem);
     }
 }
