@@ -37,7 +37,7 @@
     {% if post.coverImagePath %}
         <img src="{{ asset(post.coverImagePath) }}" alt="Cover image for {{ post.title }}" loading="lazy" width="800" height="450">
     {% else %}
-        <img src="{{ asset('assets/illustrations/paw.svg') }}" alt="" loading="lazy" width="800" height="450">
+        <img src="{{ asset('illustrations/paw.svg') }}" alt="" loading="lazy" width="800" height="450">
     {% endif %}
     <section class="content">{{ post.contentHtml|raw }}</section>
 </article>
