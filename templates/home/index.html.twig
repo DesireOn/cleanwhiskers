@@ -38,26 +38,7 @@
     {% include 'home/partials/_cta_banner.html.twig' %}
     {% include 'home/partials/_how_it_works.html.twig' %}
     {% include 'home/partials/_choose_guide.html.twig' %}
-    <section class="why-cleanwhiskers reveal-on-scroll">
-        <h2>{{ 'Why CleanWhiskers?'|trans }}</h2>
-        <div class="why-cleanwhiskers__cards">
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">🐾</div>
-                <h3>{{ 'Local, Vetted Groomers'|trans }}</h3>
-                <p>{{ 'Every groomer is screened for quality and safety.'|trans }}</p>
-            </div>
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">🚐</div>
-                <h3>{{ 'Mobile Grooming at Your Doorstep'|trans }}</h3>
-                <p>{{ 'Convenience for you and your pet.'|trans }}</p>
-            </div>
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">📅</div>
-                <h3>{{ 'Stress-Free Booking'|trans }}</h3>
-                <p>{{ 'Easy scheduling with no phone calls.'|trans }}</p>
-            </div>
-        </div>
-    </section>
+    {% include 'home/partials/_why_cleanwhiskers.html.twig' %}
     {% include 'home/_featured_groomers.html.twig' %}
     {% include 'home/_popular_cities.html.twig' with {popularCities: popularCities|slice(0,5)} %}
 {% endblock %}
