@@ -1,7 +1,8 @@
 {% if featuredGroomers|length %}
-    <section id="featured-groomers" class="featured-groomers">
-        <h2 class="featured-groomers__title">Featured Groomers</h2>
-        <div class="featured-groomers__grid">
+    <section id="featured-groomers" class="featured-groomers" aria-labelledby="featured-groomers-title">
+        <h2 id="featured-groomers-title" class="featured-groomers__title">Featured Groomers</h2>
+        <p class="featured-groomers__description">Top-rated mobile groomers customers love.</p>
+        <div class="featured-groomers__grid" role="list">
             {% for item in featuredGroomers %}
                 {% set g = item.profile %}
                 {% set badges = ['New', 'Verified'] %}
