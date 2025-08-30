@@ -11,7 +11,8 @@
     min-block-size: min(80vh, 42rem);
     padding-block: clamp(var(--space-4), 6vw, calc(var(--space-5) + 1rem));
     padding-inline: var(--space-3);
-    color: var(--color-text);
+    /* Light-on-dark for better readability over imagery */
+    color: #fff;
     background-color: var(--color-pastel);
     overflow: clip;
 }
@@ -31,7 +32,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
+    /* Darker overlay to ensure sufficient text contrast on varied images */
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.30));
     mix-blend-mode: multiply;
     z-index: -1;
 }
@@ -48,7 +50,8 @@
     font-weight: 800;
     letter-spacing: var(--ls-heading);
     line-height: var(--lh-heading);
-    color: #111; /* ensure strong contrast on pastel */
+    color: #fff; /* strong contrast on darkened image */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
     font-size: clamp(1.875rem, 4vw + 1rem, 3.5rem); /* 30px → 56px */
 }
 
@@ -68,6 +71,7 @@
 .hero__label {
     margin: 0;
     font-weight: 600;
+    color: #e9f0f6; /* slightly softer than pure white */
 }
 
 .hero__input {
@@ -131,6 +135,8 @@
 .hero.hero--listing {
     background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
     padding-block: clamp(var(--space-4), 5vw, var(--space-5));
+    /* Listing uses a light background; revert to dark text */
+    color: var(--color-text);
 }
 
 .hero.hero--listing::before { display: none; }
@@ -148,11 +154,13 @@
     letter-spacing: var(--ls-heading);
     line-height: var(--lh-heading);
     font-size: clamp(var(--fs-hero-title-min), 3vw + 1rem, 3rem);
+    color: var(--color-text);
 }
 
 .hero--listing .hero__subtitle {
     font-size: clamp(var(--fs-hero-subtitle-min), 1.2vw + 0.75rem, var(--fs-hero-subtitle-max));
     margin-bottom: var(--space-4);
+    color: var(--color-text);
 }
 
 .hero--listing .hero__cta {
