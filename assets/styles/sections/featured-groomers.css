@@ -12,8 +12,13 @@
 .featured-groomers__inner {
   max-width: var(--nav-max, 1200px);
   margin: 0 auto;
-  padding-left: var(--space-3);
-  padding-right: var(--space-3);
+}
+
+@media (min-width: 1024px) {
+  .featured-groomers {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
 }
 
 .featured-groomers__title {
@@ -37,6 +42,8 @@
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   padding: var(--space-3) 0 var(--space-1);
+  /* Keep spacing consistent with choose-guide on desktop; avoid double spacing on mobile */
+  margin-top: 0;
 }
 
 .featured-groomers__grid > * {
@@ -58,6 +65,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     overflow: visible;
     padding: 0;
+    margin-top: var(--space-4);
   }
 }
 
