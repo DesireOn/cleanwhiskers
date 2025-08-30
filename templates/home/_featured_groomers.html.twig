@@ -1,19 +1,21 @@
 {% if featuredGroomers|length %}
     <section id="featured-groomers" class="featured-groomers" aria-labelledby="featured-groomers-title">
-        <h2 id="featured-groomers-title" class="featured-groomers__title">Featured Groomers</h2>
-        <p class="featured-groomers__description">Top-rated mobile groomers customers love.</p>
-        <div class="featured-groomers__grid" role="list">
-            {% for item in featuredGroomers %}
-                {% set g = item.profile %}
-                {% set badges = ['New', 'Verified'] %}
-                {{ include('partials/_groomer-card.html.twig', {
-                    profile: g,
-                    rating: item.rating,
-                    reviewCount: item.reviewCount,
-                    badges: badges,
-                    class: 'featured-groomer-card'
-                }) }}
-            {% endfor %}
+        <div class="featured-groomers__inner">
+            <h2 id="featured-groomers-title" class="featured-groomers__title">Featured Groomers</h2>
+            <p class="featured-groomers__description">Top-rated mobile groomers customers love.</p>
+            <div class="featured-groomers__grid" role="list">
+                {% for item in featuredGroomers %}
+                    {% set g = item.profile %}
+                    {% set badges = ['New', 'Verified'] %}
+                    {{ include('partials/_groomer-card.html.twig', {
+                        profile: g,
+                        rating: item.rating,
+                        reviewCount: item.reviewCount,
+                        badges: badges,
+                        class: 'featured-groomer-card'
+                    }) }}
+                {% endfor %}
+            </div>
         </div>
     </section>
 {% endif %}

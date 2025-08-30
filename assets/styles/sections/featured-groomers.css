@@ -8,6 +8,14 @@
     var(--color-neutral, #f7f7f7);
 }
 
+/* Constrain inner content while background spans full width */
+.featured-groomers__inner {
+  max-width: var(--nav-max, 1200px);
+  margin: 0 auto;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
+}
+
 .featured-groomers__title {
   text-align: center;
   margin: 0;
