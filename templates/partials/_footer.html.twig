@@ -25,7 +25,7 @@
             <li><a href="https://instagram.com/cleanwhiskers" target="_blank" rel="noopener" class="social-link social-link--instagram" aria-label="Instagram">Instagram</a></li>
           </ul>
         </nav>
-        <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search">
+        <form id="footer-search" class="footer-search" method="get" action="{{ path('app_search_redirect') }}" role="search" autocomplete="off">
           <h3 class="footer-heading">{{ 'Search'|trans }}</h3>
           <label for="footer-city" class="sr-only">{{ 'Search by city'|trans }}</label>
           <input
