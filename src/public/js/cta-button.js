@@ -4,7 +4,7 @@
     fetchFn = fetchFn || (typeof fetch !== 'undefined' ? fetch.bind(global) : null);
     win = win || global;
     var buttons = doc.querySelectorAll(
-      '.cta-banner__link--owners, .sticky-cta__btn'
+      '.cta-banner__link--owners, .sticky-cta__btn, .get-started__action'
     );
     if (!buttons.length) {
       return;

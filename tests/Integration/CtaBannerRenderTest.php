@@ -13,8 +13,8 @@ final class CtaBannerRenderTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/');
 
-        self::assertSelectorExists('.cta-banner');
-        self::assertSelectorExists('a.cta-banner__link--owners[href="#search-form"]');
-        self::assertSelectorExists('a.cta-banner__link--groomers[href="/register?role=groomer"]');
+        self::assertSelectorExists('.get-started');
+        self::assertSelectorExists('a.get-started__action[href="#search-form"]');
+        self::assertSelectorExists('a.get-started__action[href="/register?role=groomer"]');
     }
 }
