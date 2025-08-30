@@ -17,8 +17,6 @@
 ###> symfony/asset-mapper ###
 /public/assets/*
 /assets/vendor/
-!/public/assets/illustrations/
-!/public/assets/illustrations/*
 ###< symfony/asset-mapper ###
 
 # Webpack Encore build artifacts (outputPath currently set to /public)
