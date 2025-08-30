@@ -158,8 +158,16 @@ export default function initCityAutocomplete(inputsParam) {
         render(input, matches, val);
     }, 200);
 
+    const defaultSuggestions = () => options.slice(0, Math.min(5, options.length));
+
     inputs.forEach((input) => {
         input.addEventListener('input', () => onInput(input));
+        input.addEventListener('focus', () => {
+            // Zero-keystroke: show a few suggestions immediately on focus
+            if (listEl.hidden) {
+                render(input, defaultSuggestions(), '');
+            }
+        });
         input.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
