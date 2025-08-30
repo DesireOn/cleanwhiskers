@@ -71,9 +71,7 @@
   .nav { transition: none; }
 }
 
-/* Open states: support both body data attr and .is-open class */
-body[data-menu-open="true"] .nav,
-.nav.is-open { transform: translateX(0); }
+body[data-menu-open="true"] .nav { transform: translateX(0); }
 
 .nav__content { width: 100%; }
 
