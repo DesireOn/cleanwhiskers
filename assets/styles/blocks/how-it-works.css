@@ -13,6 +13,11 @@
     margin: 0 auto;
 }
 
+/* Provide clear breathing room for the heading */
+.how-it-works__header h2 {
+    margin: var(--space-1) 0 var(--space-2);
+}
+
 .how-it-works__eyebrow {
     color: var(--color-primary, var(--color-accent, #ff9800));
     font-weight: 600;
@@ -24,7 +29,8 @@
 
 .how-it-works__lede {
     color: var(--color-text-muted, #5c5c5c);
-    margin-top: var(--space-1);
+    /* Heading above already provides spacing */
+    margin-top: 0;
 }
 
 .how-it-works__list {
