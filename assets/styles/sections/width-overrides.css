@@ -4,8 +4,7 @@
   .popular-services,
   #featured-groomers,
   .why-cleanwhiskers,
-  .how-it-works,
-  .choose-guide {
+  .how-it-works {
     max-width: var(--nav-max, 1200px);
     margin-left: auto;
     margin-right: auto;
