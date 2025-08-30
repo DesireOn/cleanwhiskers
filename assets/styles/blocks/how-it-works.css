@@ -38,7 +38,7 @@
     padding: 0;
     margin: var(--space-4) 0 0;
     display: grid;
-    gap: var(--space-3);
+    gap: var(--space-4); /* larger vertical spacing on mobile */
     grid-template-columns: 1fr; /* mobile */
     counter-reset: hiw-step;
     position: relative;
@@ -96,7 +96,7 @@
     position: absolute;
     left: calc(var(--space-2) + 16px - 1px); /* center under the badge */
     top: calc(100% - 10px);
-    height: calc(var(--space-3) + 10px);
+    height: calc(var(--space-4) + 10px); /* match increased mobile gap */
     width: 2px;
     background: linear-gradient(
         to bottom,
@@ -187,6 +187,10 @@
 @media (min-width: 600px) {
     .how-it-works__list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-3); /* revert to tighter gap on tablet+ */
+    }
+    .how-it-works__item:not(:last-child) .how-it-works__card::after {
+        height: calc(var(--space-3) + 10px); /* keep connector proportional */
     }
 }
 
