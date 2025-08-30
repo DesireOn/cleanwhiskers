@@ -33,6 +33,15 @@
     text-decoration: none;
 }
 
+/* Ensure the bottom-right sticky CTA uses black text for readability */
+.site-footer .back-to-top,
+.site-footer .back-to-top:hover,
+.site-footer .back-to-top:focus,
+.site-footer .back-to-top:active,
+.site-footer .back-to-top:visited {
+    color: #000;
+}
+
 .footer-top {
     display: flex;
     flex-direction: column;
