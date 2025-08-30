@@ -37,7 +37,8 @@ final class FeaturedGroomersSectionTest extends WebTestCase
         $this->em->persist($city);
         $this->em->persist($service);
 
-        for ($i = 0; $i < 5; ++$i) {
+        // Create more than the featured limit to verify backend cap
+        for ($i = 0; $i < 12; ++$i) {
             $gUser = (new User())
                 ->setEmail(sprintf('g%d@example.com', $i))
                 ->setPassword('hash')
@@ -57,7 +58,9 @@ final class FeaturedGroomersSectionTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
-        self::assertSelectorCount(4, '#featured-groomers .featured-groomer-card');
+        // Backend returns up to 10; desktop CSS may hide extras visually,
+        // but server renders all items for mobile horizontal scroll.
+        self::assertSelectorCount(10, '#featured-groomers .featured-groomer-card');
         self::assertSelectorNotExists('#featured-groomers [data-carousel]');
     }
 }

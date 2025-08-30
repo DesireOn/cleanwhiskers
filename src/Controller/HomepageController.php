@@ -34,7 +34,8 @@ class HomepageController extends AbstractController
             ],
         ];
 
-        $featuredGroomers = $this->groomerProfileRepository->findFeatured(4);
+        // Fetch more for mobile horizontal scroll; CSS limits desktop to 4.
+        $featuredGroomers = $this->groomerProfileRepository->findFeatured(10);
 
         $service = $this->serviceRepository->findMobileDogGroomingService();
         $cities = [];

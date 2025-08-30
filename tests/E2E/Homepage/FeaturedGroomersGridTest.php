@@ -38,7 +38,8 @@ final class FeaturedGroomersGridTest extends WebTestCase
         $this->em->persist($city);
         $this->em->persist($service);
 
-        for ($i = 0; $i < 5; ++$i) {
+        // Create more than the featured limit to test cap and links
+        for ($i = 0; $i < 12; ++$i) {
             $user = (new User())
                 ->setEmail('g'.$i.'@example.com')
                 ->setRoles([User::ROLE_GROOMER])
@@ -67,7 +68,7 @@ final class FeaturedGroomersGridTest extends WebTestCase
 
         $section = $crawler->filter('#featured-groomers');
         self::assertSame(1, $section->count());
-        self::assertSame(4, $section->filter('.featured-groomer-card')->count());
+        self::assertSame(10, $section->filter('.featured-groomer-card')->count());
 
         $hrefs = $section->filter('.card-groomer__cta')->each(fn (Crawler $link) => $link->attr('href'));
         foreach ($hrefs as $href) {

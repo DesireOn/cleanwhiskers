@@ -26,7 +26,7 @@ final class HomepageFeaturedGroomersTest extends WebTestCase
         $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());
     }
 
-    public function testFeaturedGroomersSectionShowsAtMostFourProfiles(): void
+    public function testFeaturedGroomersSectionShowsAtMostTenProfiles(): void
     {
         $city = new City('Sofia');
         $city->refreshSlugFrom($city->getName());
@@ -37,7 +37,8 @@ final class HomepageFeaturedGroomersTest extends WebTestCase
         $this->em->persist($city);
         $this->em->persist($author);
 
-        for ($i = 0; $i < 5; ++$i) {
+        // Seed more than limit to ensure capping works
+        for ($i = 0; $i < 12; ++$i) {
             $groomerUser = (new User())
                 ->setEmail(sprintf('g%d@example.com', $i))
                 ->setPassword('hash')
@@ -59,6 +60,6 @@ final class HomepageFeaturedGroomersTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/');
         self::assertResponseIsSuccessful();
-        self::assertSame(4, $crawler->filter('#featured-groomers .featured-groomer-card')->count());
+        self::assertSame(10, $crawler->filter('#featured-groomers .featured-groomer-card')->count());
     }
 }

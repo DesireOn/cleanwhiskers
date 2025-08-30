@@ -52,6 +52,11 @@
   .featured-groomers__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+
+  /* Show only first 4 cards on desktop */
+  .featured-groomers__grid > :nth-child(n+5) {
+    display: none;
+  }
 }
 
 /* Subtle card hover for discoverability */
@@ -64,4 +69,3 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
-
