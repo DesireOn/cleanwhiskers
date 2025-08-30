@@ -1,0 +1,58 @@
+/* Overlay + highlight when centering the city input */
+.focus-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(1px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+  z-index: 999;
+}
+
+.focus-overlay.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.focus-elevated {
+  position: relative;
+  z-index: 1001;
+}
+
+.focus-highlight {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.35), 0 8px 24px rgba(0,0,0,0.25);
+  border-radius: 10px;
+}
+
+/* Coachmark popover */
+.coachmark {
+  position: absolute;
+  background: #fff;
+  color: var(--color-text, #222);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  z-index: 1002;
+}
+
+.coachmark.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.coachmark::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}

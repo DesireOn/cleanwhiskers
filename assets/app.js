@@ -15,5 +15,6 @@ import './styles/components/sticky-cta.css';
 import './styles/blocks/trust-box.css';
 import './styles/blocks/card.css';
 import './styles/blocks/hero.css';
+import './styles/components/overlay-focus.css';
 // Register controllers (side-effect imports)
 import './controllers/index.js';

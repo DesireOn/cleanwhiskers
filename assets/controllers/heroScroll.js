@@ -30,6 +30,13 @@ import { qsa, on, smoothScrollTo } from '../helpers/dom.js';
         }
       } else {
         smoothScrollTo(targetEl);
+        // If we're scrolling to the search form/city area, center and focus it nicely
+        try {
+          const hasCity = targetEl.matches('#search-form, #city') || !!targetEl.querySelector?.('.city-input');
+          if (hasCity && typeof window.CW_focusCityAfterScroll === 'function') {
+            window.CW_focusCityAfterScroll(targetEl);
+          }
+        } catch (_) {}
       }
     });
   });
