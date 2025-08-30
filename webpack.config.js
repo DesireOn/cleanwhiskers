@@ -12,6 +12,7 @@ Encore
 //  .addEntry('js/mobile-nav-toggle', './assets/js/mobile-nav-toggle.js')
   .copyFiles({ from: './src/public', to: '[path][name].[ext]' })
   .copyFiles({ from: './assets/js', to: 'js/[name].[ext]' })
+  .copyFiles({ from: './assets/styles', to: 'styles/[path][name].[ext]' })
   .copyFiles({ from: './assets/illustrations', to: 'illustrations/[name].[ext]' })
   
   .splitEntryChunks()

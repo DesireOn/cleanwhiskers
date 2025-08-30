@@ -5,15 +5,17 @@
     <button id="nav-toggle" class="nav-toggle" aria-label="{{ 'Menu'|trans }}" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" type="button">
       <span class="nav-toggle__icon" aria-hidden="true"></span>
     </button>
-    <div id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true" role="dialog" aria-modal="true">
-      <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">&times;</button>
-      <nav class="nav__content" role="navigation" aria-label="{{ 'Primary'|trans }}">
-        <ul class="nav__list">
-          <li class="nav__item nav__item--cta"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
-          <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
-        </ul>
-      </nav>
-    </div>
   </div>
-  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
 </header>
+
+{# Move the drawer and overlay out of the header to avoid fixed-position containment issues on iOS/Safari with backdrop/filters #}
+<div id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true" role="dialog" aria-modal="true">
+  <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">&times;</button>
+  <nav class="nav__content" role="navigation" aria-label="{{ 'Primary'|trans }}">
+    <ul class="nav__list">
+      <li class="nav__item nav__item--cta"><a class="nav__link nav__link--cta" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }}</a></li>
+      <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
+    </ul>
+  </nav>
+</div>
+<div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
