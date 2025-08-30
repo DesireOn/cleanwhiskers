@@ -31,6 +31,8 @@ export default function initCityAutocomplete(inputsParam) {
     let activeIndex = -1;
     let currentInput = null;
     let navigating = false;
+    // Track pointer interactions on the list to avoid blur/click race
+    let pointerDownOnList = false;
 
     const hide = () => {
         listEl.hidden = true;
@@ -124,6 +126,9 @@ export default function initCityAutocomplete(inputsParam) {
                 e.preventDefault();
                 navigate(opt.value, card);
             };
+            // Handle mouse/pointer selection before blur hides the list
+            card.addEventListener('pointerdown', handleNavigation);
+            // Fallback for keyboard activation on the option itself
             card.addEventListener('click', handleNavigation);
             card.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -160,6 +165,17 @@ export default function initCityAutocomplete(inputsParam) {
 
     const defaultSuggestions = () => options.slice(0, Math.min(5, options.length));
 
+    // Track pointer state on the whole list to mitigate blur races
+    listEl.addEventListener('pointerdown', () => {
+        pointerDownOnList = true;
+    });
+    listEl.addEventListener('pointerup', () => {
+        pointerDownOnList = false;
+    });
+    listEl.addEventListener('pointercancel', () => {
+        pointerDownOnList = false;
+    });
+
     inputs.forEach((input) => {
         input.addEventListener('input', () => onInput(input));
         input.addEventListener('focus', () => {
@@ -189,7 +205,15 @@ export default function initCityAutocomplete(inputsParam) {
             }
         });
         input.addEventListener('blur', () => {
-            setTimeout(hide, 100);
+            // If the blur is caused by interacting with the list, don't hide immediately
+            // to avoid swallowing the selection click.
+            if (pointerDownOnList) {
+                setTimeout(() => {
+                    if (!pointerDownOnList) hide();
+                }, 150);
+            } else {
+                setTimeout(hide, 100);
+            }
         });
     });
 }
