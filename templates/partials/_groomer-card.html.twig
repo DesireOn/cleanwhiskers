@@ -2,9 +2,12 @@
 {%- set badges = badges|default([]) -%}
 {%- set extraClass = class|default('') -%}
 <article class="{{ [extraClass, 'card-groomer']|join(' ')|trim }}" data-badges="{{ badges|slice(0,2)|join(',')|lower }}">
-    <div class="card-groomer__image-wrapper">
+    {% set hasLogo = g.logo is defined and g.logo %}
+    {% set imgSrc = hasLogo ? g.logo : 'https://placehold.co/320x240?text=No+Photo' %}
+    <div class="card-groomer__image-wrapper{{ hasLogo ? '' : ' is-placeholder' }}">
         <img
-            src="{{ g.logo|default('https://placehold.co/320x240?text=No+Photo') }}"
+            src="{{ imgSrc }}"
+            class="{{ hasLogo ? '' : 'is-placeholder' }}"
             alt="{{ g.businessName }} logo"
             loading="lazy"
             decoding="async"
