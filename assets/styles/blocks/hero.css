@@ -222,3 +222,29 @@
         font-size: clamp(2.25rem, 2vw + 1.25rem, 3.25rem);
     }
 }
+
+/* Lead capture layout (listing hero form) */
+.lead-capture-form {
+    grid-template-columns: 1fr;
+}
+
+.hero__field {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.lead-capture-form .hero__cta {
+    grid-column: 1 / -1; /* full width under fields */
+}
+
+@media (min-width: 768px) {
+    .lead-capture-form {
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-3);
+        row-gap: var(--space-3);
+        align-items: end;
+    }
+    .lead-capture-form .hero__cta {
+        grid-column: 1 / -1; /* keep CTA spanning both columns */
+    }
+}

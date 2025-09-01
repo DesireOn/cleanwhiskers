@@ -44,21 +44,29 @@
           <input type="hidden" name="city" value="{{ city.slug }}" />
           <input type="hidden" name="service" value="{{ service.slug }}" />
 
-          <label class="hero__label" for="lead-full-name">Full Name</label>
-          <input class="hero__input" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+          <div class="hero__field">
+            <label class="hero__label" for="lead-full-name">Full Name</label>
+            <input class="hero__input" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+          </div>
 
-          <label class="hero__label" for="lead-phone">Phone Number</label>
-          <input class="hero__input" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+          <div class="hero__field">
+            <label class="hero__label" for="lead-phone">Phone Number</label>
+            <input class="hero__input" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+          </div>
 
-          <label class="hero__label" for="lead-pet-type">Pet Type</label>
-          <select class="hero__input" id="lead-pet-type" name="pet_type" required>
-            <option value="" disabled selected>Select pet type</option>
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-          </select>
+          <div class="hero__field">
+            <label class="hero__label" for="lead-pet-type">Pet Type</label>
+            <select class="hero__input" id="lead-pet-type" name="pet_type" required>
+              <option value="" disabled selected>Select pet type</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+            </select>
+          </div>
 
-          <label class="hero__label" for="lead-breed">Breed / Size</label>
-          <input class="hero__input" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+          <div class="hero__field">
+            <label class="hero__label" for="lead-breed">Breed / Size</label>
+            <input class="hero__input" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+          </div>
 
           <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
         </form>
