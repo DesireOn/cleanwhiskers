@@ -10,6 +10,12 @@ const initSectionReveal = () => {
         return;
     }
 
+    // Fallback for browsers without IntersectionObserver support
+    if (typeof window.IntersectionObserver !== 'function') {
+        targets.forEach((el) => el.classList.add('reveal-in'));
+        return;
+    }
+
     const observer = new IntersectionObserver((entries, obs) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
