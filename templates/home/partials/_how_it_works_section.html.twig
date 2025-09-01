@@ -1,0 +1,44 @@
+<section class="how-it-works-section how-it-works reveal-on-scroll" aria-labelledby="how-it-works-section-title">
+    <header class="how-it-works__header">
+        <h2 id="how-it-works-section-title">How It Works</h2>
+    </header>
+
+    <ol class="how-it-works__list" role="list">
+        <li class="how-it-works__item">
+            <div class="how-it-works__card" tabindex="0">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">Tell Us About Your Pet</h3>
+                    <p class="how-it-works__text">Fill out our quick form with your pet's details. It only takes a minute.</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </div>
+        </li>
+        <li class="how-it-works__item">
+            <div class="how-it-works__card" tabindex="0">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/calendar.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">We Match You with a Pro</h3>
+                    <p class="how-it-works__text">We instantly send your request to our network of top-rated, available mobile groomers in {{ cityName ?? '[City]' }}.</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </div>
+        </li>
+        <li class="how-it-works__item">
+            <div class="how-it-works__card" tabindex="0">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">Get Pampered at Your Doorstep</h3>
+                    <p class="how-it-works__text">The first available groomer will contact you to confirm the appointment. They arrive, you relax!</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </div>
+        </li>
+    </ol>
+</section>

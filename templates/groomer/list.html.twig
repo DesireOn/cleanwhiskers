@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -60,4 +61,5 @@
       </div>
     </section>
   </div>
+  {% include 'home/partials/_how_it_works_section.html.twig' with { cityName: city.name } %}
 {% endblock %}
