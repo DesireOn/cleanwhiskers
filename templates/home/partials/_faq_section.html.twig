@@ -62,34 +62,76 @@
     <p class="second-cta__lede">Get a quick, no-obligation quote from a trusted groomer in {{ cityName ?? '[City]' }}.</p>
   </header>
 
-  <form class="hero__form lead-capture-form second-cta__form" method="post" action="#" novalidate>
-    <input type="hidden" name="city" value="{{ citySlug ?? citySlugAlt ?? '' }}" />
-    <input type="hidden" name="service" value="{{ serviceSlug ?? serviceSlugAlt ?? '' }}" />
-
-    <div class="hero__field">
-      <label class="hero__label" for="lead2-full-name">Full Name</label>
-      <input class="hero__input" type="text" id="lead2-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+  <div class="second-cta__grid">
+    <div class="second-cta__benefits" aria-hidden="false">
+      <ul class="second-cta__list" role="list">
+        <li class="second-cta__item">
+          <div class="second-cta__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M12 2l6 3v5c0 4.5-3 8.5-6 9.5-3-1-6-5-6-9.5V5l6-3z" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="M9 11.5l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p class="second-cta__text">Vetted local pros — no spam, no obligations.</p>
+        </li>
+        <li class="second-cta__item">
+          <div class="second-cta__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <p class="second-cta__text">Fast responses — most quotes in under an hour.</p>
+        </li>
+        <li class="second-cta__item">
+          <div class="second-cta__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="second-cta__text">Simple, one-minute form — book without the hassle.</p>
+        </li>
+      </ul>
     </div>
 
-    <div class="hero__field">
-      <label class="hero__label" for="lead2-phone">Phone Number</label>
-      <input class="hero__input" type="tel" id="lead2-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
-    </div>
+    <div class="second-cta__card">
+      <form class="hero__form lead-capture-form second-cta__form" method="post" action="#" novalidate>
+        <input type="hidden" name="city" value="{{ citySlug ?? citySlugAlt ?? '' }}" />
+        <input type="hidden" name="service" value="{{ serviceSlug ?? serviceSlugAlt ?? '' }}" />
 
-    <div class="hero__field">
-      <label class="hero__label" for="lead2-pet-type">Pet Type</label>
-      <select class="hero__input" id="lead2-pet-type" name="pet_type" required>
-        <option value="" disabled selected>Select pet type</option>
-        <option value="dog">Dog</option>
-        <option value="cat">Cat</option>
-      </select>
-    </div>
+        <div class="hero__field">
+          <label class="hero__label" for="lead2-full-name">Full Name</label>
+          <input class="hero__input" type="text" id="lead2-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+        </div>
 
-    <div class="hero__field">
-      <label class="hero__label" for="lead2-breed">Breed / Size</label>
-      <input class="hero__input" type="text" id="lead2-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
-    </div>
+        <div class="hero__field">
+          <label class="hero__label" for="lead2-phone">Phone Number</label>
+          <input class="hero__input" type="tel" id="lead2-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+        </div>
 
-    <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
-  </form>
+        <div class="hero__field">
+          <label class="hero__label" for="lead2-pet-type">Pet Type</label>
+          <select class="hero__input" id="lead2-pet-type" name="pet_type" required>
+            <option value="" disabled selected>Select pet type</option>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+          </select>
+        </div>
+
+        <div class="hero__field">
+          <label class="hero__label" for="lead2-breed">Breed / Size</label>
+          <input class="hero__input" type="text" id="lead2-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+        </div>
+
+        <button type="submit" class="hero__cta btn btn--accent" aria-describedby="second-cta-privacy">Get My Free Quote</button>
+        <p id="second-cta-privacy" class="second-cta__note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path d="M6 10V8a6 6 0 1 1 12 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <rect x="5" y="10" width="14" height="10" rx="2" ry="2" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          Your info is private and only shared with a matched groomer.
+        </p>
+      </form>
+    </div>
+  </div>
 </section>
