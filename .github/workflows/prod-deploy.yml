@@ -65,6 +65,16 @@ jobs:
           chmod 600 private_key.pem
           rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_HOST:/var/www/cleanwhiskers.com
 
+      - name: Prepare Cache/Logs on Production Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && \
+           sudo mkdir -p var/cache/prod var/log && \
+           sudo chown -R www-data:www-data var && \
+           sudo chmod -R 775 var"
+
       - name: Install Importmap on Production Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
@@ -77,7 +87,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && php bin/console asset-map:compile --env=prod"
+          "cd /var/www/cleanwhiskers.com && sudo -u www-data php bin/console asset-map:compile --env=prod"
 
       - name: Run Migrations on Production Server
         run: |
@@ -86,23 +96,9 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && php bin/console --no-interaction --allow-no-migration --env=prod doctrine:migrations:migrate"
 
-      - name: Clear Cache on Production Server
+      - name: Warmup Cache on Production Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && sudo rm -rf var/cache/prod && mkdir var/cache/prod"
-
-      - name: Set Cache Directory Permissions on Production Server
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && sudo chown -R www-data:www-data var/cache/prod && sudo chmod -R 775 var/cache/prod/"
-
-      - name: Ensure Logs Directory on Production Server
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && mkdir -p var/log && sudo chown -R www-data:www-data var/log && sudo chmod -R 775 var/log"
+          "cd /var/www/cleanwhiskers.com && sudo -u www-data php bin/console cache:warmup --env=prod"
