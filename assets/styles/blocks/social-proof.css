@@ -1,42 +1,85 @@
 .social-proof-section {
-  padding: 2rem 1rem;
-  max-width: 1100px;
-  margin: 0 auto;
+  padding: var(--space-5) var(--space-3);
+  text-align: center;
+  /* Match benefits/how-it-works soft backdrop */
+  background:
+    radial-gradient(24rem 24rem at 110% -10%, rgba(212,233,233,0.25), transparent 60%),
+    radial-gradient(20rem 20rem at -10% 110%, rgba(255,152,0,0.10), transparent 60%);
 }
 
 .social-proof__header {
-  text-align: center;
-  margin-bottom: 1rem;
+  max-width: 48rem;
+  margin: 0 auto;
 }
 
 .social-proof__header h2 {
-  font-size: 1.75rem;
-  line-height: 1.2;
-  margin: 0;
+  margin: var(--space-1) 0 var(--space-2);
 }
 
 .social-proof__list {
-  margin: 1rem 0 1.5rem 0;
-  padding: 0;
   list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 var(--space-3);
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: 1fr;
 }
 
 .social-proof__item {
-  margin: 0.5rem 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2);
+  align-items: start;
+  text-align: left;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-3);
+  position: relative;
+}
+
+.social-proof__item::before {
+  content: '✓';
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  background: #fff;
+  color: var(--color-primary, var(--color-accent, #ff9800));
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+  font-size: 1.25rem;
 }
 
 .social-proof__text {
   margin: 0;
-  font-size: 1rem;
+  color: var(--color-text-muted, #5c5c5c);
 }
 
 .social-proof__guarantee {
-  margin-top: 1rem;
-  font-size: 1rem;
+  margin: var(--space-3) auto 0;
+  max-width: 48rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-3);
 }
 
-@media (min-width: 768px) {
-  .social-proof__header h2 { font-size: 2rem; }
-  .social-proof__text, .social-proof__guarantee { font-size: 1.0625rem; }
+@media (min-width: 700px) {
+  .social-proof__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
+@media (min-width: 1024px) {
+  .social-proof-section {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--nav-max, 1200px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-proof__item { transition: none; }
+}
