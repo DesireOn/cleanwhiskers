@@ -18,3 +18,5 @@ import './styles/blocks/hero.css';
 import './styles/components/overlay-focus.css';
 // Register controllers (side-effect imports)
 import './controllers/index.js';
+// Benefits section styles (list page)
+import './styles/blocks/benefits-section.css';
