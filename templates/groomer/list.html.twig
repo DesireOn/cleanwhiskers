@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/social-proof.css') }}">
     {# benefits-section styles now bundled via assets/app.js import #}
     <style>
       .reveal-on-scroll{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
@@ -83,4 +84,6 @@
   {% include 'home/partials/_benefits_section.html.twig' with { cityName: city.name } %}
   <hr class="section-divider" aria-hidden="true" />
   {% include 'home/partials/_how_it_works_section.html.twig' with { cityName: city.name } %}
+  <hr class="section-divider" aria-hidden="true" />
+  {% include 'home/partials/_social_proof_section.html.twig' with { cityName: city.name } %}
 {% endblock %}

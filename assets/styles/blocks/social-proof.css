@@ -1,0 +1,42 @@
+.social-proof-section {
+  padding: 2rem 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.social-proof__header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.social-proof__header h2 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.social-proof__list {
+  margin: 1rem 0 1.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social-proof__item {
+  margin: 0.5rem 0;
+}
+
+.social-proof__text {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.social-proof__guarantee {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .social-proof__header h2 { font-size: 2rem; }
+  .social-proof__text, .social-proof__guarantee { font-size: 1.0625rem; }
+}
+
