@@ -240,6 +240,11 @@ details[open] .faq__chevron {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239AA2A9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='7' y='2' width='10' height='20' rx='2' ry='2'/%3E%3Ccircle cx='12' cy='18' r='1.5' fill='%239AA2A9' stroke='none'/%3E%3C/svg%3E");
 }
 
+/* Breed/Size (tag) icon */
+.second-cta__form .hero__input--icon-breed {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239AA2A9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.59 13.41L12 22 4.41 14.41A2 2 0 0 1 4 13V4a2 2 0 0 1 2-2h9a2 2 0 0 1 1.41.59l4.18 4.18a2 2 0 0 1 0 2.83z'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.5'/%3E%3C/svg%3E");
+}
+
 /* Paw icon for pet type select */
 .second-cta__form .hero__input--icon-paw {
   /* Left: paw, Right: chevron */
