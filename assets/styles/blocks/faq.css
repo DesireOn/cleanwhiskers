@@ -178,26 +178,28 @@ details[open] .faq__chevron {
   position: relative;
 }
 
-.second-cta__art {
-  display: none; /* hide on mobile to avoid clutter */
-}
-
-@media (min-width: 900px) {
   .second-cta__art {
-    display: block;
-    position: absolute;
-    bottom: -8px;
-    left: -8px;
-    color: var(--color-primary, var(--color-accent, #ff9800));
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
-    pointer-events: none;
+    display: none; /* hide on mobile to avoid clutter */
   }
+
+  @media (min-width: 900px) {
+    .second-cta__art {
+      display: block;
+      position: absolute;
+      bottom: -8px;
+      left: -8px;
+      color: var(--color-primary, var(--color-accent, #ff9800));
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+      pointer-events: none;
+    }
   .second-cta__art-svg {
-    width: 120px;
-    height: 120px;
+    width: 124px;
+    height: auto;
+    opacity: 0.14;
     transform: rotate(-6deg);
+    display: block;
   }
-}
+  }
 
 /* Form card */
 .second-cta__card {
