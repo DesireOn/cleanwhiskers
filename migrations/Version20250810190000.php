@@ -16,13 +16,12 @@ final class Version20250810190000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $schema->getTable('review')->addIndex(['rating'], 'idx_review_rating');
-        $schema->getTable('groomer_profile')->addIndex(['city_id'], 'idx_groomer_profile_city');
+        // No-op: indexes are handled by later migrations and entity metadata.
+        // Keeping this migration empty prevents duplicate index creation on fresh installs.
     }
 
     public function down(Schema $schema): void
     {
-        $schema->getTable('review')->dropIndex('idx_review_rating');
-        $schema->getTable('groomer_profile')->dropIndex('idx_groomer_profile_city');
+        // No-op to mirror up().
     }
 }
