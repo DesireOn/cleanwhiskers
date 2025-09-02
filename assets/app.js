@@ -6,5 +6,17 @@ import './bootstrap.js';
  * which should already be in your base.html.twig.
  */
 import './styles/app.css';
-
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+import './styles/utilities.css';
+import './styles/blocks/groomer-card.css';
+import './styles/components/badge.css';
+import './styles/components/city-card.css';
+import './styles/components/spinner.css';
+import './styles/components/sticky-cta.css';
+import './styles/blocks/trust-box.css';
+import './styles/blocks/card.css';
+import './styles/blocks/hero.css';
+import './styles/components/overlay-focus.css';
+// Register controllers (side-effect imports)
+import './controllers/index.js';
+// Benefits section styles (list page)
+import './styles/blocks/benefits-section.css';

@@ -1,0 +1,50 @@
+.card-groomer {
+    background-color: var(--color-cream);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-groomer__image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.card-groomer__body {
+    padding: var(--space-3);
+}
+
+.card-groomer__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+}
+
+.card-groomer__price {
+    font-weight: 600;
+    margin-top: var(--space-1);
+}
+
+.card-groomer__services {
+    list-style: none;
+    display: flex;
+    gap: var(--space-2);
+    padding: 0;
+    margin: var(--space-2) 0;
+}
+
+.card-groomer__service {
+    font-size: 1.25rem;
+}
+
+.card-groomer__cta {
+    margin-top: auto;
+    align-self: flex-start;
+    text-decoration: none;
+    font-weight: 600;
+}
+

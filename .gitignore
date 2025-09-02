@@ -15,9 +15,22 @@
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets/
+/public/assets/*
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Webpack Encore build artifacts (outputPath currently set to /public)
+# These are generated on `yarn build` and during CI deploys, and should not be committed
+/public/entrypoints.json
+/public/manifest.json
+/public/runtime*.js
+/public/main*.js
+/public/main*.css
+/public/js/
+/public/css
+# Note: Static CSS should live in src/public/css/** and will be copied to
+# public/css/** during CI via webpack.copyFiles(). Do not commit public/ output.
+/public/.js
 
 /node_modules
 ###> friendsofphp/php-cs-fixer ###
@@ -28,3 +41,25 @@
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+# Task status lock file
+/.task_status.lock
+
+# Codex runner artifacts
+.task_status.json
+task.json
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Codex CLI temp files
+codex.tar.gz
+codex-x86_64-unknown-linux-musl
+public/242.fd855529.js
+public/*.js
+public/images/*
+public/styles/*
+public/styles/blocks/*
+public/styles/blocks/*.css
+public/illustrations/*.svg

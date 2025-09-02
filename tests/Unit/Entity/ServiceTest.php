@@ -17,5 +17,6 @@ final class ServiceTest extends TestCase
 
         self::assertSame('Bath', $service->getName());
         self::assertSame('bath', $service->getSlug());
+        self::assertSame('mobile-dog-grooming', Service::MOBILE_DOG_GROOMING);
     }
 }

@@ -84,7 +84,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
-          "cd /var/www/cleanwhiskers.com && php bin/console cache:clear"
+          "cd /var/www/cleanwhiskers.com && sudo rm -rf var/cache/prod && mkdir var/cache/prod"
 
       - name: Set Cache Directory Permissions on Production Server
         run: |
@@ -93,3 +93,9 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && sudo chown -R www-data:www-data var/cache/prod && sudo chmod -R 775 var/cache/prod/"
 
+      - name: Ensure Logs Directory on Production Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && mkdir -p var/log && sudo chown -R www-data:www-data var/log && sudo chmod -R 775 var/log"

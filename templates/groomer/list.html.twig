@@ -1,16 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Groomers in {{ city.name }} for {{ service.name }}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
+    {# Reuse homepage groomer card/grid styles #}
+    <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/social-proof.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/faq.css') }}">
+    {# benefits-section styles now bundled via assets/app.js import #}
+    <style>
+      .reveal-on-scroll{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+      .reveal-in{opacity:1;transform:none}
+      @media (prefers-reduced-motion: reduce){.reveal-on-scroll{opacity:1;transform:none;transition:none}}
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/faq-accordion.js') }}" defer></script>
+    <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
+{% endblock %}
 
 {% block body %}
-    <h1>Groomers in {{ city.name }} for {{ service.name }}</h1>
-    {% if groomers %}
-        <ul>
-        {% for groomer in groomers %}
-            <li><a href="/groomers/{{ groomer.slug }}">{{ groomer.businessName }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No results yet.</p>
-    {% endif %}
+  <div class="landing-page-container">
+    <section class="hero hero-section" aria-labelledby="lp-hero-title">
+      <img
+        class="hero__image hero-image"
+        src="{{ asset('images/hero-placeholder.jpg') }}"
+        alt="Happy pet after a grooming session"
+        fetchpriority="high"
+      />
+
+      <div class="hero__container hero__inner">
+        <h1 id="lp-hero-title" class="hero__title">
+          {{ 'The Easiest Way to Book' }} {{ service.name }} {{ 'in' }} {{ city.name }}
+        </h1>
+
+        <p class="hero__subtitle sub-headline">
+          Our network of vetted, insured groomers is ready to pamper your pet. Get a free, no-obligation quote in 60 seconds.
+        </p>
+
+        <form class="hero__form lead-capture-form" method="post" action="#" novalidate>
+          <input type="hidden" name="city" value="{{ city.slug }}" />
+          <input type="hidden" name="service" value="{{ service.slug }}" />
+
+          <div class="hero__field">
+            <label class="hero__label" for="lead-full-name">Full Name</label>
+            <input class="hero__input hero__input--icon hero__input--icon-name" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+          </div>
+
+          <div class="hero__field">
+            <label class="hero__label" for="lead-phone">Phone Number</label>
+            <input class="hero__input hero__input--icon hero__input--icon-phone" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+          </div>
+
+          <div class="hero__field">
+            <label class="hero__label" for="lead-pet-type">Pet Type</label>
+            <select class="hero__input hero__input--icon hero__input--icon-paw" id="lead-pet-type" name="pet_type" required>
+              <option value="" disabled selected>Select pet type</option>
+              <option value="dog">Dog</option>
+              <option value="cat">Cat</option>
+            </select>
+          </div>
+
+          <div class="hero__field">
+            <label class="hero__label" for="lead-breed">Breed / Size</label>
+            <input class="hero__input hero__input--icon hero__input--icon-breed" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+          </div>
+
+          <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
+        </form>
+
+        <div class="hero__meta trust-symbols" aria-label="Trust indicators">
+          <span class="hero__badge">✓ Vetted &amp; Insured Professionals</span>
+          <span class="hero__badge">✓ Serving the {{ city.name }} Area</span>
+          <span class="hero__badge">✓ Book in Minutes — No Stress</span>
+        </div>
+      </div>
+    </section>
+  </div>
+  {% include 'home/partials/_benefits_section.html.twig' with { cityName: city.name } %}
+  <hr class="section-divider" aria-hidden="true" />
+  {% include 'home/partials/_how_it_works_section.html.twig' with { cityName: city.name } %}
+  <hr class="section-divider" aria-hidden="true" />
+  {% include 'home/partials/_social_proof_section.html.twig' with { cityName: city.name } %}
+  <hr class="section-divider" aria-hidden="true" />
+  {% include 'home/partials/_faq_section.html.twig' with { cityName: city.name, citySlug: city.slug, serviceSlug: service.slug } %}
 {% endblock %}

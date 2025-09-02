@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ groomer.businessName }}{% endblock %}
+
+{% block body %}
+    <h1>{{ groomer.businessName }}</h1>
+    {% if groomer.user is null %}
+        <span class="badge bg-secondary">Unclaimed profile</span>
+        <p><small>Is this you? <a href="/register">Sign up to claim this profile</a>.</small></p>
+    {% endif %}
+    {% if groomer.city %}
+        <p>{{ groomer.city.name }}</p>
+    {% endif %}
+    <p>{{ groomer.about }}</p>
+
+    {% if groomer.serviceArea %}
+        <p>Service area: {{ groomer.serviceArea }}</p>
+    {% endif %}
+    {% if groomer.phone %}
+        <p>Phone: {{ groomer.phone }}</p>
+    {% endif %}
+    {% if groomer.servicesOffered %}
+        <p>Services offered: {{ groomer.servicesOffered }}</p>
+    {% endif %}
+    {% if groomer.price is not null %}
+        <p>Price: ${{ groomer.price|number_format(0, '.', ',') }}</p>
+    {% endif %}
+
+    <h2>Reviews</h2>
+    {% if reviews is empty %}
+        <p>No reviews yet.</p>
+    {% else %}
+        {% for review in reviews %}
+            <div class="mb-3">
+                <div>
+                    {% for i in 1..5 %}
+                        {% if i <= review.rating %}
+                            <span class="text-warning">★</span>
+                        {% else %}
+                            <span class="text-secondary">☆</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p>{{ review.comment }}</p>
+                <p><small>by User {{ review.author.id }} on {{ review.createdAt|date('Y-m-d') }}
+                    {% if review.isVerified %}
+                        <span class="badge bg-success">Verified</span>
+                    {% endif %}
+                </small></p>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

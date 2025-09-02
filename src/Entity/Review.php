@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ORM\Table(name: 'review')]
 #[ORM\Index(name: 'idx_review_groomer_created_at', columns: ['groomer_id', 'created_at'])]
+#[ORM\Index(name: 'idx_review_rating', columns: ['rating'])]
 class Review
 {
     #[ORM\Id]
@@ -20,11 +21,11 @@ class Review
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: GroomerProfile::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private GroomerProfile $groomer;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private User $author;
 
     #[ORM\Column(type: Types::INTEGER)]
@@ -32,6 +33,9 @@ class Review
 
     #[ORM\Column(type: Types::TEXT)]
     private string $comment;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $verified = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: 'created_at')]
     private \DateTimeImmutable $createdAt;
@@ -72,6 +76,18 @@ class Review
     public function getComment(): string
     {
         return $this->comment;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+
+    public function markVerified(): self
+    {
+        $this->verified = true;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTimeImmutable

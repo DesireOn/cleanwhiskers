@@ -1,0 +1,92 @@
+/* Section: featured-groomers */
+.featured-groomers {
+  padding: var(--space-5) var(--space-3);
+  /* Match background with 'How to Choose a Groomer' section */
+  background:
+    radial-gradient(26rem 26rem at 120% -10%, rgba(212,233,233,0.28), transparent 60%),
+    radial-gradient(24rem 24rem at -10% 110%, rgba(255,152,0,0.10), transparent 60%),
+    var(--color-neutral, #f7f7f7);
+}
+
+/* Constrain inner content while background spans full width */
+.featured-groomers__inner {
+  max-width: var(--nav-max, 1200px);
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .featured-groomers {
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-6);
+  }
+}
+
+.featured-groomers__title {
+  text-align: center;
+  margin: 0;
+}
+
+.featured-groomers__description {
+  text-align: center;
+  margin: var(--space-2) 0 0;
+  color: #4b5563;
+}
+
+/* Mobile-first: horizontal scroll with snap */
+.featured-groomers__grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 80%;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: var(--space-3) 0 var(--space-1);
+  /* Keep spacing consistent with choose-guide on desktop; avoid double spacing on mobile */
+  margin-top: 0;
+}
+
+.featured-groomers__grid > * {
+  scroll-snap-align: start;
+}
+
+/* Reduce card min width on small tablets to show more */
+@media (min-width: 480px) {
+  .featured-groomers__grid {
+    grid-auto-columns: 60%;
+  }
+}
+
+/* Switch to responsive grid on tablet and up */
+@media (min-width: 768px) {
+  .featured-groomers__grid {
+    grid-auto-flow: initial;
+    grid-auto-columns: initial;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+    padding: 0;
+    margin-top: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .featured-groomers__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* Show only first 4 cards on desktop */
+  .featured-groomers__grid > :nth-child(n+5) {
+    display: none;
+  }
+}
+
+/* Subtle card hover for discoverability */
+.featured-groomer-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.featured-groomer-card:hover,
+.featured-groomer-card:focus-within {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}

@@ -1,0 +1,5 @@
+<div id="city-list" class="city-suggestions" role="listbox" hidden>
+    {% for city in city_list() %}
+        <div role="option" aria-selected="false" class="city-suggestion" data-value="{{ city.slug }}">{{ city.name }}</div>
+    {% endfor %}
+</div>

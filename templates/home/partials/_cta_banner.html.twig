@@ -1,0 +1,26 @@
+<section class="get-started reveal-on-scroll" aria-labelledby="get-started-heading">
+    <div class="get-started__inner container">
+        <h2 id="get-started-heading" class="get-started__title">{{ 'Get Started'|trans }}</h2>
+        <p class="get-started__subtitle">{{ 'Choose what you want to do today'|trans }}</p>
+
+        <div class="get-started__options" role="list">
+            <article class="get-started__card" role="listitem">
+                <div class="get-started__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/search.svg') }}" alt="" loading="lazy">
+                </div>
+                <h3 class="get-started__heading">{{ 'Find a Groomer'|trans }}</h3>
+                <p class="get-started__text">{{ 'Compare local and mobile groomers near you.'|trans }}</p>
+                <a href="#search-form" class="get-started__action btn btn--accent tap-target">{{ 'Start searching'|trans }}</a>
+            </article>
+
+            <article class="get-started__card" role="listitem">
+                <div class="get-started__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" loading="lazy">
+                </div>
+                <h3 class="get-started__heading">{{ 'List Your Business'|trans }}</h3>
+                <p class="get-started__text">{{ 'Reach nearby pet owners looking for grooming.'|trans }}</p>
+                <a href="/register?role=groomer" class="get-started__action btn btn--accent tap-target">{{ 'Create listing'|trans }}</a>
+            </article>
+        </div>
+    </div>
+</section>

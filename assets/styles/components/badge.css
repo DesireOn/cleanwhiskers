@@ -1,0 +1,30 @@
+.card-groomer__badges {
+    display: flex;
+    gap: var(--space-1);
+    margin-bottom: var(--space-1);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    background-color: var(--color-neutral);
+    color: var(--color-text);
+}
+
+.badge--new {
+    background-color: var(--color-accent);
+}
+
+.badge--mobile {
+    background-color: var(--color-pastel);
+    color: var(--color-text);
+}
+
+.badge--verified {
+    background-color: #4caf50;
+    color: #fff;
+}

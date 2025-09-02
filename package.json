@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "encore dev",
     "watch": "encore dev --watch",
-    "build": "encore production"
+    "build": "encore production",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
@@ -19,8 +21,10 @@
     "@symfony/webpack-encore": "^4.0.0",
     "babel-loader": "^10.0.0",
     "core-js": "^3.45.0",
+    "file-loader": "^6.0.0",
     "regenerator-runtime": "^0.14.1",
     "webpack": "^5.101.0",
-    "webpack-cli": "^6.0.1"
+    "webpack-cli": "^6.0.1",
+    "cypress": "^13.13.0"
   }
 }

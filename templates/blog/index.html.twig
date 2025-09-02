@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{% import 'seo/_jsonld.html.twig' as seo_jsonld %}
+
+{% block jsonld %}
+    {{ seo_jsonld.render(jsonld|default({})) }}
+{% endblock %}
+
+{% block critical_css %}
+    <style>
+        .blog-header { margin-bottom: var(--space-3); }
+    </style>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preload" href="{{ asset('styles/blog.css') }}" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ asset('styles/blog.css') }}"></noscript>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/blog.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+{% include 'partials/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs|default([])} %}
+<header class="blog-header">
+    <h1>{{ title }}</h1>
+</header>
+<section class="post-list">
+    {% for post in posts %}
+        {% include 'blog/_post_teaser.html.twig' with {post: post} %}
+    {% else %}
+        <p>No posts found.</p>
+    {% endfor %}
+</section>
+<nav class="blog-pagination" aria-label="Pagination">
+    {% if prev_page %}
+        <a href="{{ path('app_blog_index', prev_page > 1 ? {page: prev_page} : {}) }}" rel="prev">Newer posts</a>
+    {% endif %}
+    {% if next_page %}
+        <a href="{{ path('app_blog_index', {page: next_page}) }}" rel="next">Older posts</a>
+    {% endif %}
+</nav>
+{% endblock %}

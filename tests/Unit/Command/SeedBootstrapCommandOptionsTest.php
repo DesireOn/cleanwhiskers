@@ -11,6 +11,7 @@ use App\Repository\GroomerProfileRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
+use App\Seed\SeedDataset;
 use App\Seed\Seeder;
 use App\Seed\SeedPackProvider;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,7 +80,8 @@ final class SeedBootstrapCommandOptionsTest extends TestCase
         self::assertSame(SeedBootstrapCommand::SUCCESS, $status);
         $display = $tester->getDisplay();
         self::assertStringContainsString('Dry run', $display);
-        self::assertStringContainsString('Cities: 1', $display);
+        $cityCount = count(SeedDataset::default()->cities);
+        self::assertStringContainsString(sprintf('Cities: %d', $cityCount), $display);
     }
 
     private function kernelMock(string $env): KernelInterface

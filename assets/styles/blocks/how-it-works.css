@@ -1,0 +1,224 @@
+/* Block: how-it-works (mobile-first redesign) */
+.how-it-works {
+    padding: var(--space-5) var(--space-3);
+    text-align: center;
+    /* Soft backdrop with subtle pattern */
+    background:
+        radial-gradient(24rem 24rem at 120% -10%, rgba(212, 233, 233, 0.35), transparent 60%),
+        radial-gradient(20rem 20rem at -10% 110%, rgba(255, 152, 0, 0.12), transparent 60%);
+}
+
+.how-it-works__header {
+    max-width: 48rem;
+    margin: 0 auto;
+}
+
+/* Provide clear breathing room for the heading */
+.how-it-works__header h2 {
+    margin: var(--space-1) 0 var(--space-2);
+}
+
+.how-it-works__eyebrow {
+    color: var(--color-primary, var(--color-accent, #ff9800));
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-1);
+}
+
+.how-it-works__lede {
+    color: var(--color-text-muted, #5c5c5c);
+    /* Heading above already provides spacing */
+    margin-top: 0;
+}
+
+.how-it-works__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: grid;
+    gap: var(--space-4); /* larger vertical spacing on mobile */
+    grid-template-columns: 1fr; /* mobile */
+    counter-reset: hiw-step;
+    position: relative;
+}
+
+.how-it-works__item {
+    counter-increment: hiw-step;
+    /* Ensure step badge positions relative to each item */
+    position: relative;
+}
+
+.how-it-works__card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-2);
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.9)),
+        linear-gradient(135deg, rgba(212, 233, 233, 0.25), rgba(255, 152, 0, 0.15));
+    backdrop-filter: saturate(110%);
+    padding: calc(var(--space-3) + 2px);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: inherit;
+    min-height: 64px; /* thumb target */
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease, border-color 0.22s ease;
+}
+
+/* Step number badge */
+.how-it-works__item::before {
+    content: counter(hiw-step);
+    position: absolute;
+    left: var(--space-2);
+    top: -14px;
+    background: var(--color-primary, var(--color-accent, #ff9800));
+    color: #fff;
+    border-radius: var(--radius-round, 999px);
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    box-shadow: var(--shadow-sm);
+    z-index: 2; /* Render above the card */
+    pointer-events: none; /* Do not block card clicks */
+}
+
+/* Mobile timeline connector (decorative) */
+.how-it-works__item:not(:last-child) .how-it-works__card::after {
+    content: "";
+    position: absolute;
+    left: calc(var(--space-2) + 16px - 1px); /* center under the badge */
+    top: calc(100% - 10px);
+    height: calc(var(--space-4) + 10px); /* match increased mobile gap */
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.06),
+        rgba(0,0,0,0.02)
+    );
+}
+
+.how-it-works__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-round, 999px);
+    background: #fff;
+    display: grid;
+    place-items: center;
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.04);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.how-it-works__icon img {
+    width: 36px;
+    height: 36px;
+    aspect-ratio: 1 / 1;
+    display: block;
+}
+
+.how-it-works__title {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+.how-it-works__text {
+    margin: var(--space-1) 0 0;
+    color: var(--color-text-muted, #5c5c5c);
+}
+
+.how-it-works__cta {
+    font-size: 1.25rem;
+    line-height: 1;
+    opacity: 0.5;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.how-it-works__actions { 
+    margin-top: var(--space-4);
+}
+
+.how-it-works__card:hover,
+.how-it-works__card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.how-it-works__card:hover .how-it-works__cta,
+.how-it-works__card:focus-visible .how-it-works__cta {
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* Strong focus ring for accessibility */
+.how-it-works__card:focus-visible {
+    outline: 3px solid var(--color-primary, var(--color-accent, #ff9800));
+    outline-offset: 2px;
+}
+
+/* Micro-interactions: icon lift on hover/focus */
+.how-it-works__card:hover .how-it-works__icon,
+.how-it-works__card:focus-visible .how-it-works__icon {
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* Reveal: staggered fade/slide for items when parent gains .reveal-in */
+.how-it-works.reveal-in .how-it-works__item {
+    animation: hiw-fade-up 520ms var(--easing, cubic-bezier(.2,.6,.2,1)) both;
+}
+.how-it-works.reveal-in .how-it-works__item:nth-child(1) { animation-delay: 60ms; }
+.how-it-works.reveal-in .how-it-works__item:nth-child(2) { animation-delay: 140ms; }
+.how-it-works.reveal-in .how-it-works__item:nth-child(3) { animation-delay: 220ms; }
+
+@keyframes hiw-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 600px) {
+    .how-it-works__list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-3); /* revert to tighter gap on tablet+ */
+    }
+    .how-it-works__item:not(:last-child) .how-it-works__card::after {
+        height: calc(var(--space-3) + 10px); /* keep connector proportional */
+    }
+}
+
+@media (min-width: 900px) {
+    .how-it-works__list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .how-it-works__card {
+        grid-template-columns: 1fr; /* stack icon + text */
+        text-align: left;
+        gap: var(--space-3);
+        padding: var(--space-4);
+    }
+    .how-it-works__cta {
+        position: absolute;
+        right: var(--space-3);
+        bottom: var(--space-3);
+    }
+    /* Remove mobile connector on desktop */
+    .how-it-works__item .how-it-works__card::after { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .how-it-works__card {
+        transition: none;
+    }
+    .how-it-works__cta {
+        transition: none;
+    }
+    .how-it-works.reveal-in .how-it-works__item { animation: none; }
+}

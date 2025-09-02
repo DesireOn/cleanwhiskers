@@ -8,6 +8,10 @@ use App\Domain\Shared\Exception\InvalidSlugSourceException;
 use App\Domain\Shared\Exception\SlugCollisionException;
 use App\Entity\City;
 use App\Infrastructure\Doctrine\SlugListener;
+use App\Repository\Blog\BlogCategoryRepository;
+use App\Repository\Blog\BlogPostRepository;
+use App\Repository\Blog\BlogPostSlugHistoryRepository;
+use App\Repository\Blog\BlogTagRepository;
 use App\Repository\CityRepository;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\ServiceRepository;
@@ -21,6 +25,10 @@ final class SlugListenerTest extends TestCase
     private CityRepository $cityRepository;
     private ServiceRepository $serviceRepository;
     private GroomerProfileRepository $groomerProfileRepository;
+    private BlogCategoryRepository $blogCategoryRepository;
+    private BlogTagRepository $blogTagRepository;
+    private BlogPostRepository $blogPostRepository;
+    private BlogPostSlugHistoryRepository $blogPostSlugHistoryRepository;
     private SlugListener $listener;
 
     protected function setUp(): void
@@ -28,11 +36,19 @@ final class SlugListenerTest extends TestCase
         $this->cityRepository = $this->createMock(CityRepository::class);
         $this->serviceRepository = $this->createMock(ServiceRepository::class);
         $this->groomerProfileRepository = $this->createMock(GroomerProfileRepository::class);
+        $this->blogCategoryRepository = $this->createMock(BlogCategoryRepository::class);
+        $this->blogTagRepository = $this->createMock(BlogTagRepository::class);
+        $this->blogPostRepository = $this->createMock(BlogPostRepository::class);
+        $this->blogPostSlugHistoryRepository = $this->createMock(BlogPostSlugHistoryRepository::class);
 
         $this->listener = new SlugListener(
             $this->cityRepository,
             $this->serviceRepository,
-            $this->groomerProfileRepository
+            $this->groomerProfileRepository,
+            $this->blogCategoryRepository,
+            $this->blogTagRepository,
+            $this->blogPostRepository,
+            $this->blogPostSlugHistoryRepository,
         );
     }
 

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% import 'seo/_jsonld.html.twig' as seo_jsonld %}
+
+{% block jsonld %}
+    {{ seo_jsonld.render(jsonld|default({})) }}
+{% endblock %}
+
+{% block critical_css %}
+    <style>
+        .blog-header { margin-bottom: var(--space-3); }
+    </style>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="preload" href="{{ asset('styles/blog.css') }}" as="style" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ asset('styles/blog.css') }}"></noscript>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/blog.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+{% include 'partials/_breadcrumbs.html.twig' with {breadcrumbs: breadcrumbs|default([])} %}
+<article class="blog-article">
+    <header>
+        <h1>{{ post.title }}</h1>
+        {% if post.publishedAt %}
+            <time datetime="{{ post.publishedAt|date('Y-m-d') }}">{{ post.publishedAt|date('F j, Y') }}</time>
+            {% if post.readingMinutes %}
+                <span class="reading-minutes">{{ post.readingMinutes }} min read</span>
+            {% endif %}
+        {% endif %}
+    </header>
+    {% if post.coverImagePath %}
+        <img src="{{ asset(post.coverImagePath) }}" alt="Cover image for {{ post.title }}" loading="lazy" width="800" height="450">
+    {% else %}
+        <img src="{{ asset('illustrations/paw.svg') }}" alt="" loading="lazy" width="800" height="450">
+    {% endif %}
+    <section class="content">{{ post.contentHtml|raw }}</section>
+</article>
+{% endblock %}

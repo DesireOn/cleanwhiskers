@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hero Layout Test</title>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const service = document.querySelector('input[name="service"]');
+            console.assert(service && service.type === 'hidden' && service.value === 'grooming', 'service input preset');
+            console.assert(!document.querySelector('video'), 'no video tag present');
+            const pin = document.getElementById('use-location');
+            console.assert(pin, 'pin button exists');
+            const city = document.getElementById('city');
+            console.assert(city && city.required, 'city input required');
+            console.log('Hero layout tests passed');
+        });
+    </script>
+</head>
+<body>
+<section class="hero">
+    <div class="hero__card">
+        <div class="hero__content">
+            <h1>Find trusted pet care</h1>
+            <p class="hero__microcopy">Mobile groomers near you.</p>
+        </div>
+        <form id="search-form" class="hero__form" method="get" action="/search" role="search">
+            <div class="hero__field hero__field--city">
+                <label for="city">Where is your pet?</label>
+                <div class="hero__input-wrapper">
+                    <input class="hero__input" type="text" id="city" name="city" placeholder="City" required>
+                    <button type="button" id="use-location" class="hero__pin" aria-label="Use current location"></button>
+                </div>
+            </div>
+            <input type="hidden" name="service" value="grooming">
+            <button class="hero__submit" type="submit" id="search-submit">Find</button>
+        </form>
+    </div>
+</section>
+</body>
+</html>

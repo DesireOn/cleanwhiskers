@@ -1,0 +1,75 @@
+<footer class="site-footer" role="contentinfo">
+  <h2 class="sr-only">Footer</h2>
+  <div class="footer container">
+    <section class="footer__brand">
+      <a href="{{ path('app_homepage') }}" class="footer__logo" aria-label="CleanWhiskers home">CleanWhiskers</a>
+      <p class="footer__tagline">Find trusted pet care near you.</p>
+    </section>
+
+    <nav class="footer__nav" aria-label="Company">
+      <h3 class="footer__heading">Company</h3>
+      <ul class="footer__list">
+        <li><a class="footer__link" href="#about">About</a></li>
+        <li><a class="footer__link" href="#careers">Careers</a></li>
+        <li><a class="footer__link" href="#press">Press</a></li>
+        <li><a class="footer__link" href="#blog">Blog</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer__nav" aria-label="Services">
+      <h3 class="footer__heading">Services</h3>
+      <ul class="footer__list">
+        <li><a class="footer__link" href="{{ path('app_search_redirect', { service: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }) }}">Mobile Dog Grooming</a></li>
+        <li><a class="footer__link" href="{{ path('app_search_redirect', { service: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }) }}">Bath &amp; Brush</a></li>
+        <li><a class="footer__link" href="{{ path('app_search_redirect', { service: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }) }}">Full Haircut</a></li>
+        <li><a class="footer__link" href="{{ path('app_search_redirect', { service: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }) }}">Nail Trim Add‑On</a></li>
+      </ul>
+    </nav>
+
+    <section class="footer__cta">
+      <h3 class="footer__heading">Find mobile groomers near you</h3>
+      <form class="footer__form" action="{{ path('app_search_redirect') }}" method="get" role="search" aria-describedby="footer-city-help" autocomplete="off" novalidate>
+        <label class="sr-only" for="footer-city">Enter city</label>
+        <input
+          id="footer-city"
+          class="city-input search-form__input search-form__input--city"
+          name="city"
+          type="text"
+          placeholder="Enter city (e.g., Seattle)"
+          required
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="city-list"
+          aria-haspopup="listbox"
+          aria-describedby="footer-city-help"
+          autocomplete="off"
+        >
+        <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
+        <button class="search-form__button btn btn--accent" type="submit">Find Groomers</button>
+      </form>
+      <span id="footer-city-help" class="visually-hidden">Focus or type to see city suggestions. Use arrow keys to navigate.</span>
+      <div class="footer__social" role="navigation" aria-label="Social media">
+        <a class="footer__social-link" href="https://twitter.com/cleanwhiskers" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.633 7.997c.013.175.013.35.013.525 0 5.34-4.063 11.49-11.49 11.49-2.282 0-4.4-.662-6.184-1.8.32.037.625.05.957.05 1.882 0 3.613-.637 4.993-1.712a4.05 4.05 0 0 1-3.78-2.8c.25.038.5.063.763.063.363 0 .726-.05 1.063-.138a4.044 4.044 0 0 1-3.242-3.97v-.05c.537.3 1.163.487 1.825.512a4.04 4.04 0 0 1-1.8-3.363c0-.75.2-1.45.55-2.062a11.48 11.48 0 0 0 8.33 4.225 4.56 4.56 0 0 1-.1-.925 4.04 4.04 0 0 1 4.05-4.05c1.163 0 2.212.487 2.95 1.275a7.96 7.96 0 0 0 2.563-.975 4.06 4.06 0 0 1-1.775 2.237 8.12 8.12 0 0 0 2.325-.625 8.69 8.69 0 0 1-2.012 2.075Z"/></svg>
+        </a>
+        <a class="footer__social-link" href="https://facebook.com/cleanwhiskers" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.48 17.52 2 11.94 2 6.36 2 1.88 6.48 1.88 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.98v-2.9h2.34V9.84c0-2.3 1.36-3.57 3.45-3.57.99 0 2.03.18 2.03.18v2.25h-1.14c-1.13 0-1.48.7-1.48 1.42v1.7h2.52l-.4 2.9h-2.12V22c4.78-.8 8.44-4.94 8.44-9.94Z"/></svg>
+        </a>
+        <a class="footer__social-link" href="https://instagram.com/cleanwhiskers" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.51 5.51 0 0 1 12 7.5Zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5Zm5.75-2.5a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer__legal container">
+    <p class="footer__copyright">&copy; {{ 'now'|date('Y') }} CleanWhiskers</p>
+    <ul class="footer__legal-list">
+      <li><a class="footer__link" href="#privacy">Privacy</a></li>
+      <li><a class="footer__link" href="#terms">Terms</a></li>
+      <li><a class="footer__link" href="#accessibility">Accessibility</a></li>
+    </ul>
+    <a class="footer__top" href="#top">Back to top</a>
+  </div>
+</footer>

@@ -40,4 +40,35 @@ final class ServiceRepositoryTest extends KernelTestCase
         self::assertNotNull($found);
         self::assertSame('Grooming', $found->getName());
     }
+
+    public function testFindTopReturnsLimitedNumberOfServices(): void
+    {
+        for ($i = 1; $i <= 8; ++$i) {
+            $service = (new Service())
+                ->setName('Service '.$i);
+            $service->refreshSlugFrom('Service '.$i);
+            $this->em->persist($service);
+        }
+
+        $this->em->flush();
+
+        $services = $this->repository->findTop(6);
+
+        self::assertCount(6, $services);
+    }
+
+    public function testFindMobileDogGroomingService(): void
+    {
+        $service = (new Service())
+            ->setName('Mobile Dog Grooming');
+        $service->refreshSlugFrom('Mobile Dog Grooming');
+        $this->em->persist($service);
+        $this->em->flush();
+        $this->em->clear();
+
+        $found = $this->repository->findMobileDogGroomingService();
+
+        self::assertNotNull($found);
+        self::assertSame('Mobile Dog Grooming', $found->getName());
+    }
 }

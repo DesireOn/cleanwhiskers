@@ -1,0 +1,79 @@
+/* Accessibility utilities */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* SR-only alias with project prefix */
+.u-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Responsive visibility utilities */
+
+.hidden-sm { display: none !important; }
+@media (min-width: 480px) {
+    .hidden-sm { display: initial !important; }
+}
+
+.hidden-md { display: none !important; }
+@media (min-width: 768px) {
+    .hidden-md { display: initial !important; }
+}
+
+.hidden-lg { display: none !important; }
+@media (min-width: 1024px) {
+    .hidden-lg { display: initial !important; }
+}
+
+/* Margin utilities */
+.mb-4 { margin-bottom: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+
+/* Tap target utility */
+.tap-target {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Sticky CTA spacer */
+@media (max-width: 767px) {
+    .has-sticky-cta {
+        --sticky-cta-h: 64px;
+        padding-bottom: calc(var(--sticky-cta-h) + env(safe-area-inset-bottom));
+    }
+}
+
+/* Truncation utilities */
+.u-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Fallback for browsers without line-clamp support */
+@supports not (-webkit-line-clamp: 2) {
+    .u-truncate-2 {
+        display: block;
+        max-height: calc(1em * 2 * 1.4); /* 2 lines with ~1.4 line-height */
+        overflow: hidden;
+    }
+}

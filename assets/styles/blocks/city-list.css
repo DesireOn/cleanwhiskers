@@ -1,0 +1,39 @@
+/* City Listing (scoped via route) */
+
+/* Align sections and prevent float overlap with listings */
+body[data-route="app_groomer_list_by_city_service"] #controls {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Ensure groomer grid starts below the floated trust box on desktop */
+body[data-route="app_groomer_list_by_city_service"] .featured-groomers {
+  clear: both;
+}
+
+/* Center the sort controls within the container */
+body[data-route="app_groomer_list_by_city_service"] .sort--dropdown {
+  justify-content: center;
+}
+
+/* Keep select compact on small screens for centered layout */
+body[data-route="app_groomer_list_by_city_service"] .sort__select {
+  width: auto;
+}
+
+/* On desktop, do not float the trust box on this route; keep it centered */
+@media (min-width: 992px) {
+  body[data-route="app_groomer_list_by_city_service"] .trust-box {
+    float: none;
+    margin: 16px auto;
+  }
+}
+
+/* Match desktop width to header nav container (1200px) */
+@media (min-width: 1024px) {
+  body[data-route="app_groomer_list_by_city_service"] #trust-info,
+  body[data-route="app_groomer_list_by_city_service"] #controls,
+  body[data-route="app_groomer_list_by_city_service"] #groomer-listings {
+    max-width: var(--nav-max, 1200px); /* align with .nav-container */
+  }
+}

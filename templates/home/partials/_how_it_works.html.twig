@@ -1,0 +1,47 @@
+<section id="how-it-works" class="how-it-works reveal-on-scroll" aria-labelledby="how-it-works-title">
+    <header class="how-it-works__header">
+        <p class="how-it-works__eyebrow">{{ 'Just 3 simple steps'|trans }}</p>
+        <h2 id="how-it-works-title">{{ 'How It Works'|trans }}</h2>
+        <p class="how-it-works__lede">{{ 'Find, book, relax — made for busy pet parents.'|trans }}</p>
+    </header>
+
+    <ol class="how-it-works__list" role="list">
+        <li class="how-it-works__item">
+            <a href="#search-form" class="how-it-works__card">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/search.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">{{ 'Search'|trans }}</h3>
+                    <p class="how-it-works__text">{{ 'Find trusted groomers near you.'|trans }}</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </a>
+        </li>
+        <li class="how-it-works__item">
+            <a href="/blog/how-to-book" class="how-it-works__card">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/calendar.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">{{ 'Book'|trans }}</h3>
+                    <p class="how-it-works__text">{{ 'Pick a time that works for you.'|trans }}</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </a>
+        </li>
+        <li class="how-it-works__item">
+            <a href="#featured-groomers" class="how-it-works__card">
+                <div class="how-it-works__icon" aria-hidden="true">
+                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+                </div>
+                <div class="how-it-works__content">
+                    <h3 class="how-it-works__title">{{ 'Relax'|trans }}</h3>
+                    <p class="how-it-works__text">{{ 'Your pet comes back fresh and happy.'|trans }}</p>
+                </div>
+                <span class="how-it-works__cta" aria-hidden="true">→</span>
+            </a>
+        </li>
+    </ol>
+
+</section>

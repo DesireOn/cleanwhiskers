@@ -1,0 +1,60 @@
+/* Sort Dropdown (BEM) */
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort--dropdown {
+  justify-content: flex-end;
+  margin: 0.75rem 0 1rem;
+}
+
+.sort__label {
+  font-size: 0.95rem;
+  color: var(--text-muted, #555);
+}
+
+.sort__select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 6px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  min-height: 44px; /* Tap target >= 44px */
+  cursor: pointer;
+}
+
+.sort__select:focus-visible {
+  outline: 3px solid var(--focus, #2257ff);
+  outline-offset: 2px;
+}
+
+/* Small arrow indicator via background (non-critical) */
+.sort__select {
+  background-image: linear-gradient(45deg, transparent 50%, #666 50%),
+    linear-gradient(135deg, #666 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50% - 2px), calc(100% - 12px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 600px) {
+  .sort--dropdown {
+    justify-content: stretch;
+  }
+  .sort {
+    gap: 0.75rem;
+  }
+  .sort__label {
+    font-size: 1rem;
+  }
+  .sort__select {
+    width: 100%;
+  }
+}
+

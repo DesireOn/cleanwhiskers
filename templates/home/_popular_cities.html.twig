@@ -1,0 +1,22 @@
+<section class="popular-cities">
+    <h2 class="popular-cities__heading">Popular Cities</h2>
+    <p class="popular-cities__description">Discover groomers in these top locations.</p>
+    <ul class="popular-cities__grid" role="list">
+        {% for city in popularCities %}
+            <li class="popular-cities__item">
+                <a class="popular-cities__link" href="{{ path('app_groomer_list_by_city_service', {citySlug: city.slug, serviceSlug: constant('App\\Entity\\Service::MOBILE_DOG_GROOMING')}) }}" aria-label="Groomers in {{ city.name }}">
+                    <span class="popular-cities__avatar" aria-hidden="true">
+                        {% if city.image is defined and city.image %}
+                            <img src="{{ city.image }}" alt="" loading="lazy">
+                        {% else %}
+                            {{ city.name|slice(0,1) }}
+                        {% endif %}
+                    </span>
+                    <span class="popular-cities__name">{{ city.name }}</span>
+                </a>
+            </li>
+        {% else %}
+            <li class="popular-cities__item">City coming soon</li>
+        {% endfor %}
+    </ul>
+</section>

@@ -14,6 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Service
 {
     use SluggerTrait;
+
+    public const MOBILE_DOG_GROOMING = 'mobile-dog-grooming';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ServiceRepository extends ServiceEntityRepository
 {
+    public const MOBILE_DOG_GROOMING = Service::MOBILE_DOG_GROOMING;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Service::class);
@@ -31,5 +33,26 @@ class ServiceRepository extends ServiceEntityRepository
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findMobileDogGroomingService(): ?Service
+    {
+        return $this->findOneBySlug(self::MOBILE_DOG_GROOMING);
+    }
+
+    /**
+     * @return Service[]
+     */
+    public function findTop(int $limit = 6): array
+    {
+        /** @var Service[] $services */
+        $services = $this->createQueryBuilder('s')
+            ->select('partial s.{id, name, slug}')
+            ->orderBy('s.name', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return $services;
     }
 }
