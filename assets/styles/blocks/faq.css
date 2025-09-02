@@ -173,6 +173,32 @@ details[open] .faq__chevron {
   color: var(--color-text-muted, #5c5c5c);
 }
 
+/* Decorative art on benefits side */
+.second-cta__benefits {
+  position: relative;
+}
+
+.second-cta__art {
+  display: none; /* hide on mobile to avoid clutter */
+}
+
+@media (min-width: 900px) {
+  .second-cta__art {
+    display: block;
+    position: absolute;
+    bottom: -8px;
+    left: -8px;
+    color: var(--color-primary, var(--color-accent, #ff9800));
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.08));
+    pointer-events: none;
+  }
+  .second-cta__art-svg {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-6deg);
+  }
+}
+
 /* Form card */
 .second-cta__card {
   background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.98));
