@@ -222,6 +222,37 @@ details[open] .faq__chevron {
 /* Improve contrast for form labels when reused outside the hero */
 .second-cta-section .hero__label { color: var(--color-text); }
 
+/* Input icons for second CTA form */
+.second-cta__form .hero__input.hero__input--icon {
+  padding-left: 44px; /* room for the icon */
+  background-repeat: no-repeat;
+  background-position: 12px 50%;
+  background-size: 18px 18px;
+}
+
+/* Name (user) icon */
+.second-cta__form .hero__input--icon-name {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239AA2A9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E");
+}
+
+/* Phone (smartphone) icon */
+.second-cta__form .hero__input--icon-phone {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239AA2A9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='7' y='2' width='10' height='20' rx='2' ry='2'/%3E%3Ccircle cx='12' cy='18' r='1.5' fill='%239AA2A9' stroke='none'/%3E%3C/svg%3E");
+}
+
+/* Paw icon for pet type select */
+.second-cta__form .hero__input--icon-paw {
+  /* Left: paw, Right: chevron */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%239AA2A9'%3E%3Ccircle cx='8' cy='8' r='2.2'/%3E%3Ccircle cx='12' cy='6.5' r='2.2'/%3E%3Ccircle cx='16' cy='8' r='2.0'/%3E%3Ccircle cx='10' cy='12' r='2.2'/%3E%3Cpath d='M12 14c-2.6 0-5.5 2-5.5 4.5C6.5 20.6 8 22 12 22s5.5-1.4 5.5-3.5C17.5 16 14.6 14 12 14z'/%3E%3C/svg%3E"), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239AA2A9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-position: 12px 50%, right 12px center;
+  background-size: 18px 18px, 12px 12px;
+  padding-right: 44px; /* space for right chevron */
+  /* Improve select UI consistency */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
 @media (min-width: 1024px) {
   .faq-section, .second-cta-section {
     margin-left: auto;
