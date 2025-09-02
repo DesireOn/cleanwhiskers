@@ -1,0 +1,76 @@
+<section class="faq-section reveal-on-scroll" aria-labelledby="faq-title">
+  <header class="faq__header">
+    <h2 id="faq-title">Frequently Asked Questions</h2>
+  </header>
+
+  <div class="faq__list" role="list">
+    <details class="faq__item" role="listitem">
+      <summary class="faq__question">
+        <span>How much does mobile grooming cost in {{ cityName ?? '[City]' }}?</span>
+        <span class="faq__chevron" aria-hidden="true">▾</span>
+      </summary>
+      <div class="faq__answer">
+        <p>Prices vary based on your pet's size, breed, and coat condition. Filling out the form gets you a precise, no-obligation quote from a local pro.</p>
+      </div>
+    </details>
+
+    <details class="faq__item" role="listitem">
+      <summary class="faq__question">
+        <span>What services are included?</span>
+        <span class="faq__chevron" aria-hidden="true">▾</span>
+      </summary>
+      <div class="faq__answer">
+        <p>A standard groom typically includes a bath, haircut, nail trim, and ear cleaning. You can discuss specific needs with your groomer.</p>
+      </div>
+    </details>
+
+    <details class="faq__item" role="listitem">
+      <summary class="faq__question">
+        <span>How long does an appointment take?</span>
+        <span class="faq__chevron" aria-hidden="true">▾</span>
+      </summary>
+      <div class="faq__answer">
+        <p>Usually 1–2 hours, depending on your pet. It's much faster than a traditional salon since it's one-on-one.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="second-cta-section reveal-on-scroll" aria-labelledby="second-cta-title">
+  <header class="second-cta__header">
+    <h2 id="second-cta-title">Ready to Spoil Your Pet?</h2>
+    <p class="second-cta__lede">Get a quick, no-obligation quote from a trusted groomer in {{ cityName ?? '[City]' }}.</p>
+  </header>
+
+  <form class="hero__form lead-capture-form second-cta__form" method="post" action="#" novalidate>
+    <input type="hidden" name="city" value="{{ citySlug ?? citySlugAlt ?? '' }}" />
+    <input type="hidden" name="service" value="{{ serviceSlug ?? serviceSlugAlt ?? '' }}" />
+
+    <div class="hero__field">
+      <label class="hero__label" for="lead2-full-name">Full Name</label>
+      <input class="hero__input" type="text" id="lead2-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+    </div>
+
+    <div class="hero__field">
+      <label class="hero__label" for="lead2-phone">Phone Number</label>
+      <input class="hero__input" type="tel" id="lead2-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+    </div>
+
+    <div class="hero__field">
+      <label class="hero__label" for="lead2-pet-type">Pet Type</label>
+      <select class="hero__input" id="lead2-pet-type" name="pet_type" required>
+        <option value="" disabled selected>Select pet type</option>
+        <option value="dog">Dog</option>
+        <option value="cat">Cat</option>
+      </select>
+    </div>
+
+    <div class="hero__field">
+      <label class="hero__label" for="lead2-breed">Breed / Size</label>
+      <input class="hero__input" type="text" id="lead2-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+    </div>
+
+    <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
+  </form>
+</section>
+
