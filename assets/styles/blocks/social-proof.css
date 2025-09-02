@@ -55,15 +55,7 @@
   color: var(--color-text-muted, #5c5c5c);
 }
 
-.social-proof__guarantee {
-  margin: var(--space-3) auto 0;
-  max-width: 48rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
-  border: 1px solid rgba(0,0,0,0.06);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-3);
-}
+/* guarantee callout removed per request */
 
 @media (min-width: 700px) {
   .social-proof__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
