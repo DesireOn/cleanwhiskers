@@ -78,6 +78,9 @@
     margin-right: auto;
     max-width: var(--nav-max, 1200px);
   }
+  .social-proof__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
