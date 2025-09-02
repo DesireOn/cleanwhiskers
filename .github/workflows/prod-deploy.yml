@@ -71,9 +71,9 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && \
-           sudo mkdir -p var/cache/prod var/log && \
-           sudo chown -R www-data:www-data var && \
-           sudo chmod -R 775 var"
+           sudo mkdir -p var/cache/prod/asset_mapper var/log public/assets && \
+           sudo chown -R www-data:www-data var public/assets && \
+           sudo chmod -R 775 var public/assets"
 
       - name: Install Importmap on Production Server
         run: |
