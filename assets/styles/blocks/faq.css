@@ -269,3 +269,29 @@ details[open] .faq__chevron {
 @media (prefers-reduced-motion: reduce) {
   .faq__chevron { transition: none; }
 }
+
+/* Inline error visuals for second CTA form */
+.second-cta__form .hero__input[aria-invalid="true"] {
+  border-color: #d93025;
+  box-shadow: 0 0 0 2px rgba(217,48,37,0.08);
+}
+
+.second-cta__form .field-error {
+  margin-top: 4px;
+  color: #b3261e;
+  font-size: 0.875rem;
+}
+
+/* Gentle shake animation on invalid submit */
+@keyframes form-shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.second-cta__card.is-shaking {
+  animation: form-shake 420ms ease;
+}

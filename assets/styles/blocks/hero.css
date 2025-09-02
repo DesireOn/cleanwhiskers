@@ -162,6 +162,32 @@
     .hero__submit { transition: none; }
 }
 
+/* Inline error visuals (hero form) */
+.hero .lead-capture-form .hero__input[aria-invalid="true"] {
+    border-color: #d93025;
+    box-shadow: 0 0 0 2px rgba(217,48,37,0.08);
+}
+
+.hero .lead-capture-form .field-error {
+    margin-top: 4px;
+    color: #f3b0ab; /* softer on dark hero background */
+    font-size: 0.875rem;
+}
+
+/* Gentle shake animation on invalid submit (hero) */
+@keyframes form-shake-hero {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+
+.hero__inner.is-shaking {
+    animation: form-shake-hero 420ms ease;
+}
+
 /* Listing variant: simple, readable block hero */
 .hero.hero--listing {
     background: linear-gradient(135deg, var(--color-pastel), var(--color-neutral));
