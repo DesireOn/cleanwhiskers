@@ -97,6 +97,19 @@ h3 { font-size: var(--fs-h3); }
     color: var(--color-text);
 }
 
+/* Non-interactive helper for temporarily disabled actions */
+.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Minor spacing for inline badges next to labels */
+.btn .badge,
+.nav__link .badge {
+    margin-left: 0.5rem;
+}
+
 /* Components */
 .hero {
     background: var(--color-pastel) no-repeat center/cover;
