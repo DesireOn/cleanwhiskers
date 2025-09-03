@@ -106,6 +106,18 @@ body[data-menu-open="true"] .nav {
     color: var(--color-text);
 }
 
+/* Disabled/locked CTA state for "List Your Business" */
+.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Small spacing between label and inline badge */
+.nav__link .badge {
+    margin-left: 0.5rem;
+}
+
 .nav__close {
     position: absolute;
     top: var(--space-3);
