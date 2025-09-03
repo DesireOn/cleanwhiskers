@@ -1,7 +1,10 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 <header class="site-header">
   <div class="nav-container">
-    <a href="{{ path('app_homepage') }}" class="site-logo">CleanWhiskers</a>
+    <a href="{{ path('app_homepage') }}" class="site-logo">
+      <img src="{{ asset('images/logo.png') }}" alt="CleanWhiskers" />
+      <span class="sr-only">CleanWhiskers</span>
+    </a>
     <button id="nav-toggle" class="nav-toggle" aria-label="{{ 'Menu'|trans }}" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" type="button">
       <span class="nav-toggle__icon" aria-hidden="true"></span>
     </button>

@@ -13,6 +13,7 @@ Encore
   .copyFiles({ from: './src/public', to: '[path][name].[ext]' })
   .copyFiles({ from: './assets/js', to: 'js/[name].[ext]' })
   .copyFiles({ from: './assets/illustrations', to: 'illustrations/[name].[ext]' })
+  .copyFiles({ from: './assets/images', to: 'images/[name].[ext]' })
   
   .splitEntryChunks()
   .enableSingleRuntimeChunk()
