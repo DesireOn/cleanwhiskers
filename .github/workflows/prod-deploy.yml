@@ -74,7 +74,7 @@ jobs:
            sudo rm -rf var/cache
            sudo rm -rf var/log
            sudo rm -rf public/assets
-           sudo mkdir -p var/cache var/log public/assets && \
+           sudo mkdir -p var/log public/assets && \
            sudo chown -R www-data:www-data var public/assets && \
            sudo chmod -R 775 var public/assets"
 
