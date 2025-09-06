@@ -17,5 +17,9 @@ class LeadRecipientRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, LeadRecipient::class);
     }
-}
 
+    public function findOneByRecipientToken(string $token): ?LeadRecipient
+    {
+        return $this->findOneBy(['recipientToken' => $token]);
+    }
+}

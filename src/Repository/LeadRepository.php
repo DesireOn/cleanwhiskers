@@ -17,5 +17,9 @@ class LeadRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Lead::class);
     }
-}
 
+    public function findOneByClaimToken(string $token): ?Lead
+    {
+        return $this->findOneBy(['claimToken' => $token]);
+    }
+}
