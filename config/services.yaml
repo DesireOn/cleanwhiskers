@@ -6,9 +6,6 @@
 parameters:
     lead_feature_enabled: '%env(bool:LEADS_FEATURE_ENABLED)%'
     'sms.provider': '%env(string:SMS_PROVIDER)%'
-    'twilio.sid': '%env(string:TWILIO_SID)%'
-    'twilio.token': '%env(string:TWILIO_TOKEN)%'
-    'twilio.from': '%env(string:TWILIO_FROM)%'
 
 services:
     # default configuration for services in *this* file
