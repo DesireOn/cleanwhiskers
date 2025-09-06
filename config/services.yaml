@@ -35,15 +35,5 @@ services:
     App\Seed\Seeder:
         public: true
 
-    # SMS Gateways
-    App\Service\Sms\TwilioSmsGateway:
-        arguments:
-            $sid: '%twilio.sid%'
-            $token: '%twilio.token%'
-            $from: '%twilio.from%'
-
-    # Default alias; overridden by compiler pass based on SMS_PROVIDER
-    App\Service\Sms\SmsGatewayInterface: '@App\\Service\\Sms\\NullSmsGateway'
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
