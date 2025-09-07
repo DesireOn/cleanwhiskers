@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 
 #[AsMessageHandler]
 final class DispatchLeadMessageHandler
@@ -124,7 +124,7 @@ final class DispatchLeadMessageHandler
             $rawToken = $entry['rawToken'];
 
             try {
-                $claimUrl = $this->buildSignedClaimUrl($lead->getId(), $recipient->getId(), $recipient->getEmail(), $rawToken, $recipient->getTokenExpiresAt());
+                $claimUrl = $this->buildSignedClaimUrl((int) ($lead->getId() ?? 0), (int) ($recipient->getId() ?? 0), $recipient->getEmail(), $rawToken, $recipient->getTokenExpiresAt());
                 $unsubUrl = $this->buildSignedUnsubscribeUrl($recipient->getEmail());
 
                 $subject = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
@@ -136,13 +136,17 @@ final class DispatchLeadMessageHandler
                     ->subject($subject)
                     ->text($text);
 
-                $this->mailer->send($message);
-
+                // Mark as sent before sending; revert on failure in catch
                 $recipient->setStatus(\App\Entity\LeadRecipient::STATUS_SENT);
                 $recipient->setInviteSentAt(new \DateTimeImmutable());
+
+                $this->mailer->send($message);
                 $sent++;
             } catch (\Throwable $e) {
                 $failed++;
+                // Revert status if sending failed
+                $recipient->setStatus(\App\Entity\LeadRecipient::STATUS_QUEUED);
+                $recipient->setInviteSentAt(null);
                 $this->logger->error('Failed sending outreach email', [
                     'leadId' => $lead->getId(),
                     'recipientId' => $recipient->getId(),
@@ -168,8 +172,8 @@ final class DispatchLeadMessageHandler
     private function buildSignedClaimUrl(int $leadId, int $recipientId, string $email, string $rawToken, \DateTimeImmutable $expiresAt): string
     {
         $query = http_build_query([
-            'lid' => $leadId,
-            'rid' => $recipientId,
+            'lid' => (int) $leadId,
+            'rid' => (int) $recipientId,
             'email' => $email,
             'token' => $rawToken,
             'exp' => $expiresAt->getTimestamp(),
