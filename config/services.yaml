@@ -42,3 +42,6 @@ services:
     App\MessageHandler\DispatchLeadMessageHandler:
         arguments:
             $claimTtlMinutes: '%lead.claim_ttl_minutes%'
+            $appBaseUrl: '%env(APP_BASE_URL)%'
+            $outreachFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
+            $companyName: '%env(OUTREACH_COMPANY_NAME)%'
