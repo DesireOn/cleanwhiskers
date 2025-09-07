@@ -163,6 +163,57 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $persisted->getInviteSentAt());
     }
 
+    public function testMailerFailureRevertsStatusAndLogsError(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->flags = new FeatureFlags(true);
+        $this->leads->method('find')->willReturn($lead);
+        $this->recipients->method('findByLead')->with($lead)->willReturn([]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'fail@example.com', 0.9, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $persisted = null;
+        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+            $persisted = $entity;
+        });
+        // Only one flush (after creation) because send fails (no post-send flush)
+        $this->em->expects($this->once())->method('flush');
+
+        $this->signer->method('sign')->willReturnCallback(static function (string $url): string {
+            return $url . '#sig';
+        });
+
+        // Simulate mailer failure
+        $this->mailer->expects($this->once())->method('send')->willThrowException(new \RuntimeException('SMTP failure'));
+
+        // Expect error log with message and context
+        $this->logger->expects($this->once())->method('error')
+            ->with(
+                $this->stringContains('Failed sending outreach email'),
+                $this->callback(function ($ctx): bool {
+                    return is_array($ctx)
+                        && array_key_exists('leadId', $ctx)
+                        && array_key_exists('recipientId', $ctx)
+                        && array_key_exists('email', $ctx)
+                        && array_key_exists('error', $ctx);
+                })
+            );
+
+        ($this->handler())(new DispatchLeadMessage(77));
+
+        $this->assertInstanceOf(LeadRecipient::class, $persisted);
+        $this->assertSame('fail@example.com', $persisted->getEmail());
+        $this->assertSame(LeadRecipient::STATUS_QUEUED, $persisted->getStatus());
+        $this->assertNull($persisted->getInviteSentAt());
+    }
+
     private function makeLead(): Lead
     {
         $city = new City('Denver');
