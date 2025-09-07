@@ -172,6 +172,166 @@ final class LeadSegmentationServiceTest extends TestCase
         self::assertSame('email_suppressed', $excluded[0]['reason']);
     }
 
+    public function testSuppressedEmailCheckIsCaseInsensitive(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setPetType('Dog');
+
+        $p = $this->profile(
+            outreachEmail: 'Upper@Example.com',
+            userEmail: null,
+            servicesOffered: 'Dog grooming',
+            specialties: [],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$p]);
+        // Return true only if lowercased is checked
+        $this->suppressions->method('isSuppressed')->willReturnCallback(function (string $email): bool {
+            return $email === 'upper@example.com';
+        });
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        self::assertCount(0, $res->getRecipients());
+        $excluded = $res->getExcluded();
+        self::assertSame('email_suppressed', $excluded[0]['reason']);
+    }
+
+    public function testPetTypeSynonymCanineMatchesDog(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setPetType('Dog');
+
+        $p = $this->profile(
+            outreachEmail: 'syn@example.com',
+            userEmail: null,
+            servicesOffered: 'Expert CANINE styling and spa',
+            specialties: [],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$p]);
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        $recipients = $res->getRecipients();
+        self::assertCount(1, $recipients);
+        self::assertGreaterThanOrEqual(1.0 - 0.001, $recipients[0]['score']);
+        self::assertContains('canine', $recipients[0]['matches']);
+    }
+
+    public function testBreedSizeSynonymsMatchXLToLarge(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setBreedSize('Large');
+
+        $p = $this->profile(
+            outreachEmail: 'xl@example.com',
+            userEmail: null,
+            servicesOffered: 'XL dog grooming',
+            specialties: [],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$p]);
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        $recipients = $res->getRecipients();
+        self::assertCount(1, $recipients);
+        // Only size matched, so ~0.7
+        self::assertGreaterThanOrEqual(0.7 - 0.001, $recipients[0]['score']);
+        self::assertTrue(in_array('xl', $recipients[0]['matches'], true) || $this->hasAnyPrefix($recipients[0]['matches'], 'xl'));
+    }
+
+    public function testSubstringFuzzyMiniatureMatchesMini(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setBreedSize('mini');
+
+        $p = $this->profile(
+            outreachEmail: 'mini@example.com',
+            userEmail: null,
+            servicesOffered: 'Grooming for miniature breeds',
+            specialties: [],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$p]);
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        $recipients = $res->getRecipients();
+        self::assertCount(1, $recipients);
+        self::assertGreaterThanOrEqual(0.7 - 0.001, $recipients[0]['score']);
+    }
+
+    public function testSpecialtiesArrayContributesToPetTypeMatch(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setPetType('Cat');
+
+        $p = $this->profile(
+            outreachEmail: 'spec@example.com',
+            userEmail: null,
+            servicesOffered: '',
+            specialties: ['Feline care', 'Gentle handling'],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$p]);
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        $recipients = $res->getRecipients();
+        self::assertCount(1, $recipients);
+        self::assertContains('feline', $recipients[0]['matches']);
+        self::assertGreaterThanOrEqual(1.0 - 0.001, $recipients[0]['score']);
+    }
+
+    public function testSortingTiePrefersProfilesWithLinkedUser(): void
+    {
+        $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
+        $lead->setPetType('Dog');
+
+        $withUser = $this->profile(
+            outreachEmail: null,
+            userEmail: 'u@example.com',
+            servicesOffered: 'Dog grooming',
+            specialties: [],
+            badges: []
+        );
+        $withoutUser = $this->profile(
+            outreachEmail: 'z@example.com',
+            userEmail: null,
+            servicesOffered: 'Dog grooming',
+            specialties: [],
+            badges: []
+        );
+
+        $this->profiles->method('findByCityAndService')->willReturn([$withoutUser, $withUser]);
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $svc = new LeadSegmentationService($this->profiles, $this->suppressions);
+        $res = $svc->findMatchingRecipients($lead);
+
+        $recipients = $res->getRecipients();
+        self::assertCount(2, $recipients);
+        // Same scores; profile with linked user should come first
+        self::assertSame($withUser, $recipients[0]['profile']);
+        self::assertSame('u@example.com', $recipients[0]['email']);
+    }
+
     public function testEmailResolutionPrefersOutreachThenUserAndHandlesMissing(): void
     {
         $lead = new Lead($this->city, $this->service, 'Owner', 'o@example.com');
@@ -249,4 +409,3 @@ final class LeadSegmentationServiceTest extends TestCase
         return false;
     }
 }
-
