@@ -35,7 +35,8 @@ jobs:
           export APP_ENV=test
           export DATABASE_URL="sqlite:///%kernel.project_dir%/var/migrations_ci.sqlite"
           rm -f var/migrations_ci.sqlite || true
-          php bin/console doctrine:database:create --if-not-exists
+          mkdir -p var
+          touch var/migrations_ci.sqlite
           php bin/console doctrine:migrations:migrate --no-interaction
           # Run diff; it will create a migration file if mapping != schema
           php bin/console doctrine:migrations:diff --no-interaction || true
