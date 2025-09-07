@@ -432,6 +432,12 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->logger->expects($this->once())->method('error')
             ->with($this->stringContains('Failed sending outreach email'));
 
+        // Capture info logs to assert final summary context
+        $infoCalls = [];
+        $this->logger->method('info')->willReturnCallback(function (string $message, array $context = []) use (&$infoCalls): void {
+            $infoCalls[] = ['message' => $message, 'context' => $context];
+        });
+
         ($this->handler())(new DispatchLeadMessage(1001));
 
         // Verify both persisted recipients by email
@@ -448,6 +454,24 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->assertInstanceOf(\DateTimeImmutable::class, $ok1->getInviteSentAt(), 'ok1 should have invite timestamp');
         $this->assertNull($ok2->getInviteSentAt(), 'ok2 should not have invite timestamp after failure');
         $this->assertSame(LeadRecipient::STATUS_QUEUED, $ok2->getStatus(), 'ok2 should be reverted to queued');
+
+        // Assert final summary log has expected counters
+        $summary = null;
+        foreach ($infoCalls as $call) {
+            if (str_contains($call['message'], 'Lead dispatch processed')) {
+                $summary = $call['context'] ?? [];
+                break;
+            }
+        }
+        $this->assertIsArray($summary, 'Summary info log should be present');
+        $this->assertArrayHasKey('createdRecipients', $summary);
+        $this->assertArrayHasKey('emailsSent', $summary);
+        $this->assertArrayHasKey('emailsFailed', $summary);
+        $this->assertArrayHasKey('skippedExisting', $summary);
+        $this->assertSame(2, $summary['createdRecipients']);
+        $this->assertSame(1, $summary['emailsSent']);
+        $this->assertSame(1, $summary['emailsFailed']);
+        $this->assertSame(2, $summary['skippedExisting']);
     }
 
     private function makeLead(): Lead
