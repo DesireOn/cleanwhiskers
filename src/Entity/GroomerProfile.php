@@ -67,6 +67,9 @@ class GroomerProfile
     #[ORM\JoinTable(name: 'groomer_profile_service')]
     private Collection $services;
 
+    #[ORM\Column(name: 'outreach_email', length: 255, nullable: true)]
+    private ?string $outreachEmail = null;
+
     public function __construct(?User $user, City $city, string $businessName, string $about, string $slug = '')
     {
         if (null !== $user && !in_array(User::ROLE_GROOMER, $user->getRoles(), true)) {
@@ -218,5 +221,15 @@ class GroomerProfile
         $this->services->removeElement($service);
 
         return $this;
+    }
+
+    public function getOutreachEmail(): ?string
+    {
+        return $this->outreachEmail;
+    }
+
+    public function setOutreachEmail(?string $outreachEmail): void
+    {
+        $this->outreachEmail = $outreachEmail;
     }
 }
