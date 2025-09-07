@@ -20,6 +20,7 @@ use App\Repository\GroomerProfileRepository;
 use App\Repository\ReviewRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
+use App\Repository\EmailSuppressionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\Lead\LeadTokenFactory;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -34,7 +35,8 @@ final class Seeder
         private readonly GroomerProfileRepository $profileRepository,
         private readonly ReviewRepository $reviewRepository,
         private readonly BookingRequestRepository $bookingRequestRepository,
-        private readonly LeadTokenFactory $leadTokenFactory,
+        private readonly ?LeadTokenFactory $leadTokenFactory = null,
+        private readonly ?EmailSuppressionRepository $emailSuppressionRepository = null,
     ) {
     }
 
@@ -206,8 +208,10 @@ final class Seeder
                     $lead->setPetType('dog');
                     $lead->setBreedSize('medium');
                     $lead->setConsentToShare(true);
-                    // Generate secure owner token and set expiry via factory
-                    $this->leadTokenFactory->issueOwnerToken($lead);
+                    // Generate secure owner token and set expiry via factory if available
+                    if ($this->leadTokenFactory) {
+                        $this->leadTokenFactory->issueOwnerToken($lead);
+                    }
                     $this->em->persist($lead);
 
                     // Two recipients from Ruse if available
@@ -226,9 +230,18 @@ final class Seeder
                     }
                 }
 
-                // Add a sample suppression entry
-                $suppress = new EmailSuppression('bounced@example.com', 'bounce');
-                $this->em->persist($suppress);
+                // Add a sample suppression entry idempotently
+                $suppressEmail = 'bounced@example.com';
+                $exists = false;
+                if ($this->emailSuppressionRepository !== null) {
+                    $exists = $this->emailSuppressionRepository->isSuppressed($suppressEmail);
+                } else {
+                    $exists = null !== $this->em->getRepository(EmailSuppression::class)->findOneBy(['email' => $suppressEmail]);
+                }
+                if (!$exists) {
+                    $suppress = new EmailSuppression($suppressEmail, 'bounce');
+                    $this->em->persist($suppress);
+                }
             }
 
             $this->em->flush();
