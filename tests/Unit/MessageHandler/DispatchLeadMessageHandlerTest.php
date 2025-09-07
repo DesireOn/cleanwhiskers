@@ -214,6 +214,77 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->assertNull($persisted->getInviteSentAt());
     }
 
+    public function testMultipleRecipientsMixedSuccessAndFailure(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->flags = new FeatureFlags(true);
+        $this->leads->method('find')->willReturn($lead);
+
+        // Existing duplicate email
+        $existing = new LeadRecipient($lead, 'dupe@example.com', 'hash', (new \DateTimeImmutable())->modify('+1 day'));
+        $this->recipients->method('findByLead')->with($lead)->willReturn([$existing]);
+
+        // Segmentation yields: suppressed, duplicate, ok1, ok2
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'suppressed@example.com', 0.95, []);
+        $segResult->addRecipient($profile, 'dupe@example.com', 0.9, []);
+        $segResult->addRecipient($profile, 'ok1@example.com', 0.85, []);
+        $segResult->addRecipient($profile, 'ok2@example.com', 0.8, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturnCallback(static function (string $email): bool {
+            return $email === 'suppressed@example.com';
+        });
+
+        // Capture both persisted recipients
+        $persisted = [];
+        $this->em->expects($this->exactly(2))->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+            if ($entity instanceof LeadRecipient) {
+                $persisted[] = $entity;
+            }
+        });
+        // Flush after create and after at least one send success
+        $this->em->expects($this->exactly(2))->method('flush');
+
+        // Signer returns signed URL
+        $this->signer->method('sign')->willReturnCallback(static function (string $url): string {
+            return $url . '#sig';
+        });
+
+        // First send succeeds, second fails
+        $sendCount = 0;
+        $this->mailer->expects($this->exactly(2))->method('send')->willReturnCallback(function () use (&$sendCount): void {
+            $sendCount++;
+            if ($sendCount === 2) {
+                throw new \RuntimeException('SMTP failure');
+            }
+        });
+
+        // Expect one error log for the failure
+        $this->logger->expects($this->once())->method('error')
+            ->with($this->stringContains('Failed sending outreach email'));
+
+        ($this->handler())(new DispatchLeadMessage(1001));
+
+        // Verify both persisted recipients by email
+        $byEmail = [];
+        foreach ($persisted as $r) {
+            $byEmail[$r->getEmail()] = $r;
+        }
+        $this->assertArrayHasKey('ok1@example.com', $byEmail);
+        $this->assertArrayHasKey('ok2@example.com', $byEmail);
+
+        $ok1 = $byEmail['ok1@example.com'];
+        $ok2 = $byEmail['ok2@example.com'];
+
+        $this->assertInstanceOf(\DateTimeImmutable::class, $ok1->getInviteSentAt(), 'ok1 should have invite timestamp');
+        $this->assertNull($ok2->getInviteSentAt(), 'ok2 should not have invite timestamp after failure');
+        $this->assertSame(LeadRecipient::STATUS_QUEUED, $ok2->getStatus(), 'ok2 should be reverted to queued');
+    }
+
     private function makeLead(): Lead
     {
         $city = new City('Denver');
