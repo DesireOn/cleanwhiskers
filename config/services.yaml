@@ -4,11 +4,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    lead_feature_enabled: '%env(bool:LEADS_FEATURE_ENABLED)%'
-    'sms.provider': '%env(string:SMS_PROVIDER)%'
-    'twilio.sid': '%env(string:TWILIO_SID)%'
-    'twilio.token': '%env(string:TWILIO_TOKEN)%'
-    'twilio.from': '%env(string:TWILIO_FROM)%'
 
 services:
     # default configuration for services in *this* file
@@ -37,3 +32,4 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+

@@ -1,0 +1,16 @@
+# If you rely on Apache for front controller rewrites, you can enable the
+# standard Symfony rewrite rules below. They are commented out to avoid
+# interfering with any existing vhost configuration.
+#
+# <IfModule mod_rewrite.c>
+#     Options -MultiViews
+#     RewriteEngine On
+#
+#     # Serve existing files directly
+#     RewriteCond %{REQUEST_FILENAME} -f [OR]
+#     RewriteCond %{REQUEST_FILENAME} -d
+#     RewriteRule ^ - [L]
+#
+#     # Otherwise, route to index.php
+#     RewriteRule ^ index.php [L]
+# </IfModule>
