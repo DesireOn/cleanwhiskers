@@ -161,6 +161,171 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->assertSame('good@example.com', $persisted->getEmail());
         // Invite timestamp set indicates successful send; status change is handled in persistence layer
         $this->assertInstanceOf(\DateTimeImmutable::class, $persisted->getInviteSentAt());
+        $this->assertSame(LeadRecipient::STATUS_SENT, $persisted->getStatus());
+    }
+
+    public function testSkipsDuplicateEmailsWithCaseAndWhitespaceDifferences(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+
+        // Existing recipient stored lowercased and trimmed
+        $existing = new LeadRecipient($lead, 'normalized@example.com', 'hash', (new \DateTimeImmutable())->modify('+1 day'));
+        $this->recipients->method('findByLead')->with($lead)->willReturn([$existing]);
+
+        // Segmentation yields same email but with different case/whitespace, and one new
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, '  Normalized@Example.com  ', 0.9, []); // should be treated as duplicate
+        $segResult->addRecipient($profile, 'new@example.com', 0.8, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $persisted = [];
+        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+            if ($entity instanceof LeadRecipient) {
+                $persisted[] = $entity;
+            }
+        });
+        $this->em->expects($this->exactly(2))->method('flush');
+
+        $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
+        $this->mailer->expects($this->once())->method('send');
+
+        ($this->handler())(new DispatchLeadMessage(2001));
+
+        $this->assertCount(1, $persisted, 'Only new@example.com should be persisted');
+        $this->assertSame('new@example.com', $persisted[0]->getEmail());
+    }
+
+    public function testSkipsEmptyEmailsAndAvoidsUnnecessaryFlushWhenNoneCreated(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+        $this->recipients->method('findByLead')->with($lead)->willReturn([]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, '   ', 0.9, []); // will be trimmed to empty and skipped
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $this->em->expects($this->never())->method('persist');
+        $this->em->expects($this->never())->method('flush');
+        $this->mailer->expects($this->never())->method('send');
+
+        ($this->handler())(new DispatchLeadMessage(3001));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testClaimExpiryUsesMinimumOneMinuteWhenConfiguredZero(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+        $this->recipients->method('findByLead')->with($lead)->willReturn([]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'ttl@example.com', 0.9, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $captured = null;
+        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$captured): void {
+            if ($entity instanceof LeadRecipient) {
+                $captured = $entity;
+            }
+        });
+        $this->em->expects($this->exactly(2))->method('flush');
+
+        $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
+        $this->mailer->expects($this->once())->method('send');
+
+        // Rebuild handler with TTL set to 0 to exercise max(1, ttl)
+        $handler = new DispatchLeadMessageHandler(
+            $this->flags,
+            $this->leads,
+            $this->recipients,
+            $this->suppressions,
+            $this->segmentation,
+            $this->em,
+            $this->logger,
+            $this->mailer,
+            $this->signer,
+            'http://localhost',
+            'support@example.com',
+            'CleanWhiskers',
+            0,
+        );
+
+        $before = new \DateTimeImmutable('+55 seconds');
+        $after = new \DateTimeImmutable('+3 minutes');
+        $handler(new DispatchLeadMessage(4001));
+
+        $this->assertInstanceOf(LeadRecipient::class, $captured);
+        $expires = $captured->getTokenExpiresAt();
+        $this->assertGreaterThan($before, $expires, 'Expiry should be at least ~1 minute from now');
+        $this->assertLessThan($after, $expires, 'Expiry should not be far beyond a couple of minutes');
+    }
+
+    public function testEmailContentIncludesSignedUrlsAndCompanySignature(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+        $this->recipients->method('findByLead')->with($lead)->willReturn([]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'content@example.com', 0.9, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+
+        $this->em->expects($this->once())->method('persist');
+        $this->em->expects($this->exactly(2))->method('flush');
+
+        // Record URLs passed to sign() and assert content/order afterwards
+        $signedUrls = [];
+        $this->signer->expects($this->exactly(2))->method('sign')
+            ->willReturnCallback(function (string $url) use (&$signedUrls): string {
+                $signedUrls[] = $url;
+                return $url . '#sig';
+            });
+
+        // Capture the outbound email to verify subject/text
+        $capturedEmail = null;
+        $this->mailer->expects($this->once())->method('send')
+            ->willReturnCallback(function ($email) use (&$capturedEmail): void {
+                $capturedEmail = $email;
+            });
+
+        ($this->handler())(new DispatchLeadMessage(5001));
+
+        $this->assertNotNull($capturedEmail);
+        $this->assertCount(2, $signedUrls);
+        $this->assertStringStartsWith('http://localhost/leads/claim?', $signedUrls[0]);
+        $this->assertStringStartsWith('http://localhost/unsubscribe?', $signedUrls[1]);
+        $this->assertStringContainsString('email=content%40example.com', $signedUrls[1]);
+        $subject = $capturedEmail->getSubject();
+        $text = $capturedEmail->getTextBody();
+
+        $this->assertStringContainsString('New Mobile Dog Grooming lead in Denver', (string) $subject);
+        $this->assertStringContainsString('Claim this lead: http://localhost/leads/claim?', (string) $text);
+        $this->assertStringContainsString('#sig', (string) $text, 'Signed URLs should include signature marker');
+        $this->assertStringContainsString('unsubscribe here: http://localhost/unsubscribe?', (string) $text);
+        $this->assertStringContainsString('— CleanWhiskers', (string) $text);
     }
 
     public function testMailerFailureRevertsStatusAndLogsError(): void
