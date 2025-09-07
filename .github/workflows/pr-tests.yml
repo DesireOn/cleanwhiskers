@@ -8,6 +8,17 @@ on:
 jobs:
   phpunit:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -proot || exit 1"
+          --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -23,11 +34,34 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, intl, pdo_mysql
+          extensions: mbstring, intl, pdo_mysql, sqlite3, pdo_sqlite
           coverage: none
 
       - name: Install PHP dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Ensure migrations are in sync (diff check)
+        run: |
+          set -e
+          export APP_ENV=dev
+          export DATABASE_URL="mysql://root:root@127.0.0.1:3306/app?serverVersion=8.0&charset=utf8mb4"
+          # Wait for MySQL to accept connections
+          for i in {1..60}; do
+            php -r '$s=@fsockopen("127.0.0.1",3306); if($s){fclose($s); exit(0);} exit(1);' && break || sleep 2
+          done
+          # Create database if missing and migrate to current state
+          php bin/console doctrine:database:create --if-not-exists
+          php bin/console doctrine:migrations:migrate --no-interaction
+          # Run diff; it will create a migration file if mapping != schema
+          php bin/console doctrine:migrations:diff --no-interaction || true
+          CHANGED=$( (git ls-files -m migrations/; git ls-files --other --exclude-standard migrations/) | wc -l )
+          if [ "$CHANGED" -ne 0 ]; then
+            echo "::error::Doctrine mapping has unapplied changes. Run 'php bin/console make:migration' and commit the result."
+            echo "Changed or new files under migrations/:"
+            git ls-files -m migrations/ || true
+            git ls-files --other --exclude-standard migrations/ || true
+            exit 1
+          fi
 
       - name: Run PHPUnit
         run: ./bin/phpunit --testdox

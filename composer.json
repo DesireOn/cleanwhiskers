@@ -93,6 +93,7 @@
     "fix:php": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --diff",
     "stan": "phpstan analyse --memory-limit=1G",
     "audit": "composer audit --no-interaction || true",
+    "make:migration": "php bin/console make:migration --no-interaction",
     "migrate": "php bin/console doctrine:migrations:migrate --no-interaction",
     "db:reset": [
       "@php bin/console doctrine:schema:drop --force --full-database --no-interaction",
