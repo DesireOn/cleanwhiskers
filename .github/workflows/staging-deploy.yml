@@ -17,7 +17,8 @@ jobs:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       EC2_STAGING_HOST: ${{ secrets.EC2_STAGING_HOST }}
       EC2_USER: ${{ secrets.EC2_USER }}
-      # (Reverted) Removed Basic Auth variables for staging
+      STAGING_BASIC_AUTH_USER: ${{ secrets.STAGING_BASIC_AUTH_USER }}
+      STAGING_BASIC_AUTH_PASS: ${{ secrets.STAGING_BASIC_AUTH_PASS }}
 
     steps:
       - name: Checkout Code
@@ -32,7 +33,7 @@ jobs:
       - name: Set .env file
         run: |
           cp .env.staging .env
-          envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD' < .env > .env.tmp
+          envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD $STAGING_BASIC_AUTH_USER $STAGING_BASIC_AUTH_PASS' < .env > .env.tmp
           mv .env.tmp .env
 
       - name: Install Dependencies
