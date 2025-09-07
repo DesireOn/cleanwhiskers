@@ -6,8 +6,9 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EmailSuppressionRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: EmailSuppressionRepository::class)]
 #[ORM\Table(name: 'email_suppression')]
 #[ORM\UniqueConstraint(name: 'uniq_email_suppression_email', columns: ['email'])]
 class EmailSuppression
@@ -43,4 +44,3 @@ class EmailSuppression
 
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }
-

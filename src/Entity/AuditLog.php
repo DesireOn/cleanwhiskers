@@ -6,8 +6,9 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AuditLogRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: AuditLogRepository::class)]
 #[ORM\Table(name: 'audit_log')]
 #[ORM\Index(name: 'idx_audit_event', columns: ['event'])]
 #[ORM\Index(name: 'idx_audit_subject', columns: ['subject_type', 'subject_id'])]
@@ -73,4 +74,3 @@ class AuditLog
     public function getMetadata(): array { return $this->metadata; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }
-

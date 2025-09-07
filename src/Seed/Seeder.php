@@ -7,6 +7,10 @@ namespace App\Seed;
 use App\Entity\BookingRequest;
 use App\Entity\City;
 use App\Entity\GroomerProfile;
+use App\Entity\Lead;
+use App\Entity\LeadRecipient;
+use App\Entity\EmailSuppression;
+use App\Entity\AuditLog;
 use App\Entity\Review;
 use App\Entity\Service;
 use App\Entity\User;
@@ -109,6 +113,10 @@ final class Seeder
                         $badges = $profileData['badges'];
                         $profile->setBadges($badges);
                     }
+                    // Provide outreach email for samples
+                    if ($withSamples) {
+                        $profile->setOutreachEmail('outreach+' . $this->slugify($profileData['businessName']) . '@example.com');
+                    }
                     $this->em->persist($profile);
                 } else {
                     // ensure services
@@ -133,6 +141,9 @@ final class Seeder
                         /** @var array<int,string> $badges */
                         $badges = $profileData['badges'];
                         $profile->setBadges($badges);
+                    }
+                    if ($withSamples && $profile->getOutreachEmail() === null) {
+                        $profile->setOutreachEmail('outreach+' . $profile->getSlug() . '@example.com');
                     }
                 }
                 $profiles[] = [
@@ -183,9 +194,59 @@ final class Seeder
                         }
                     }
                 }
+
+                // Create a sample lead in Ruse for Mobile Dog Grooming
+                $ruse = $cities['ruse'] ?? null;
+                $mdg = $services['mobile-dog-grooming'] ?? null;
+                if ($ruse instanceof City && $mdg instanceof Service) {
+                    $lead = new Lead($ruse, $mdg, 'Jane Owner', 'jane.owner@example.com');
+                    $lead->setPhone('555-0101');
+                    $lead->setPetType('dog');
+                    $lead->setBreedSize('medium');
+                    $lead->setConsentToShare(true);
+                    $lead->setOwnerTokenHash(sha1('lead1'));
+                    $lead->setOwnerTokenExpiresAt((new \DateTimeImmutable('+7 days')));
+                    $this->em->persist($lead);
+
+                    // Two recipients from Ruse if available
+                    $ruseGroomers = array_values(array_filter(
+                        array_map(static fn(array $m) => $m['profile'], $profiles),
+                        static fn(GroomerProfile $p): bool => $p->getCity()->getId() === $ruse->getId()
+                    ));
+
+                    $now = new \DateTimeImmutable();
+                    for ($i = 0; $i < min(2, count($ruseGroomers)); $i++) {
+                        $gp = $ruseGroomers[$i];
+                        $email = $gp->getOutreachEmail() ?? ('groomer' . ($i+1) . '@example.com');
+                        $recipient = new LeadRecipient($lead, $email, sha1('claim'.$i), $now->modify('+7 days'));
+                        $recipient->setGroomerProfile($gp);
+                        $this->em->persist($recipient);
+                    }
+                }
+
+                // Add a sample suppression entry
+                $suppress = new EmailSuppression('bounced@example.com', 'bounce');
+                $this->em->persist($suppress);
             }
 
             $this->em->flush();
+
+            if ($withSamples) {
+                // Create an audit log entry for the created lead
+                $leadEntity = $this->em->getRepository(Lead::class)->findOneBy(['email' => 'jane.owner@example.com']);
+                if ($leadEntity instanceof Lead && $leadEntity->getId() !== null) {
+                    $log = new AuditLog(
+                        event: 'lead.created',
+                        actorType: AuditLog::ACTOR_SYSTEM,
+                        actorId: null,
+                        subjectType: AuditLog::SUBJECT_LEAD,
+                        subjectId: $leadEntity->getId(),
+                        metadata: ['source' => 'seeder']
+                    );
+                    $this->em->persist($log);
+                    $this->em->flush();
+                }
+            }
         });
     }
 

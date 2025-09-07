@@ -6,8 +6,9 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LeadRecipientRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LeadRecipientRepository::class)]
 #[ORM\Table(name: 'lead_recipient')]
 #[ORM\UniqueConstraint(name: 'uniq_lead_recipient_lead_email', columns: ['lead_id', 'email'])]
 class LeadRecipient
@@ -81,4 +82,3 @@ class LeadRecipient
 
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }
-
