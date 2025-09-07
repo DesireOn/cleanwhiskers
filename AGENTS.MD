@@ -198,6 +198,14 @@ Allowed files/folders: src/, tests/, templates/, config/, migrations/, composer.
 
 Forbidden: real secrets, CI config changes, infra/terraform, deployment keys.
 
+Standing Testing Policy (PHP)
+
+- Canonical test command: `./vendor/bin/phpunit`.
+- Pre-approval: You may run `composer install` and the test suite as needed.
+- Requirement: For any change that touches PHP, run the full PHPUnit suite and fix failures introduced by your change before delivering the result.
+- Scope control: Only modify code relevant to failures caused by your change. If failures appear unrelated, flaky, or require large refactors, pause and summarize for approval.
+- Environment: Use the test environment as configured by the project (e.g., `APP_ENV=test`) when preparing and running tests.
+
 Must do before commit:
 
 composer fix:php (or ensure lint:php passes)
