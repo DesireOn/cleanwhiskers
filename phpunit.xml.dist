@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
     bootstrap="vendor/autoload.php"
     colors="true"
-    cacheResult="true"
     cacheDirectory="var/.phpunit.cache"
 >
     <testsuites>
@@ -41,15 +40,7 @@
         </exclude>
     </source>
 
-    <coverage cacheDirectory="var/.phpunit.cache/coverage">
-        <include>
-            <directory>src</directory>
-        </include>
-        <report>
-            <html outputDirectory="var/coverage"/>
-            <text/>
-        </report>
-    </coverage>
+    <!-- Code coverage configuration removed for PHPUnit 11 schema compliance. -->
 
     <php>
         <!-- Symfony test env -->
