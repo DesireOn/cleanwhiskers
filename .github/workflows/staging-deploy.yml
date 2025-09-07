@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP_ENV: staging
+      APP_ENV: prod
       STAGING_RDS_ENDPOINT: ${{ secrets.STAGING_RDS_ENDPOINT }}
       STAGING_DB_USER: ${{ secrets.STAGING_DB_USER }}
       STAGING_DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
@@ -22,16 +22,8 @@ jobs:
       STAGING_BASIC_AUTH_PASS: ${{ secrets.STAGING_BASIC_AUTH_PASS }}
 
     steps:
-      - name: Checkout latest staging branch
+      - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          ref: staging
-          fetch-depth: 0
-
-      - name: Pull latest code from staging
-        run: |
-          git checkout staging
-          git pull origin staging
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -45,11 +37,11 @@ jobs:
           envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD' < .env > .env.tmp
           mv .env.tmp .env
 
-      - name: Install PHP Dependencies
+      - name: Install Dependencies
         env:
           SKIP_CACHE_CLEAR: "1"
         run: |
-          composer install --no-dev --optimize-autoloader
+          composer install --no-dev --optimize-autoloader --no-scripts
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -70,15 +62,24 @@ jobs:
       - name: Build Frontend Assets
         run: yarn build
 
-
-      - name: Compile Asset Map
-        run: php bin/console asset-map:compile
-
       - name: Deploy to Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'var' -e "ssh -o StrictHostKeyChecking=no -i private_key.pem" . $EC2_USER@$EC2_STAGING_HOST:/var/www/staging.cleanwhiskers.com
+
+      - name: Prepare Cache/Logs on Staging Server
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && \
+           sudo rm -rf var/cache && \
+           sudo rm -rf var/log && \
+           sudo rm -rf public/assets && \
+           sudo mkdir -p var/log public/assets && \
+           sudo chown -R www-data:www-data var public/assets && \
+           sudo chmod -R 775 var public/assets"
 
       - name: Configure Basic Auth on Staging (optional)
         run: |
@@ -101,37 +102,30 @@ jobs:
              echo 'STAGING_BASIC_AUTH_USER/PASS not set; skipping .htpasswd configuration'; \
            fi"
 
-      - name: Run Migrations on Staging Server
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && php bin/console --no-interaction --allow-no-migration doctrine:migrations:migrate"
-
       - name: Install Importmap on Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && php bin/console importmap:install"
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console importmap:install --no-interaction --env=prod"
 
-      - name: Clear Cache on Staging Server
+      - name: Compile Asset Map on Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && sudo rm -rf var/cache/prod && mkdir var/cache/prod"
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console asset-map:compile --env=prod"
 
-      - name: Set Cache Directory Permissions on Staging Server
+      - name: Run Migrations on Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && sudo chown -R www-data:www-data var/cache/prod && sudo chmod -R 775 var/cache/prod/"
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console --no-interaction --allow-no-migration --env=prod doctrine:migrations:migrate"
 
-      - name: Ensure Logs Directory on Staging Server
+      - name: Clear Symfony Cache on Staging Server
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "cd /var/www/staging.cleanwhiskers.com && mkdir -p var/log && sudo chown -R www-data:www-data var/log && sudo chmod -R 775 var/log"
+          "cd /var/www/staging.cleanwhiskers.com && php bin/console cache:clear --env=prod"
