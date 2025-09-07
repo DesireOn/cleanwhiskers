@@ -141,7 +141,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
 
         // Capture persisted entity, ensure it's updated to SENT after email
         $persisted = null;
-        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+        $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             $persisted = $entity;
         });
         // Two flushes: one after creating recipients, one after marking sent
@@ -185,7 +185,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
         $persisted = [];
-        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+        $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             if ($entity instanceof LeadRecipient) {
                 $persisted[] = $entity;
             }
@@ -241,7 +241,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
         $captured = null;
-        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$captured): void {
+        $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$captured): void {
             if ($entity instanceof LeadRecipient) {
                 $captured = $entity;
             }
@@ -293,7 +293,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
 
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
-        $this->em->expects($this->once())->method('persist');
+        $this->em->expects($this->atLeastOnce())->method('persist');
         $this->em->expects($this->exactly(2))->method('flush');
 
         // Record URLs passed to sign() and assert content/order afterwards
@@ -406,7 +406,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
 
         // Capture both persisted recipients
         $persisted = [];
-        $this->em->expects($this->exactly(2))->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+        $this->em->expects($this->atLeast(2))->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             if ($entity instanceof LeadRecipient) {
                 $persisted[] = $entity;
             }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Entity\Lead;
+use App\Entity\AuditLog;
 use App\Message\DispatchLeadMessage;
 use App\Repository\LeadRepository;
 use App\Repository\LeadRecipientRepository;
@@ -142,6 +143,22 @@ final class DispatchLeadMessageHandler
 
                 $this->mailer->send($message);
                 $sent++;
+
+                // Log successful outreach email in AuditLog
+                if (null !== $recipient->getId() && null !== $lead->getId()) {
+                    $log = new AuditLog(
+                        event: 'outreach_email_sent',
+                        actorType: AuditLog::ACTOR_SYSTEM,
+                        actorId: null,
+                        subjectType: AuditLog::SUBJECT_EMAIL,
+                        subjectId: $recipient->getId(),
+                        metadata: [
+                            'leadId' => $lead->getId(),
+                            'recipientEmail' => $recipient->getEmail(),
+                        ]
+                    );
+                    $this->em->persist($log);
+                }
             } catch (\Throwable $e) {
                 $failed++;
                 // Revert status if sending failed
