@@ -59,8 +59,8 @@ class Lead
     #[ORM\Column(name: 'claimed_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $claimedAt = null;
 
-    #[ORM\Column(name: 'owner_token_hash', length: 255, nullable: true)]
-    private ?string $ownerTokenHash = null;
+    #[ORM\Column(name: 'owner_token_hash', length: 255)]
+    private string $ownerTokenHash = '';
 
     #[ORM\Column(name: 'owner_token_expires_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $ownerTokenExpiresAt = null;
@@ -114,8 +114,8 @@ class Lead
     public function getClaimedAt(): ?\DateTimeImmutable { return $this->claimedAt; }
     public function setClaimedAt(?\DateTimeImmutable $claimedAt): void { $this->claimedAt = $claimedAt; }
 
-    public function getOwnerTokenHash(): ?string { return $this->ownerTokenHash; }
-    public function setOwnerTokenHash(?string $hash): void { $this->ownerTokenHash = $hash; }
+    public function getOwnerTokenHash(): string { return $this->ownerTokenHash; }
+    public function setOwnerTokenHash(string $hash): void { $this->ownerTokenHash = $hash; }
 
     public function getOwnerTokenExpiresAt(): ?\DateTimeImmutable { return $this->ownerTokenExpiresAt; }
     public function setOwnerTokenExpiresAt(?\DateTimeImmutable $at): void { $this->ownerTokenExpiresAt = $at; }

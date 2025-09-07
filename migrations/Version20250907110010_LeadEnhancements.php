@@ -51,7 +51,17 @@ final class Version20250907110010_LeadEnhancements extends AbstractMigration
             $this->addSql("ALTER TABLE lead_capture ADD claimed_at DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'");
         }
         if (!in_array('owner_token_hash', $have, true)) {
+            // Add nullable first, backfill, then enforce NOT NULL
             $this->addSql("ALTER TABLE lead_capture ADD owner_token_hash VARCHAR(255) DEFAULT NULL");
+        }
+        // Backfill any NULL/empty hashes deterministically, then enforce NOT NULL
+        $this->addSql("UPDATE lead_capture SET owner_token_hash = COALESCE(owner_token_hash, SHA1(CONCAT('init-', id, '-', email))) WHERE owner_token_hash IS NULL OR owner_token_hash = ''");
+        // Make column NOT NULL if currently nullable
+        $isNullable = (string) $this->connection->fetchOne(
+            "SELECT IS_NULLABLE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'lead_capture' AND COLUMN_NAME = 'owner_token_hash' LIMIT 1"
+        );
+        if (strtoupper($isNullable) === 'YES') {
+            $this->addSql("ALTER TABLE lead_capture MODIFY owner_token_hash VARCHAR(255) NOT NULL");
         }
         if (!in_array('owner_token_expires_at', $have, true)) {
             $this->addSql("ALTER TABLE lead_capture ADD owner_token_expires_at DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'");
