@@ -18,15 +18,15 @@ final class Version20250907123000PopulateMobileGroomerCities extends AbstractMig
         return 'Ensure mobile-dog-grooming service exists and backfill groomer_profile_service links (prod/staging only).';
     }
 
-    private function assertProdOrStaging(): void
+    private function skipUnlessProdOrStaging(): void
     {
         $env = getenv('APP_ENV') ?: ($_ENV['APP_ENV'] ?? $_SERVER['APP_ENV'] ?? null);
-        $this->abortIf(!in_array($env, ['prod', 'production', 'staging'], true), 'This migration runs only on prod/staging.');
+        $this->skipIf(!in_array($env, ['prod', 'production', 'staging'], true), 'This migration runs only on prod/staging.');
     }
 
     public function up(Schema $schema): void
     {
-        $this->assertProdOrStaging();
+        $this->skipUnlessProdOrStaging();
 
         // 0) Ensure required cities exist (idempotent)
         $this->addSql(
