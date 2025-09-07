@@ -17,9 +17,7 @@ jobs:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       EC2_STAGING_HOST: ${{ secrets.EC2_STAGING_HOST }}
       EC2_USER: ${{ secrets.EC2_USER }}
-      # Optional: set these to enable Apache Basic Auth on staging
-      STAGING_BASIC_AUTH_USER: ${{ secrets.STAGING_BASIC_AUTH_USER }}
-      STAGING_BASIC_AUTH_PASS: ${{ secrets.STAGING_BASIC_AUTH_PASS }}
+      # (Reverted) Removed Basic Auth variables for staging
 
     steps:
       - name: Checkout Code
@@ -81,26 +79,7 @@ jobs:
            sudo chown -R www-data:www-data var public/assets && \
            sudo chmod -R 775 var public/assets"
 
-      - name: Configure Basic Auth on Staging (optional)
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          # Create or update .htpasswd only when both user and pass are provided
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "set -euo pipefail; \
-           cd /var/www/staging.cleanwhiskers.com; \
-           if [ -n '${STAGING_BASIC_AUTH_USER}' ] && [ -n '${STAGING_BASIC_AUTH_PASS}' ]; then \
-             if command -v htpasswd >/dev/null 2>&1; then \
-               htpasswd -bc .htpasswd '${STAGING_BASIC_AUTH_USER}' '${STAGING_BASIC_AUTH_PASS}'; \
-             else \
-               # Fallback if apache2-utils not installed: generate crypt hash via OpenSSL
-               HASH=\"$(openssl passwd -apr1 '${STAGING_BASIC_AUTH_PASS}')\"; \
-               printf '%s:%s\n' '${STAGING_BASIC_AUTH_USER}' "$HASH" > .htpasswd; \
-             fi; \
-             chmod 640 .htpasswd; \
-           else \
-             echo 'STAGING_BASIC_AUTH_USER/PASS not set; skipping .htpasswd configuration'; \
-           fi"
+      # (Reverted) Removed Basic Auth provisioning on staging
 
       - name: Install Importmap on Staging Server
         run: |

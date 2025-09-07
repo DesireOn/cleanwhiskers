@@ -1,16 +1,3 @@
-# Apache Basic Auth for staging only
-# Protects the staging domain with HTTP Basic authentication.
-
-<If "%{HTTP_HOST} == 'staging.cleanwhiskers.com'">
-    <IfModule mod_auth_basic.c>
-        AuthType Basic
-        AuthName "CleanWhiskers Staging"
-        # Absolute path on the staging server (see CI deploy workflow)
-        AuthUserFile /var/www/staging.cleanwhiskers.com/.htpasswd
-        Require valid-user
-    </IfModule>
-</If>
-
 # If you rely on Apache for front controller rewrites, you can enable the
 # standard Symfony rewrite rules below. They are commented out to avoid
 # interfering with any existing vhost configuration.
@@ -27,4 +14,3 @@
 #     # Otherwise, route to index.php
 #     RewriteRule ^ index.php [L]
 # </IfModule>
-

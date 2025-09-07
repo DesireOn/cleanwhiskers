@@ -4,10 +4,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    staging_basic_auth.enabled: '%env(bool:STAGING_BASIC_AUTH_ENABLED)%'
-    staging_basic_auth.user: '%env(default::STAGING_BASIC_AUTH_USER)%'
-    staging_basic_auth.pass: '%env(default::STAGING_BASIC_AUTH_PASS)%'
-    staging_basic_auth.realm: '%env(default:CleanWhiskers Staging:STAGING_BASIC_AUTH_REALM)%'
 
 services:
     # default configuration for services in *this* file
@@ -34,12 +30,6 @@ services:
     App\Seed\Seeder:
         public: true
 
-    App\Security\StagingBasicAuthSubscriber:
-        arguments:
-            $enabled: '%staging_basic_auth.enabled%'
-            $username: '%staging_basic_auth.user%'
-            $password: '%staging_basic_auth.pass%'
-            $realm: '%staging_basic_auth.realm%'
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
