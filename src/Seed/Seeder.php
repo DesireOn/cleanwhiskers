@@ -21,6 +21,7 @@ use App\Repository\ReviewRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Lead\LeadTokenFactory;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 final class Seeder
@@ -33,6 +34,7 @@ final class Seeder
         private readonly GroomerProfileRepository $profileRepository,
         private readonly ReviewRepository $reviewRepository,
         private readonly BookingRequestRepository $bookingRequestRepository,
+        private readonly LeadTokenFactory $leadTokenFactory,
     ) {
     }
 
@@ -204,8 +206,8 @@ final class Seeder
                     $lead->setPetType('dog');
                     $lead->setBreedSize('medium');
                     $lead->setConsentToShare(true);
-                    $lead->setOwnerTokenHash(sha1('lead1'));
-                    $lead->setOwnerTokenExpiresAt((new \DateTimeImmutable('+7 days')));
+                    // Generate secure owner token and set expiry via factory
+                    $this->leadTokenFactory->issueOwnerToken($lead);
                     $this->em->persist($lead);
 
                     // Two recipients from Ruse if available
