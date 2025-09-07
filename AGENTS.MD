@@ -224,6 +224,12 @@ Only mark the task as complete when the PHPUnit test suite returns 100% success.
 
 If DB change is required: generate a migration and include it in the PR.
 
+Migrations policy (assistants and humans):
+- Always generate migrations via `php bin/console make:migration`.
+- Do NOT hand-write or edit files in `migrations/` via patches; use the command above.
+- If the command cannot be executed in the current environment, request the user to run it and commit the generated file.
+- Apply migrations with `php bin/console doctrine:migrations:migrate --no-interaction` when validating changes locally/CI.
+
 Definition of Done (DoD)
  Coding standards (PSR-12) pass: composer lint:php
 
