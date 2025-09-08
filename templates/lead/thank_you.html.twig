@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Thank you | CleanWhiskers{% endblock %}
+
+{% block body %}
+  <section class="thank-you" aria-labelledby="thank-you-title">
+    <div class="container">
+      <h1 id="thank-you-title">Thanks — your request is in!</h1>
+      <p>We’ll notify our network of groomers in {{ city.name }} about your {{ service.name|lower }} request.</p>
+      <p>You’ll hear back shortly with availability and pricing options.</p>
+    </div>
+  </section>
+{% endblock %}
+

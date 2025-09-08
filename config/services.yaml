@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     feature.leads.enabled: '%env(bool:LEADS_FEATURE_ENABLED)%'
+    lead.claim_ttl_minutes: '%env(int:LEAD_CLAIM_TTL_MINUTES)%'
 
 services:
     # default configuration for services in *this* file
@@ -37,3 +38,32 @@ services:
     App\Service\FeatureFlags:
         arguments:
             $featureLeadsEnabled: '%feature.leads.enabled%'
+
+    # Captcha verifier (null by default; enable via env if needed)
+    App\Service\Captcha\CaptchaVerifierInterface: '@App\Service\Captcha\NullCaptchaVerifier'
+    App\Service\Captcha\NullCaptchaVerifier:
+        arguments:
+            $enabled: '%env(bool:CAPTCHA_ENABLED)%'
+
+    App\MessageHandler\DispatchLeadMessageHandler:
+        arguments:
+            $claimTtlMinutes: '%lead.claim_ttl_minutes%'
+            $appBaseUrl: '%env(APP_BASE_URL)%'
+            $outreachFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
+            $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+            $recipientTokenFactory: '@App\Service\Lead\LeadRecipientTokenFactory'
+            $urlBuilder: '@App\Service\Lead\LeadUrlBuilder'
+            $emailFactory: '@App\Service\Lead\OutreachEmailFactory'
+
+    App\Service\Lead\LeadUrlBuilder:
+        arguments:
+            $appBaseUrl: '%env(APP_BASE_URL)%'
+
+    App\Service\Lead\OutreachEmailFactory:
+        arguments:
+            $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
+            $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+ 
+    App\Command\SendTestEmailCommand:
+        arguments:
+            $defaultFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
