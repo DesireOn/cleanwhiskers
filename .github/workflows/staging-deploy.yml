@@ -19,6 +19,12 @@ jobs:
       EC2_USER: ${{ secrets.EC2_USER }}
       STAGING_BASIC_AUTH_USER: ${{ secrets.STAGING_BASIC_AUTH_USER }}
       STAGING_BASIC_AUTH_PASS: ${{ secrets.STAGING_BASIC_AUTH_PASS }}
+      # Email + app configuration (configure as repo secrets)
+      STAGING_MAILER_DSN: ${{ secrets.STAGING_MAILER_DSN }}
+      STAGING_OUTREACH_CONTACT_EMAIL: ${{ secrets.STAGING_OUTREACH_CONTACT_EMAIL }}
+      STAGING_APP_SECRET: ${{ secrets.STAGING_APP_SECRET }}
+      STAGING_APP_BASE_URL: ${{ secrets.STAGING_APP_BASE_URL }}
+      STAGING_LEADS_FEATURE_ENABLED: ${{ secrets.STAGING_LEADS_FEATURE_ENABLED }}
 
     steps:
       - name: Checkout Code
@@ -35,6 +41,12 @@ jobs:
           cp .env.staging .env
           envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD $STAGING_BASIC_AUTH_USER $STAGING_BASIC_AUTH_PASS' < .env > .env.tmp
           mv .env.tmp .env
+          # Inject staging secrets for mailer and app settings if provided
+          if [ -n "${STAGING_MAILER_DSN}" ]; then echo "MAILER_DSN=${STAGING_MAILER_DSN}" >> .env; fi
+          if [ -n "${STAGING_OUTREACH_CONTACT_EMAIL}" ]; then echo "OUTREACH_CONTACT_EMAIL=${STAGING_OUTREACH_CONTACT_EMAIL}" >> .env; fi
+          if [ -n "${STAGING_APP_SECRET}" ]; then echo "APP_SECRET=${STAGING_APP_SECRET}" >> .env; fi
+          if [ -n "${STAGING_APP_BASE_URL}" ]; then echo "APP_BASE_URL=${STAGING_APP_BASE_URL}" >> .env; fi
+          if [ -n "${STAGING_LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED=${STAGING_LEADS_FEATURE_ENABLED}" >> .env; fi
 
       - name: Install Dependencies
         env:
@@ -109,3 +121,22 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
           "cd /var/www/staging.cleanwhiskers.com && php bin/console cache:clear --env=prod"
+
+      - name: Install/Restart Messenger Worker (Staging)
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
+          "cd /var/www/staging.cleanwhiskers.com && \
+           php bin/console messenger:stop-workers --env=prod || true && \
+           # Wait up to 15s for any old consumers to exit
+           for i in $(seq 1 15); do \
+             if ! pgrep -f 'messenger:consume' >/dev/null; then echo 'All workers stopped'; break; fi; \
+             sleep 1; \
+           done && \
+           sudo cp /var/www/staging.cleanwhiskers.com/deploy/messenger-worker-staging.service /etc/systemd/system/messenger-worker-staging.service && \
+           sudo systemctl daemon-reload && \
+           sudo systemctl enable messenger-worker-staging.service && \
+           sudo systemctl restart messenger-worker-staging.service && \
+           sudo systemctl is-active --quiet messenger-worker-staging.service || (sudo systemctl status --no-pager messenger-worker-staging.service; exit 1) && \
+           sudo systemctl status --no-pager messenger-worker-staging.service"

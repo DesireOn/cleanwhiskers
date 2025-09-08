@@ -17,6 +17,12 @@ jobs:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       EC2_HOST: ${{ secrets.EC2_HOST }}
       EC2_USER: ${{ secrets.EC2_USER }}
+      # Email + app configuration (configure as repo secrets)
+      MAILER_DSN: ${{ secrets.MAILER_DSN }}
+      OUTREACH_CONTACT_EMAIL: ${{ secrets.OUTREACH_CONTACT_EMAIL }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+      LEADS_FEATURE_ENABLED: ${{ secrets.LEADS_FEATURE_ENABLED }}
 
     steps:
       - name: Checkout Code
@@ -33,6 +39,12 @@ jobs:
           cp .env.production .env
           envsubst '$RDS_ENDPOINT $DB_USER $DB_PASSWORD' < .env > .env.tmp
           mv .env.tmp .env
+          # Inject production secrets for mailer and app settings if provided
+          if [ -n "${MAILER_DSN}" ]; then echo "MAILER_DSN=${MAILER_DSN}" >> .env; fi
+          if [ -n "${OUTREACH_CONTACT_EMAIL}" ]; then echo "OUTREACH_CONTACT_EMAIL=${OUTREACH_CONTACT_EMAIL}" >> .env; fi
+          if [ -n "${APP_SECRET}" ]; then echo "APP_SECRET=${APP_SECRET}" >> .env; fi
+          if [ -n "${APP_BASE_URL}" ]; then echo "APP_BASE_URL=${APP_BASE_URL}" >> .env; fi
+          if [ -n "${LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED=${LEADS_FEATURE_ENABLED}" >> .env; fi
 
       - name: Install Dependencies
         env:
@@ -105,3 +117,22 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && php bin/console cache:clear --env=prod"
+
+      - name: Install/Restart Messenger Worker (Production)
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "cd /var/www/cleanwhiskers.com && \
+           php bin/console messenger:stop-workers --env=prod || true && \
+           # Wait up to 15s for any old consumers to exit
+           for i in $(seq 1 15); do \
+             if ! pgrep -f 'messenger:consume' >/dev/null; then echo 'All workers stopped'; break; fi; \
+             sleep 1; \
+           done && \
+           sudo cp /var/www/cleanwhiskers.com/deploy/messenger-worker-prod.service /etc/systemd/system/messenger-worker-prod.service && \
+           sudo systemctl daemon-reload && \
+           sudo systemctl enable messenger-worker-prod.service && \
+           sudo systemctl restart messenger-worker-prod.service && \
+           sudo systemctl is-active --quiet messenger-worker-prod.service || (sudo systemctl status --no-pager messenger-worker-prod.service; exit 1) && \
+           sudo systemctl status --no-pager messenger-worker-prod.service"

@@ -64,3 +64,6 @@ services:
             $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
  
+    App\Command\SendTestEmailCommand:
+        arguments:
+            $defaultFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
