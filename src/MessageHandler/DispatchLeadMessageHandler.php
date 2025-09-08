@@ -58,7 +58,7 @@ final class DispatchLeadMessageHandler
             return;
         }
 
-        if ($lead->getStatus() !== Lead::STATUS_PENDING) {
+        if (!$this->isLeadPending($lead)) {
             $this->logger->info('Lead dispatch aborted: lead not pending', [
                 'leadId' => $message->getLeadId(),
                 'status' => $lead->getStatus(),
@@ -66,61 +66,128 @@ final class DispatchLeadMessageHandler
             return;
         }
 
-        // Run segmentation to find matching recipients
-        $segmentation = $this->segmentation->findMatchingRecipients($lead);
+        $segmentationResult = $this->segmentation->findMatchingRecipients($lead);
+        $existingEmails = $this->loadExistingEmails($lead);
 
-        // Build a set of existing recipient emails for this lead (normalized)
-        $existing = $this->leadRecipientRepository->findByLead($lead);
-        $existingEmails = [];
-        foreach ($existing as $r) {
-            $existingEmails[mb_strtolower(trim($r->getEmail()))] = true;
+        [$newlyCreated, $createdCount] = $this->createRecipients($lead, $segmentationResult->getRecipients(), $existingEmails);
+        if ($createdCount > 0) {
+            $this->em->flush();
         }
 
+        [$sent, $failed] = $this->sendInvites($lead, $newlyCreated);
+        if ($sent > 0) {
+            $this->em->flush();
+        }
+
+        $skipped = count($segmentationResult->getRecipients()) - $createdCount;
+        $this->logger->info('Lead dispatch processed', [
+            'leadId' => $lead->getId(),
+            'createdRecipients' => $createdCount,
+            'emailsSent' => $sent,
+            'emailsFailed' => $failed,
+            'skippedExisting' => $skipped,
+        ]);
+
+        $this->auditLogs->logLeadDispatchSummary(
+            $lead,
+            createdRecipients: $createdCount,
+            emailsSent: $sent,
+            emailsFailed: $failed,
+            skippedExisting: $skipped,
+        );
+    }
+
+    private function isLeadPending(Lead $lead): bool
+    {
+        return $lead->getStatus() === Lead::STATUS_PENDING;
+    }
+
+    /**
+     * @return array<string, true> Normalized set of existing recipient emails for the lead
+     */
+    private function loadExistingEmails(Lead $lead): array
+    {
+        $existing = $this->leadRecipientRepository->findByLead($lead);
+        $emails = [];
+        foreach ($existing as $r) {
+            $emails[$this->normalizeEmail($r->getEmail())] = true;
+        }
+        return $emails;
+    }
+
+    private function normalizeEmail(string $email): string
+    {
+        return mb_strtolower(trim($email));
+    }
+
+    /**
+     * @param array<int, array{profile: mixed, email: string, score?: float, reasons?: array<mixed>}> $candidates
+     * @param array<string, true> $existingEmails
+     * @return array{0: array<int, array{entity: \App\Entity\LeadRecipient, rawToken: string}>, 1: int}
+     */
+    private function createRecipients(Lead $lead, array $candidates, array &$existingEmails): array
+    {
         $created = 0;
         $newlyCreated = [];
-        foreach ($segmentation->getRecipients() as $row) {
-            $email = mb_strtolower(trim($row['email']));
-            if ('' === $email) {
+
+        foreach ($candidates as $row) {
+            $normalizedEmail = $this->normalizeEmail($row['email'] ?? '');
+            if ($normalizedEmail === '') {
                 continue;
             }
 
-            // Double-check suppression at insert time
-            if ($this->emailSuppressions->isSuppressed($email)) {
+            if ($this->emailSuppressions->isSuppressed($normalizedEmail)) {
                 $this->logger->info('Skipping suppressed recipient email', [
                     'leadId' => $lead->getId(),
-                    'email' => $email,
+                    'email' => $normalizedEmail,
                 ]);
                 continue;
             }
 
-            if (isset($existingEmails[$email])) {
-                continue; // already have this recipient for this lead
+            if (isset($existingEmails[$normalizedEmail])) {
+                continue;
             }
 
-            // Compute claim token and expiry
-            $raw = bin2hex(random_bytes(16));
-            $hash = hash('sha256', $raw);
-            $expiresAt = (new \DateTimeImmutable())->modify('+' . max(1, $this->claimTtlMinutes) . ' minutes');
+            [$hash, $raw, $expiresAt] = $this->issueRecipientToken();
 
-            $recipient = new \App\Entity\LeadRecipient($lead, $email, $hash, $expiresAt);
-            $recipient->setGroomerProfile($row['profile']);
+            $recipient = new \App\Entity\LeadRecipient($lead, $normalizedEmail, $hash, $expiresAt);
+            if (isset($row['profile'])) {
+                $recipient->setGroomerProfile($row['profile']);
+            }
+
             $this->em->persist($recipient);
-            $existingEmails[$email] = true;
+            $existingEmails[$normalizedEmail] = true;
             $created++;
-            // Keep the raw token so we can include it in the outreach email
+
             $newlyCreated[] = [
                 'entity' => $recipient,
                 'rawToken' => $raw,
             ];
         }
 
-        if ($created > 0) {
-            $this->em->flush();
-        }
+        return [$newlyCreated, $created];
+    }
 
-        // Send outreach emails to newly created recipients
+    /**
+     * @return array{0: string, 1: string, 2: \DateTimeImmutable} [hash, raw, expiresAt]
+     */
+    private function issueRecipientToken(): array
+    {
+        $raw = bin2hex(random_bytes(16));
+        $hash = hash('sha256', $raw);
+        $expiresAt = (new \DateTimeImmutable())->modify('+' . max(1, $this->claimTtlMinutes) . ' minutes');
+        return [$hash, $raw, $expiresAt];
+    }
+
+    /**
+     * @param array<int, array{entity: \App\Entity\LeadRecipient, rawToken: string}> $newlyCreated
+     * @return array{0:int,1:int} [sent, failed]
+     */
+    private function sendInvites(Lead $lead, array $newlyCreated): array
+    {
         $sent = 0;
         $failed = 0;
+
         foreach ($newlyCreated as $entry) {
             /** @var \App\Entity\LeadRecipient $recipient */
             $recipient = $entry['entity'];
@@ -133,24 +200,21 @@ final class DispatchLeadMessageHandler
                 $subject = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
                 $text = $this->renderPlainTextEmail($lead, $claimUrl, $unsubUrl, $recipient->getTokenExpiresAt());
 
-                $message = (new Email())
+                $email = (new Email())
                     ->from($this->outreachFrom)
                     ->to($recipient->getEmail())
                     ->subject($subject)
                     ->text($text);
 
-                // Mark as sent before sending; revert on failure in catch
                 $recipient->setStatus(\App\Entity\LeadRecipient::STATUS_SENT);
                 $recipient->setInviteSentAt(new \DateTimeImmutable());
 
-                $this->mailer->send($message);
+                $this->mailer->send($email);
                 $sent++;
 
-                // Log successful outreach email in AuditLog via repository helper
                 $this->auditLogs->logOutreachEmailSent($lead, $recipient);
             } catch (\Throwable $e) {
                 $failed++;
-                // Revert status if sending failed
                 $recipient->setStatus(\App\Entity\LeadRecipient::STATUS_QUEUED);
                 $recipient->setInviteSentAt(null);
                 $this->logger->error('Failed sending outreach email', [
@@ -159,31 +223,11 @@ final class DispatchLeadMessageHandler
                     'email' => $recipient->getEmail(),
                     'error' => $e->getMessage(),
                 ]);
-                // Log failure in audit logs
                 $this->auditLogs->logOutreachEmailFailed($lead, $recipient, $e->getMessage());
             }
         }
 
-        if ($sent > 0) {
-            $this->em->flush();
-        }
-
-        $this->logger->info('Lead dispatch processed', [
-            'leadId' => $lead->getId(),
-            'createdRecipients' => $created,
-            'emailsSent' => $sent,
-            'emailsFailed' => $failed,
-            'skippedExisting' => count($segmentation->getRecipients()) - $created,
-        ]);
-
-        // Log summary in audit logs as well
-        $this->auditLogs->logLeadDispatchSummary(
-            $lead,
-            createdRecipients: $created,
-            emailsSent: $sent,
-            emailsFailed: $failed,
-            skippedExisting: count($segmentation->getRecipients()) - $created,
-        );
+        return [$sent, $failed];
     }
 
     private function buildSignedClaimUrl(int $leadId, int $recipientId, string $email, string $rawToken, \DateTimeImmutable $expiresAt): string
