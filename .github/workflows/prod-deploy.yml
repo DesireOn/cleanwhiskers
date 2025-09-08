@@ -122,32 +122,22 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'REMOTE'
-            set -euo pipefail
-            cd /var/www/cleanwhiskers.com
-
-            # Stop existing workers (ignore if none)
-            php bin/console messenger:stop-workers --env=prod || true
-
-            # Wait up to 15s for any old consumers to exit
-            for i in $(seq 1 15); do
-              if ! pgrep -f messenger:consume >/dev/null; then
-                echo "All workers stopped"
-                break
-              fi
-              sleep 1
-            done
-
-            # Update and restart systemd service
-            sudo cp /var/www/cleanwhiskers.com/deploy/messenger-worker-prod.service /etc/systemd/system/messenger-worker-prod.service
-            sudo systemctl daemon-reload
-            sudo systemctl enable messenger-worker-prod.service
-            sudo systemctl restart messenger-worker-prod.service
-
-            if ! sudo systemctl is-active --quiet messenger-worker-prod.service; then
-              sudo systemctl status --no-pager messenger-worker-prod.service
-              exit 1
-            fi
-
-            sudo systemctl status --no-pager messenger-worker-prod.service
-REMOTE
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST 'set -euo pipefail; \
+            cd /var/www/cleanwhiskers.com; \
+            php bin/console messenger:stop-workers --env=prod || true; \
+            for i in $(seq 1 15); do \
+              if ! pgrep -f messenger:consume >/dev/null; then \
+                echo "All workers stopped"; \
+                break; \
+              fi; \
+              sleep 1; \
+            done; \
+            sudo cp /var/www/cleanwhiskers.com/deploy/messenger-worker-prod.service /etc/systemd/system/messenger-worker-prod.service; \
+            sudo systemctl daemon-reload; \
+            sudo systemctl enable messenger-worker-prod.service; \
+            sudo systemctl restart messenger-worker-prod.service; \
+            if ! sudo systemctl is-active --quiet messenger-worker-prod.service; then \
+              sudo systemctl status --no-pager messenger-worker-prod.service; \
+              exit 1; \
+            fi; \
+            sudo systemctl status --no-pager messenger-worker-prod.service'
