@@ -127,7 +127,9 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_STAGING_HOST \
-          "sudo cp /var/www/staging.cleanwhiskers.com/deploy/messenger-worker-staging.service /etc/systemd/system/messenger-worker-staging.service && \
+          "cd /var/www/staging.cleanwhiskers.com && \
+           php bin/console messenger:stop-workers --env=prod || true && \
+           sudo cp /var/www/staging.cleanwhiskers.com/deploy/messenger-worker-staging.service /etc/systemd/system/messenger-worker-staging.service && \
            sudo systemctl daemon-reload && \
            sudo systemctl enable messenger-worker-staging.service && \
            sudo systemctl restart messenger-worker-staging.service && \
