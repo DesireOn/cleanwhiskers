@@ -6,6 +6,7 @@ namespace App\MessageHandler;
 
 use App\Entity\Lead;
 use App\Entity\AuditLog;
+use App\Repository\AuditLogRepository;
 use App\Message\DispatchLeadMessage;
 use App\Repository\LeadRepository;
 use App\Repository\LeadRecipientRepository;
@@ -28,6 +29,7 @@ final class DispatchLeadMessageHandler
         private readonly LeadRecipientRepository $leadRecipientRepository,
         private readonly EmailSuppressionRepository $emailSuppressions,
         private readonly LeadSegmentationService $segmentation,
+        private readonly AuditLogRepository $auditLogs,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
         private readonly MailerInterface $mailer,
@@ -144,21 +146,8 @@ final class DispatchLeadMessageHandler
                 $this->mailer->send($message);
                 $sent++;
 
-                // Log successful outreach email in AuditLog
-                if (null !== $recipient->getId() && null !== $lead->getId()) {
-                    $log = new AuditLog(
-                        event: 'outreach_email_sent',
-                        actorType: AuditLog::ACTOR_SYSTEM,
-                        actorId: null,
-                        subjectType: AuditLog::SUBJECT_EMAIL,
-                        subjectId: $recipient->getId(),
-                        metadata: [
-                            'leadId' => $lead->getId(),
-                            'recipientEmail' => $recipient->getEmail(),
-                        ]
-                    );
-                    $this->em->persist($log);
-                }
+                // Log successful outreach email in AuditLog via repository helper
+                $this->auditLogs->logOutreachEmailSent($lead, $recipient);
             } catch (\Throwable $e) {
                 $failed++;
                 // Revert status if sending failed

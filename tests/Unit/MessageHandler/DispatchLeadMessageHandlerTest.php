@@ -11,6 +11,7 @@ use App\Entity\Service;
 use App\Message\DispatchLeadMessage;
 use App\MessageHandler\DispatchLeadMessageHandler;
 use App\Repository\EmailSuppressionRepository;
+use App\Repository\AuditLogRepository;
 use App\Repository\LeadRecipientRepository;
 use App\Repository\LeadRepository;
 use App\Service\FeatureFlags;
@@ -34,6 +35,8 @@ final class DispatchLeadMessageHandlerTest extends TestCase
     private EmailSuppressionRepository $suppressions;
     /** @var LeadSegmentationService&MockObject */
     private LeadSegmentationService $segmentation;
+    /** @var AuditLogRepository&MockObject */
+    private AuditLogRepository $auditLogs;
     /** @var EntityManagerInterface&MockObject */
     private EntityManagerInterface $em;
     /** @var LoggerInterface&MockObject */
@@ -50,6 +53,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->recipients = $this->createMock(LeadRecipientRepository::class);
         $this->suppressions = $this->createMock(EmailSuppressionRepository::class);
         $this->segmentation = $this->createMock(LeadSegmentationService::class);
+        $this->auditLogs = $this->createMock(AuditLogRepository::class);
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->mailer = $this->createMock(MailerInterface::class);
@@ -64,6 +68,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
             $this->recipients,
             $this->suppressions,
             $this->segmentation,
+            $this->auditLogs,
             $this->em,
             $this->logger,
             $this->mailer,
@@ -258,6 +263,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
             $this->recipients,
             $this->suppressions,
             $this->segmentation,
+            $this->auditLogs,
             $this->em,
             $this->logger,
             $this->mailer,
