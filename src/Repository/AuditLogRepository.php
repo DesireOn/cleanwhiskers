@@ -35,7 +35,7 @@ class AuditLogRepository extends ServiceEntityRepository
             subjectId: $subjectId,
             metadata: $metadata,
         );
-        $this->_em->persist($log);
+        $this->getEntityManager()->persist($log);
         return $log;
     }
 
@@ -71,6 +71,27 @@ class AuditLogRepository extends ServiceEntityRepository
                 'recipientEmail' => $recipient->getEmail(),
                 'error' => $error,
             ],
+        );
+    }
+
+    /**
+     * Log that a lead was created in the system.
+     *
+     * @param array<string,mixed> $metadata
+     */
+    public function logLeadCreated(Lead $lead, array $metadata = [], string $actorType = AuditLog::ACTOR_SYSTEM, ?int $actorId = null): void
+    {
+        if ($lead->getId() === null) {
+            return;
+        }
+
+        $this->log(
+            event: 'lead.created',
+            subjectType: AuditLog::SUBJECT_LEAD,
+            subjectId: (int) $lead->getId(),
+            metadata: $metadata,
+            actorType: $actorType,
+            actorId: $actorId,
         );
     }
 }

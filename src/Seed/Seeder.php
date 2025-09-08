@@ -11,6 +11,7 @@ use App\Entity\Lead;
 use App\Entity\LeadRecipient;
 use App\Entity\EmailSuppression;
 use App\Entity\AuditLog;
+use App\Repository\AuditLogRepository;
 use App\Entity\Review;
 use App\Entity\Service;
 use App\Entity\User;
@@ -37,6 +38,7 @@ final class Seeder
         private readonly BookingRequestRepository $bookingRequestRepository,
         private readonly ?LeadTokenFactory $leadTokenFactory = null,
         private readonly ?EmailSuppressionRepository $emailSuppressionRepository = null,
+        private readonly ?AuditLogRepository $auditLogs = null,
     ) {
     }
 
@@ -247,9 +249,13 @@ final class Seeder
             $this->em->flush();
 
             if ($withSamples) {
-                // Create an audit log entry for the created lead
+                // Create an audit log entry for the created lead via repository helper (if available)
                 $leadEntity = $this->em->getRepository(Lead::class)->findOneBy(['email' => 'jane.owner@example.com']);
-                if ($leadEntity instanceof Lead && $leadEntity->getId() !== null) {
+                if ($leadEntity instanceof Lead && $this->auditLogs !== null) {
+                    $this->auditLogs->logLeadCreated($leadEntity, ['source' => 'seeder']);
+                    $this->em->flush();
+                } elseif ($leadEntity instanceof Lead && $leadEntity->getId() !== null) {
+                    // Fallback without repository (should rarely occur)
                     $log = new AuditLog(
                         event: 'lead.created',
                         actorType: AuditLog::ACTOR_SYSTEM,
