@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}There was a problem | CleanWhiskers{% endblock %}
+
+{% block body %}
+  <section class="form-errors" aria-labelledby="error-title">
+    <div class="container">
+      <h1 id="error-title">Please fix the following</h1>
+      <ul>
+        {% for e in errors %}
+          <li>{{ e }}</li>
+        {% endfor %}
+      </ul>
+      <p><a href="javascript:history.back()">Go back</a> and try again.</p>
+    </div>
+  </section>
+{% endblock %}
+
