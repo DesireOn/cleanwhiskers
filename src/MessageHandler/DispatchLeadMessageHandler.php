@@ -12,6 +12,9 @@ use App\Repository\LeadRepository;
 use App\Repository\LeadRecipientRepository;
 use App\Repository\EmailSuppressionRepository;
 use App\Service\Lead\LeadSegmentationService;
+use App\Service\Lead\LeadRecipientTokenFactory;
+use App\Service\Lead\LeadUrlBuilder;
+use App\Service\Lead\OutreachEmailFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\FeatureFlags;
 use Psr\Log\LoggerInterface;
@@ -39,8 +42,18 @@ final class DispatchLeadMessageHandler
         private readonly string $outreachFrom = 'support@example.com',
         private readonly string $companyName = 'CleanWhiskers',
         private readonly int $claimTtlMinutes = 60,
+        ?LeadRecipientTokenFactory $recipientTokenFactory = null,
+        ?LeadUrlBuilder $urlBuilder = null,
+        ?OutreachEmailFactory $emailFactory = null,
     ) {
+        $this->recipientTokenFactory = $recipientTokenFactory ?? new LeadRecipientTokenFactory();
+        $this->urlBuilder = $urlBuilder ?? new LeadUrlBuilder($this->uriSigner, $this->appBaseUrl);
+        $this->emailFactory = $emailFactory ?? new OutreachEmailFactory($this->outreachFrom, $this->companyName);
     }
+
+    private LeadRecipientTokenFactory $recipientTokenFactory;
+    private LeadUrlBuilder $urlBuilder;
+    private OutreachEmailFactory $emailFactory;
 
     public function __invoke(DispatchLeadMessage $message): void
     {
@@ -149,7 +162,7 @@ final class DispatchLeadMessageHandler
                 continue;
             }
 
-            [$hash, $raw, $expiresAt] = $this->issueRecipientToken();
+            [$hash, $raw, $expiresAt] = $this->recipientTokenFactory->issue($this->claimTtlMinutes);
 
             $recipient = new \App\Entity\LeadRecipient($lead, $normalizedEmail, $hash, $expiresAt);
             if (isset($row['profile'])) {
@@ -167,17 +180,6 @@ final class DispatchLeadMessageHandler
     }
 
     /**
-     * @return array{0: string, 1: string, 2: \DateTimeImmutable} [hash, raw, expiresAt]
-     */
-    private function issueRecipientToken(): array
-    {
-        $raw = bin2hex(random_bytes(16));
-        $hash = hash('sha256', $raw);
-        $expiresAt = (new \DateTimeImmutable())->modify('+' . max(1, $this->claimTtlMinutes) . ' minutes');
-        return [$hash, $raw, $expiresAt];
-    }
-
-    /**
      * @param array<int, LeadRecipientInvite> $newlyCreated
      * @return array{0:int,1:int} [sent, failed]
      */
@@ -191,17 +193,10 @@ final class DispatchLeadMessageHandler
             $rawToken = $entry->rawToken;
 
             try {
-                $claimUrl = $this->buildSignedClaimUrl((int) ($lead->getId() ?? 0), (int) ($recipient->getId() ?? 0), $recipient->getEmail(), $rawToken, $recipient->getTokenExpiresAt());
-                $unsubUrl = $this->buildSignedUnsubscribeUrl($recipient->getEmail());
+                $claimUrl = $this->urlBuilder->buildSignedClaimUrl((int) ($lead->getId() ?? 0), (int) ($recipient->getId() ?? 0), $recipient->getEmail(), $rawToken, $recipient->getTokenExpiresAt());
+                $unsubUrl = $this->urlBuilder->buildSignedUnsubscribeUrl($recipient->getEmail());
 
-                $subject = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
-                $text = $this->renderPlainTextEmail($lead, $claimUrl, $unsubUrl, $recipient->getTokenExpiresAt());
-
-                $email = (new Email())
-                    ->from($this->outreachFrom)
-                    ->to($recipient->getEmail())
-                    ->subject($subject)
-                    ->text($text);
+                $email = $this->emailFactory->buildLeadInviteEmail($lead, $recipient->getEmail(), $claimUrl, $unsubUrl, $recipient->getTokenExpiresAt());
 
                 $recipient->setStatus(\App\Entity\LeadRecipient::STATUS_SENT);
                 $recipient->setInviteSentAt(new \DateTimeImmutable());
@@ -227,37 +222,5 @@ final class DispatchLeadMessageHandler
         return [$sent, $failed];
     }
 
-    private function buildSignedClaimUrl(int $leadId, int $recipientId, string $email, string $rawToken, \DateTimeImmutable $expiresAt): string
-    {
-        $query = http_build_query([
-            'lid' => (int) $leadId,
-            'rid' => (int) $recipientId,
-            'email' => $email,
-            'token' => $rawToken,
-            'exp' => $expiresAt->getTimestamp(),
-        ]);
-        $url = rtrim($this->appBaseUrl, '/') . '/leads/claim?' . $query;
-        return $this->uriSigner->sign($url);
-    }
-
-    private function buildSignedUnsubscribeUrl(string $email): string
-    {
-        $query = http_build_query(['email' => $email]);
-        $url = rtrim($this->appBaseUrl, '/') . '/unsubscribe?' . $query;
-        return $this->uriSigner->sign($url);
-    }
-
-    private function renderPlainTextEmail(Lead $lead, string $claimUrl, string $unsubUrl, \DateTimeImmutable $expiresAt): string
-    {
-        $lines = [];
-        $lines[] = sprintf('You have a new %s lead in %s.', $lead->getService()->getName(), $lead->getCity()->getName());
-        $lines[] = '';
-        $lines[] = sprintf('Claim this lead: %s', $claimUrl);
-        $lines[] = sprintf('This claim link expires on %s.', $expiresAt->format('Y-m-d H:i T'));
-        $lines[] = '';
-        $lines[] = sprintf('If you no longer wish to receive outreach emails, unsubscribe here: %s', $unsubUrl);
-        $lines[] = '';
-        $lines[] = sprintf('— %s', $this->companyName);
-        return implode("\n", $lines);
-    }
+    // Token generation, URL building, and email rendering are delegated to services.
 }
