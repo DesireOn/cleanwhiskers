@@ -109,6 +109,8 @@ final class DispatchLeadMessageHandler
             emailsFailed: $failed,
             skippedExisting: $skipped,
         );
+
+        $this->em->flush();
     }
 
     private function isLeadPending(Lead $lead): bool

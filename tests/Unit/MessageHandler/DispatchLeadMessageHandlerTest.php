@@ -149,8 +149,8 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             $persisted = $entity;
         });
-        // Two flushes: one after creating recipients, one after marking sent
-        $this->em->expects($this->exactly(2))->method('flush');
+        // Three flushes: after creation, after marking sent, and final summary flush
+        $this->em->expects($this->exactly(3))->method('flush');
 
         // Signer returns same URL with #signed
         $this->signer->method('sign')->willReturnCallback(static function (string $url): string {
@@ -262,7 +262,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
                 $persisted[] = $entity;
             }
         });
-        $this->em->expects($this->exactly(2))->method('flush');
+        $this->em->expects($this->exactly(3))->method('flush');
 
         $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
         $this->mailer->expects($this->once())->method('send');
@@ -289,7 +289,8 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
         $this->em->expects($this->never())->method('persist');
-        $this->em->expects($this->never())->method('flush');
+        // Final summary is logged and flushed even when none created
+        $this->em->expects($this->once())->method('flush');
         $this->mailer->expects($this->never())->method('send');
 
         ($this->handler())(new DispatchLeadMessage(3001));
@@ -318,7 +319,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
                 $captured = $entity;
             }
         });
-        $this->em->expects($this->exactly(2))->method('flush');
+        $this->em->expects($this->exactly(3))->method('flush');
 
         $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
         $this->mailer->expects($this->once())->method('send');
@@ -367,7 +368,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
         $this->em->expects($this->atLeastOnce())->method('persist');
-        $this->em->expects($this->exactly(2))->method('flush');
+        $this->em->expects($this->exactly(3))->method('flush');
 
         // Record URLs passed to sign() and assert content/order afterwards
         $signedUrls = [];
@@ -421,8 +422,8 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             $persisted = $entity;
         });
-        // Only one flush (after creation) because send fails (no post-send flush)
-        $this->em->expects($this->once())->method('flush');
+        // Two flushes: after creation and final summary (send failed, no mid flush)
+        $this->em->expects($this->exactly(2))->method('flush');
 
         $this->signer->method('sign')->willReturnCallback(static function (string $url): string {
             return $url . '#sig';
@@ -485,7 +486,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
             }
         });
         // Flush after create and after at least one send success
-        $this->em->expects($this->exactly(2))->method('flush');
+        $this->em->expects($this->exactly(3))->method('flush');
 
         // Signer returns signed URL
         $this->signer->method('sign')->willReturnCallback(static function (string $url): string {
