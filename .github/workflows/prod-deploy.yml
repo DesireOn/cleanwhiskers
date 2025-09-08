@@ -117,3 +117,14 @@ jobs:
           chmod 600 private_key.pem
           ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
           "cd /var/www/cleanwhiskers.com && php bin/console cache:clear --env=prod"
+
+      - name: Install/Restart Messenger Worker (Production)
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST \
+          "sudo cp /var/www/cleanwhiskers.com/deploy/messenger-worker-prod.service /etc/systemd/system/messenger-worker-prod.service && \
+           sudo systemctl daemon-reload && \
+           sudo systemctl enable messenger-worker-prod.service && \
+           sudo systemctl restart messenger-worker-prod.service && \
+           sudo systemctl status --no-pager messenger-worker-prod.service"
