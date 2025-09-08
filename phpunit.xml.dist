@@ -52,6 +52,8 @@
         <!-- Provide safe defaults for transports to avoid EnvNotFound errors in tests -->
         <env name="MESSENGER_TRANSPORT_DSN" value="in-memory://"/>
         <env name="MESSENGER_FAILURE_TRANSPORT_DSN" value="in-memory://"/>
+        <!-- Provide CORS default to avoid EnvNotFound in functional tests -->
+        <env name="CORS_ALLOW_ORIGIN" value="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"/>
         <!-- Silence deprecations in CI without hiding them locally -->
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
