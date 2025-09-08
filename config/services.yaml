@@ -45,3 +45,15 @@ services:
             $appBaseUrl: '%env(APP_BASE_URL)%'
             $outreachFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+            $recipientTokenFactory: '@App\Service\Lead\LeadRecipientTokenFactory'
+            $urlBuilder: '@App\Service\Lead\LeadUrlBuilder'
+            $emailFactory: '@App\Service\Lead\OutreachEmailFactory'
+
+    App\Service\Lead\LeadUrlBuilder:
+        arguments:
+            $appBaseUrl: '%env(APP_BASE_URL)%'
+
+    App\Service\Lead\OutreachEmailFactory:
+        arguments:
+            $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
+            $companyName: '%env(OUTREACH_COMPANY_NAME)%'
