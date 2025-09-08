@@ -7,7 +7,7 @@ Type=simple
 User=www-data
 WorkingDirectory=/var/www/staging.cleanwhiskers.com
 Environment=APP_ENV=prod
-ExecStart=/usr/bin/php bin/console messenger:consume --time-limit=3600 --env=prod -vv
+ExecStart=/usr/bin/php bin/console messenger:consume --time-limit=3600 --memory-limit=256M --env=prod -vv
 Restart=always
 RestartSec=5s
 NoNewPrivileges=true
