@@ -169,6 +169,73 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->assertSame(LeadRecipient::STATUS_SENT, $persisted->getStatus());
     }
 
+    public function testCallsAuditLogSummaryWithCounters(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+
+        // One existing recipient to increment skippedExisting
+        $existing = new LeadRecipient($lead, 'dupe@example.com', 'hash', (new \DateTimeImmutable())->modify('+1 day'));
+        $this->recipients->method('findByLead')->with($lead)->willReturn([$existing]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'dupe@example.com', 0.9, []);
+        $segResult->addRecipient($profile, 'new1@example.com', 0.8, []);
+        $segResult->addRecipient($profile, 'new2@example.com', 0.7, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+        $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
+        $this->mailer->expects($this->exactly(2))->method('send');
+
+        // Expect a single summary log with counters
+        $this->auditLogs->expects($this->once())
+            ->method('logLeadDispatchSummary')
+            ->with($lead, createdRecipients: 2, emailsSent: 2, emailsFailed: 0, skippedExisting: 1);
+
+        ($this->handler())(new DispatchLeadMessage(6001));
+
+        $this->addToAssertionCount(1);
+    }
+
+    public function testLogsSuccessAndFailureAuditEvents(): void
+    {
+        $lead = $this->makeLead();
+        $lead->setStatus(Lead::STATUS_PENDING);
+
+        $this->leads->method('find')->willReturn($lead);
+        $this->recipients->method('findByLead')->with($lead)->willReturn([]);
+
+        $segResult = new LeadSegmentationResult();
+        $profile = $this->getMockBuilder(\App\Entity\GroomerProfile::class)->disableOriginalConstructor()->onlyMethods(['getUser'])->getMock();
+        $segResult->addRecipient($profile, 'ok@example.com', 0.9, []);
+        $segResult->addRecipient($profile, 'fail@example.com', 0.8, []);
+        $this->segmentation->method('findMatchingRecipients')->with($lead)->willReturn($segResult);
+
+        $this->suppressions->method('isSuppressed')->willReturn(false);
+        $this->signer->method('sign')->willReturnCallback(static fn(string $url): string => $url);
+
+        $sendCount = 0;
+        $this->mailer->expects($this->exactly(2))->method('send')->willReturnCallback(function () use (&$sendCount): void {
+            $sendCount++;
+            if ($sendCount === 2) {
+                throw new \RuntimeException('boom');
+            }
+        });
+
+        // Expect audit logs for both outcomes, plus the summary
+        $this->auditLogs->expects($this->once())->method('logOutreachEmailSent')->with($lead, $this->isInstanceOf(LeadRecipient::class));
+        $this->auditLogs->expects($this->once())->method('logOutreachEmailFailed')->with($lead, $this->isInstanceOf(LeadRecipient::class), $this->stringContains('boom'));
+        $this->auditLogs->expects($this->once())->method('logLeadDispatchSummary')->with($lead, $this->anything(), $this->anything(), $this->anything(), $this->anything());
+
+        ($this->handler())(new DispatchLeadMessage(6002));
+
+        $this->addToAssertionCount(1);
+    }
+
     public function testSkipsDuplicateEmailsWithCaseAndWhitespaceDifferences(): void
     {
         $lead = $this->makeLead();
