@@ -40,7 +40,7 @@ services:
             $featureLeadsEnabled: '%feature.leads.enabled%'
 
     # Captcha verifier (null by default; enable via env if needed)
-    App\Service\Captcha\CaptchaVerifierInterface: '@App\\Service\\Captcha\\NullCaptchaVerifier'
+    App\Service\Captcha\CaptchaVerifierInterface: '@App\Service\Captcha\NullCaptchaVerifier'
     App\Service\Captcha\NullCaptchaVerifier:
         arguments:
             $enabled: '%env(bool:CAPTCHA_ENABLED)%'
@@ -63,3 +63,4 @@ services:
         arguments:
             $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+ 
