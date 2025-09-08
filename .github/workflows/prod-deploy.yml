@@ -40,11 +40,12 @@ jobs:
           envsubst '$RDS_ENDPOINT $DB_USER $DB_PASSWORD' < .env > .env.tmp
           mv .env.tmp .env
           # Inject production secrets for mailer and app settings if provided
-          if [ -n "${MAILER_DSN}" ]; then echo "MAILER_DSN=${MAILER_DSN}" >> .env; fi
-          if [ -n "${OUTREACH_CONTACT_EMAIL}" ]; then echo "OUTREACH_CONTACT_EMAIL=${OUTREACH_CONTACT_EMAIL}" >> .env; fi
-          if [ -n "${APP_SECRET}" ]; then echo "APP_SECRET=${APP_SECRET}" >> .env; fi
-          if [ -n "${APP_BASE_URL}" ]; then echo "APP_BASE_URL=${APP_BASE_URL}" >> .env; fi
-          if [ -n "${LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED=${LEADS_FEATURE_ENABLED}" >> .env; fi
+          # Quote values to avoid dotenv parsing issues (e.g., '#' starting a comment)
+          if [ -n "${MAILER_DSN}" ]; then echo "MAILER_DSN='${MAILER_DSN}'" >> .env; fi
+          if [ -n "${OUTREACH_CONTACT_EMAIL}" ]; then echo "OUTREACH_CONTACT_EMAIL='${OUTREACH_CONTACT_EMAIL}'" >> .env; fi
+          if [ -n "${APP_SECRET}" ]; then echo "APP_SECRET='${APP_SECRET}'" >> .env; fi
+          if [ -n "${APP_BASE_URL}" ]; then echo "APP_BASE_URL='${APP_BASE_URL}'" >> .env; fi
+          if [ -n "${LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED='${LEADS_FEATURE_ENABLED}'" >> .env; fi
 
       - name: Install Dependencies
         env:
