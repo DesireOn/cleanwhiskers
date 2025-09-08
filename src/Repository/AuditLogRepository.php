@@ -55,4 +55,22 @@ class AuditLogRepository extends ServiceEntityRepository
             ],
         );
     }
+
+    public function logOutreachEmailFailed(Lead $lead, LeadRecipient $recipient, string $error): void
+    {
+        if ($lead->getId() === null || $recipient->getId() === null) {
+            return;
+        }
+
+        $this->log(
+            event: 'outreach_email_failed',
+            subjectType: AuditLog::SUBJECT_EMAIL,
+            subjectId: (int) $recipient->getId(),
+            metadata: [
+                'leadId' => $lead->getId(),
+                'recipientEmail' => $recipient->getEmail(),
+                'error' => $error,
+            ],
+        );
+    }
 }

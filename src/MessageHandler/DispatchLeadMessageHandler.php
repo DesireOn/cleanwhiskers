@@ -159,6 +159,8 @@ final class DispatchLeadMessageHandler
                     'email' => $recipient->getEmail(),
                     'error' => $e->getMessage(),
                 ]);
+                // Log failure in audit logs
+                $this->auditLogs->logOutreachEmailFailed($lead, $recipient, $e->getMessage());
             }
         }
 

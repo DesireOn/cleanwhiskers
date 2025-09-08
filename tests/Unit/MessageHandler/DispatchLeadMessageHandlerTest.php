@@ -351,7 +351,7 @@ final class DispatchLeadMessageHandlerTest extends TestCase
         $this->suppressions->method('isSuppressed')->willReturn(false);
 
         $persisted = null;
-        $this->em->expects($this->once())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
+        $this->em->expects($this->atLeastOnce())->method('persist')->willReturnCallback(function ($entity) use (&$persisted): void {
             $persisted = $entity;
         });
         // Only one flush (after creation) because send fails (no post-send flush)
