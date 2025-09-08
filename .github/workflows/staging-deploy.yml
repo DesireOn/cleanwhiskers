@@ -19,6 +19,12 @@ jobs:
       EC2_USER: ${{ secrets.EC2_USER }}
       STAGING_BASIC_AUTH_USER: ${{ secrets.STAGING_BASIC_AUTH_USER }}
       STAGING_BASIC_AUTH_PASS: ${{ secrets.STAGING_BASIC_AUTH_PASS }}
+      # Email + app configuration (configure as repo secrets)
+      STAGING_MAILER_DSN: ${{ secrets.STAGING_MAILER_DSN }}
+      STAGING_OUTREACH_CONTACT_EMAIL: ${{ secrets.STAGING_OUTREACH_CONTACT_EMAIL }}
+      STAGING_APP_SECRET: ${{ secrets.STAGING_APP_SECRET }}
+      STAGING_APP_BASE_URL: ${{ secrets.STAGING_APP_BASE_URL }}
+      STAGING_LEADS_FEATURE_ENABLED: ${{ secrets.STAGING_LEADS_FEATURE_ENABLED }}
 
     steps:
       - name: Checkout Code
@@ -35,6 +41,12 @@ jobs:
           cp .env.staging .env
           envsubst '$STAGING_RDS_ENDPOINT $STAGING_DB_USER $STAGING_DB_PASSWORD $STAGING_BASIC_AUTH_USER $STAGING_BASIC_AUTH_PASS' < .env > .env.tmp
           mv .env.tmp .env
+          # Inject staging secrets for mailer and app settings if provided
+          if [ -n "${STAGING_MAILER_DSN}" ]; then echo "MAILER_DSN=${STAGING_MAILER_DSN}" >> .env; fi
+          if [ -n "${STAGING_OUTREACH_CONTACT_EMAIL}" ]; then echo "OUTREACH_CONTACT_EMAIL=${STAGING_OUTREACH_CONTACT_EMAIL}" >> .env; fi
+          if [ -n "${STAGING_APP_SECRET}" ]; then echo "APP_SECRET=${STAGING_APP_SECRET}" >> .env; fi
+          if [ -n "${STAGING_APP_BASE_URL}" ]; then echo "APP_BASE_URL=${STAGING_APP_BASE_URL}" >> .env; fi
+          if [ -n "${STAGING_LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED=${STAGING_LEADS_FEATURE_ENABLED}" >> .env; fi
 
       - name: Install Dependencies
         env:
