@@ -64,4 +64,4 @@ jobs:
           fi
 
       - name: Run PHPUnit
-        run: ./bin/phpunit --testdox
+        run: ./bin/phpunit -c phpunit.xml.dist --testdox
