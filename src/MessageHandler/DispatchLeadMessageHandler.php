@@ -19,6 +19,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\UriSigner;
+use App\Service\Lead\LeadRecipientInvite;
 
 #[AsMessageHandler]
 final class DispatchLeadMessageHandler
@@ -123,7 +124,7 @@ final class DispatchLeadMessageHandler
     /**
      * @param array<int, array{profile: mixed, email: string, score?: float, reasons?: array<mixed>}> $candidates
      * @param array<string, true> $existingEmails
-     * @return array{0: array<int, array{entity: \App\Entity\LeadRecipient, rawToken: string}>, 1: int}
+     * @return array{0: array<int, LeadRecipientInvite>, 1: int}
      */
     private function createRecipients(Lead $lead, array $candidates, array &$existingEmails): array
     {
@@ -159,10 +160,7 @@ final class DispatchLeadMessageHandler
             $existingEmails[$normalizedEmail] = true;
             $created++;
 
-            $newlyCreated[] = [
-                'entity' => $recipient,
-                'rawToken' => $raw,
-            ];
+            $newlyCreated[] = new LeadRecipientInvite($recipient, $raw);
         }
 
         return [$newlyCreated, $created];
@@ -180,7 +178,7 @@ final class DispatchLeadMessageHandler
     }
 
     /**
-     * @param array<int, array{entity: \App\Entity\LeadRecipient, rawToken: string}> $newlyCreated
+     * @param array<int, LeadRecipientInvite> $newlyCreated
      * @return array{0:int,1:int} [sent, failed]
      */
     private function sendInvites(Lead $lead, array $newlyCreated): array
@@ -189,9 +187,8 @@ final class DispatchLeadMessageHandler
         $failed = 0;
 
         foreach ($newlyCreated as $entry) {
-            /** @var \App\Entity\LeadRecipient $recipient */
-            $recipient = $entry['entity'];
-            $rawToken = $entry['rawToken'];
+            $recipient = $entry->recipient;
+            $rawToken = $entry->rawToken;
 
             try {
                 $claimUrl = $this->buildSignedClaimUrl((int) ($lead->getId() ?? 0), (int) ($recipient->getId() ?? 0), $recipient->getEmail(), $rawToken, $recipient->getTokenExpiresAt());
