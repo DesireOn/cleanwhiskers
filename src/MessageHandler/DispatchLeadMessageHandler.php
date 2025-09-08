@@ -175,6 +175,15 @@ final class DispatchLeadMessageHandler
             'emailsFailed' => $failed,
             'skippedExisting' => count($segmentation->getRecipients()) - $created,
         ]);
+
+        // Log summary in audit logs as well
+        $this->auditLogs->logLeadDispatchSummary(
+            $lead,
+            createdRecipients: $created,
+            emailsSent: $sent,
+            emailsFailed: $failed,
+            skippedExisting: count($segmentation->getRecipients()) - $created,
+        );
     }
 
     private function buildSignedClaimUrl(int $leadId, int $recipientId, string $email, string $rawToken, \DateTimeImmutable $expiresAt): string

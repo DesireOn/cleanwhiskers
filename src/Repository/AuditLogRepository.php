@@ -94,4 +94,73 @@ class AuditLogRepository extends ServiceEntityRepository
             actorId: $actorId,
         );
     }
+
+    public function logLeadClaimed(Lead $lead, LeadRecipient $recipient, string $actorType = AuditLog::ACTOR_GROOMER, ?int $actorId = null): void
+    {
+        if ($lead->getId() === null || $recipient->getId() === null) {
+            return;
+        }
+
+        $this->log(
+            event: 'lead.claimed',
+            subjectType: AuditLog::SUBJECT_LEAD,
+            subjectId: (int) $lead->getId(),
+            metadata: [
+                'recipientId' => $recipient->getId(),
+                'recipientEmail' => $recipient->getEmail(),
+            ],
+            actorType: $actorType,
+            actorId: $actorId,
+        );
+    }
+
+    public function logLeadDispatchSummary(Lead $lead, int $createdRecipients, int $emailsSent, int $emailsFailed, int $skippedExisting): void
+    {
+        if ($lead->getId() === null) {
+            return;
+        }
+
+        $this->log(
+            event: 'lead.dispatch_summary',
+            subjectType: AuditLog::SUBJECT_LEAD,
+            subjectId: (int) $lead->getId(),
+            metadata: [
+                'createdRecipients' => $createdRecipients,
+                'emailsSent' => $emailsSent,
+                'emailsFailed' => $emailsFailed,
+                'skippedExisting' => $skippedExisting,
+            ],
+        );
+    }
+
+    public function logRecipientUnsubscribed(LeadRecipient $recipient): void
+    {
+        if ($recipient->getId() === null) {
+            return;
+        }
+
+        $lead = $recipient->getLead();
+        $this->log(
+            event: 'email.unsubscribed',
+            subjectType: AuditLog::SUBJECT_EMAIL,
+            subjectId: (int) $recipient->getId(),
+            metadata: [
+                'leadId' => $lead->getId(),
+                'recipientEmail' => $recipient->getEmail(),
+            ],
+        );
+    }
+
+    public function logUnsubscribedEmail(string $email): void
+    {
+        // When no recipient context exists, use subjectId 0 and store email in metadata
+        $this->log(
+            event: 'email.unsubscribed',
+            subjectType: AuditLog::SUBJECT_EMAIL,
+            subjectId: 0,
+            metadata: [
+                'recipientEmail' => $email,
+            ],
+        );
+    }
 }
