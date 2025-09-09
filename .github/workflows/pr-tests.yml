@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # needed to diff against base for coverage on changes
 
       - name: Cache Composer packages
         uses: actions/cache@v3
@@ -35,7 +37,7 @@ jobs:
         with:
           php-version: '8.3'
           extensions: mbstring, intl, pdo_mysql, sqlite3, pdo_sqlite
-          coverage: none
+          coverage: xdebug
 
       - name: Install PHP dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -63,5 +65,18 @@ jobs:
             exit 1
           fi
 
-      - name: Run PHPUnit
-        run: ./bin/phpunit -c phpunit.xml.dist --testdox
+      - name: Run PHPUnit with coverage
+        env:
+          XDEBUG_MODE: coverage
+        run: |
+          mkdir -p build/logs
+          ./bin/phpunit -c phpunit.xml.dist --testdox \
+            --coverage-clover build/logs/clover.xml \
+            --log-junit build/logs/junit.xml
+
+      - name: Enforce 70% coverage on changed PHP files
+        env:
+          MIN_COVERAGE: '70'
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: |
+          php tools/coverage-diff-check.php build/logs/clover.xml "$GITHUB_BASE_REF" "$MIN_COVERAGE"
