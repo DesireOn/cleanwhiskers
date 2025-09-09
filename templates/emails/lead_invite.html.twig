@@ -68,8 +68,10 @@
             <tr>
               <td style="padding:8px 24px 0 24px;">
                 <p style="margin:0 0 16px 0; color:#111827;">Preview the details and claim it if it’s a fit. The secure link expires
-                  {% if expiresAt is defined and expiresAt %}
-                    on <strong>{{ expiresAt|date('Y-m-d H:i T') }}</strong>.
+                  {% if expiresIn is defined and expiresIn %}
+                    <strong>{{ expiresIn }}</strong>.
+                  {% elseif expiresAt is defined and expiresAt %}
+                    <strong>{{ expiresAt|date('Y-m-d H:i T') }}</strong>.
                   {% else %}
                     soon.
                   {% endif %}
