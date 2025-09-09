@@ -73,4 +73,4 @@ services:
     Symfony\Component\HttpFoundation\UriSigner:
         arguments:
             $secret: '%kernel.secret%'
-            $parameter: 'signature'
+            $hashParameter: 'signature'
