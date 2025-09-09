@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace App\Service\Lead;
 
 use App\Entity\Lead;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Email;
+use Twig\Environment;
 
 final class OutreachEmailFactory
 {
     public function __construct(
         private readonly string $fromAddress,
         private readonly string $companyName,
+        private readonly string $companyAddress = '',
+        private readonly string $contactEmail = '',
+        private readonly ?Environment $twig = null,
     ) {}
 
     public function buildLeadInviteEmail(Lead $lead, string $to, string $claimUrl, string $unsubUrl, \DateTimeImmutable $expiresAt): Email
@@ -19,6 +24,29 @@ final class OutreachEmailFactory
         $subject = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
         $text = $this->renderPlainTextEmail($lead, $claimUrl, $unsubUrl, $expiresAt);
 
+        if ($this->twig instanceof Environment) {
+            $email = (new TemplatedEmail())
+                ->from($this->fromAddress)
+                ->to($to)
+                ->subject($subject)
+                ->htmlTemplate('emails/lead_invite.html.twig')
+                ->context([
+                    'lead' => $lead,
+                    'serviceName' => $lead->getService()->getName(),
+                    'cityName' => $lead->getCity()->getName(),
+                    'claimUrl' => $claimUrl,
+                    'unsubUrl' => $unsubUrl,
+                    'expiresAt' => $expiresAt,
+                    'companyName' => $this->companyName,
+                    'companyAddress' => $this->companyAddress,
+                    'contactEmail' => $this->contactEmail ?: $this->fromAddress,
+                ])
+                ->text($text);
+
+            return $email;
+        }
+
+        // Fallback if Twig not available
         return (new Email())
             ->from($this->fromAddress)
             ->to($to)
@@ -40,4 +68,3 @@ final class OutreachEmailFactory
         return implode("\n", $lines);
     }
 }
-
