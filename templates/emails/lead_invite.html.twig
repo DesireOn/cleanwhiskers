@@ -1,0 +1,111 @@
+{#
+  Lead invite email (HTML)
+  Expected context (preferred):
+    - serviceName (string)
+    - cityName (string)
+    - claimUrl (string)
+    - unsubUrl (string)
+    - expiresAt (\DateTimeInterface|string)
+    - companyName (string)
+    - companyAddress (string)
+    - contactEmail (string)
+
+  Fallbacks: if a Lead entity is provided as `lead`, service/city are derived via accessors.
+  Company/contact values fall back to environment if available, then to sensible defaults.
+#}
+{% set service_name = serviceName is defined ? serviceName : (lead is defined ? lead.service.name : null) %}
+{% set city_name = cityName is defined ? cityName : (lead is defined ? lead.city.name : null) %}
+
+{# Company/contact fallbacks: prefer explicit context, else try request env, else defaults #}
+{% set _env = app is defined and app.request is defined and app.request ? app.request.server : null %}
+{% set company_name = companyName is defined and companyName ? companyName : (_env ? _env.get('OUTREACH_COMPANY_NAME') : null) %}
+{% set company_address = companyAddress is defined and companyAddress ? companyAddress : (_env ? _env.get('OUTREACH_COMPANY_ADDRESS') : null) %}
+{% set contact_email = contactEmail is defined and contactEmail ? contactEmail : (_env ? _env.get('OUTREACH_CONTACT_EMAIL') : null) %}
+
+{% set company_name = company_name ?: 'CleanWhiskers' %}
+{% set company_address = company_address ?: '123 Business Rd, City, Country' %}
+{% set contact_email = contact_email ?: 'support@example.com' %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ service_name ? ('New ' ~ service_name ~ ' lead') : 'New lead available' }}</title>
+    <style>
+      /* Minimal, email-friendly styles (inline where important) */
+      .btn { background:#2d6cdf; color:#ffffff !important; text-decoration:none; padding:12px 18px; border-radius:6px; display:inline-block; }
+      .text-muted { color:#6b7280; }
+      .small { font-size:12px; }
+      .container { max-width:640px; margin:0 auto; padding:0 16px; }
+    </style>
+  </head>
+  <body style="margin:0; padding:0; background:#f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#111827;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f6f8fb;">
+      <tr>
+        <td align="center" style="padding:24px 0;">
+          <table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" class="container" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="padding:24px 24px 8px 24px;">
+                <h1 style="margin:0 0 8px 0; font-size:20px;">You have a new lead</h1>
+                {% if service_name and city_name %}
+                  <p style="margin:0; color:#374151;">A {{ service_name }} lead in {{ city_name }} is available for you to claim.</p>
+                {% elseif service_name %}
+                  <p style="margin:0; color:#374151;">A {{ service_name }} lead is available for you to claim.</p>
+                {% else %}
+                  <p style="margin:0; color:#374151;">A new lead is available for you to claim.</p>
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:8px 24px 0 24px;">
+                <p style="margin:0 0 16px 0; color:#111827;">Claiming reserves this lead for you. The claim link expires
+                  {% if expiresAt is defined and expiresAt %}
+                    on <strong>{{ expiresAt|date('Y-m-d H:i T') }}</strong>.
+                  {% else %}
+                    soon.
+                  {% endif %}
+                </p>
+                {% if claimUrl is defined and claimUrl %}
+                  <p style="margin:0 0 24px 0;">
+                    <a class="btn" href="{{ claimUrl }}" target="_blank" rel="noopener">Claim this lead</a>
+                  </p>
+                  <p class="text-muted" style="margin:0 0 8px 0; color:#6b7280;">If the button doesn’t work, copy and paste this link:</p>
+                  <p class="small" style="margin:0 0 16px 0; word-break:break-all; color:#374151;">{{ claimUrl }}</p>
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:8px 24px 24px 24px; border-top:1px solid #e5e7eb;">
+                <p class="small text-muted" style="margin:0 0 8px 0; color:#6b7280; font-size:12px;">
+                  Reason for contact: legitimate interest. You’re receiving this because your business matches a pet owner’s
+                  request in our system.
+                </p>
+                <p class="small text-muted" style="margin:0 0 8px 0; color:#6b7280; font-size:12px;">
+                  Questions? Email us at <a href="mailto:{{ contact_email }}" style="color:#374151;">{{ contact_email }}</a>.
+                </p>
+                {% if unsubUrl is defined and unsubUrl %}
+                  <p class="small text-muted" style="margin:0 0 0 0; color:#6b7280; font-size:12px;">
+                    One-click unsubscribe:
+                    <a href="{{ unsubUrl }}" target="_blank" rel="noopener" style="color:#374151;">{{ unsubUrl }}</a>
+                  </p>
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:16px 24px 24px 24px; background:#f9fafb; border-top:1px solid #e5e7eb;">
+                <p class="small text-muted" style="margin:0 0 4px 0; color:#6b7280; font-size:12px;">— {{ company_name }}</p>
+                <p class="small text-muted" style="margin:0; color:#6b7280; font-size:12px;">{{ company_address }}</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+  </html>
+
