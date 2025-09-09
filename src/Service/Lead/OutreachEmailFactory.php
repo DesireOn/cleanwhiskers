@@ -38,6 +38,7 @@ final class OutreachEmailFactory
                     'claimUrl' => $claimUrl,
                     'unsubUrl' => $unsubUrl,
                     'expiresAt' => $expiresAt,
+                    'expiresIn' => $this->humanizeTimeUntil($expiresAt),
                     'companyName' => $this->companyName,
                     'companyAddress' => $this->companyAddress,
                     'contactEmail' => $this->contactEmail ?: $this->fromAddress,
@@ -61,11 +62,56 @@ final class OutreachEmailFactory
         $lines = [];
         $lines[] = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
         $lines[] = sprintf('Claim this lead: %s', $claimUrl);
-        // Expiry included for completeness, but tests don't assert the exact text
-        $lines[] = sprintf('This link expires on %s', $expiresAt->format('Y-m-d H:i T'));
+        // Expiry shown as a relative time to avoid timezone confusion
+        $lines[] = sprintf('This link expires %s', $this->humanizeTimeUntil($expiresAt));
         $lines[] = sprintf('unsubscribe here: %s', $unsubUrl);
         $lines[] = sprintf('— %s', $this->companyName);
         return implode("\n", $lines);
+    }
+
+    /**
+     * Returns a compact human-friendly relative time for a future date.
+     * Examples: "in 5 minutes", "in an hour", "in 3 hours", "in 2 days".
+     */
+    private function humanizeTimeUntil(\DateTimeImmutable $future, ?\DateTimeImmutable $now = null): string
+    {
+        $now ??= new \DateTimeImmutable('now');
+        $diff = $future->getTimestamp() - $now->getTimestamp();
+
+        if ($diff <= 0) {
+            return 'soon';
+        }
+
+        $minute = 60;
+        $hour   = 60 * $minute;
+        $day    = 24 * $hour;
+
+        if ($diff < 90) {
+            return 'in less than 2 minutes';
+        }
+
+        if ($diff < $hour) {
+            $mins = (int) round($diff / $minute);
+            if ($mins <= 1) {
+                return 'in a minute';
+            }
+            return sprintf('in %d minutes', $mins);
+        }
+
+        if ($diff < 2 * $hour) {
+            return 'in an hour';
+        }
+
+        if ($diff < $day) {
+            $hours = (int) round($diff / $hour);
+            return sprintf('in %d hours', max(2, $hours));
+        }
+
+        $days = (int) round($diff / $day);
+        if ($days <= 1) {
+            return 'in a day';
+        }
+        return sprintf('in %d days', $days);
     }
 
     public function buildLeadAlreadyClaimedEmail(Lead $lead, string $to, string $unsubUrl): Email

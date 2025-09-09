@@ -42,6 +42,7 @@ final class DispatchLeadMessageHandler
         private readonly string $outreachFrom = 'support@example.com',
         private readonly string $companyName = 'CleanWhiskers',
         private readonly int $claimTtlMinutes = 60,
+        private readonly string $alertsRecipient = 'desireon98@gmail.com',
         ?LeadRecipientTokenFactory $recipientTokenFactory = null,
         ?LeadUrlBuilder $urlBuilder = null,
         ?OutreachEmailFactory $emailFactory = null,
@@ -189,6 +190,7 @@ final class DispatchLeadMessageHandler
     {
         $sent = 0;
         $failed = 0;
+        $failures = [];
 
         foreach ($newlyCreated as $entry) {
             $recipient = $entry->recipient;
@@ -218,6 +220,29 @@ final class DispatchLeadMessageHandler
                     'error' => $e->getMessage(),
                 ]);
                 $this->auditLogs->logOutreachEmailFailed($lead, $recipient, $e->getMessage());
+
+                $failures[] = [
+                    'recipientId' => $recipient->getId(),
+                    'email' => $recipient->getEmail(),
+                    'error' => $e->getMessage(),
+                ];
+            }
+        }
+        // Send a single admin alert if any failures occurred
+        if ($failed > 0) {
+            try {
+                $alert = (new Email())
+                    ->from($this->outreachFrom)
+                    ->to($this->alertsRecipient)
+                    ->subject(sprintf('Alert: %d outreach email failure(s) for lead #%d', $failed, (int) ($lead->getId() ?? 0)))
+                    ->text($this->buildFailureAlertBody($lead, $sent, $failed, $failures));
+                $this->mailer->send($alert);
+            } catch (\Throwable $alertEx) {
+                // Avoid breaking the flow if alert fails; log instead
+                $this->logger->error('Failed sending admin alert for outreach failures', [
+                    'leadId' => $lead->getId(),
+                    'error' => $alertEx->getMessage(),
+                ]);
             }
         }
 
@@ -225,4 +250,25 @@ final class DispatchLeadMessageHandler
     }
 
     // Token generation, URL building, and email rendering are delegated to services.
+
+    /**
+     * @param array<int, array{recipientId: mixed, email: string, error: string}> $failures
+     */
+    private function buildFailureAlertBody(Lead $lead, int $sent, int $failed, array $failures): string
+    {
+        $lines = [];
+        $lines[] = sprintf('Lead ID: %d', (int) ($lead->getId() ?? 0));
+        $lines[] = sprintf('City: %s', $lead->getCity()->getName());
+        $lines[] = sprintf('Service: %s', $lead->getService()->getName());
+        $lines[] = sprintf('Emails sent: %d', $sent);
+        $lines[] = sprintf('Emails failed: %d', $failed);
+        $lines[] = '';
+        $lines[] = 'Failures:';
+        foreach ($failures as $f) {
+            $lines[] = sprintf('- Recipient #%s <%s>: %s', (string) ($f['recipientId'] ?? 'n/a'), $f['email'] ?? 'n/a', $f['error'] ?? '');
+        }
+        $lines[] = '';
+        $lines[] = sprintf('— %s notifier', $this->companyName);
+        return implode("\n", $lines);
+    }
 }
