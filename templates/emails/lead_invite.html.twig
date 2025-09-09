@@ -16,15 +16,10 @@
 {% set service_name = serviceName is defined ? serviceName : (lead is defined ? lead.service.name : null) %}
 {% set city_name = cityName is defined ? cityName : (lead is defined ? lead.city.name : null) %}
 
-{# Company/contact fallbacks: prefer explicit context, else try request env, else defaults #}
-{% set _env = app is defined and app.request is defined and app.request ? app.request.server : null %}
-{% set company_name = companyName is defined and companyName ? companyName : (_env ? _env.get('OUTREACH_COMPANY_NAME') : null) %}
-{% set company_address = companyAddress is defined and companyAddress ? companyAddress : (_env ? _env.get('OUTREACH_COMPANY_ADDRESS') : null) %}
-{% set contact_email = contactEmail is defined and contactEmail ? contactEmail : (_env ? _env.get('OUTREACH_CONTACT_EMAIL') : null) %}
-
-{% set company_name = company_name ?: 'CleanWhiskers' %}
-{% set company_address = company_address ?: '123 Business Rd, City, Country' %}
-{% set contact_email = contact_email ?: 'support@example.com' %}
+{# Company/contact fallbacks: prefer explicit context, else defaults #}
+{% set company_name = companyName is defined and companyName ? companyName : 'CleanWhiskers' %}
+{% set company_address = companyAddress is defined and companyAddress ? companyAddress : '123 Business Rd, City, Country' %}
+{% set contact_email = contactEmail is defined and contactEmail ? contactEmail : 'support@example.com' %}
 
 <!DOCTYPE html>
 <html lang="en">
