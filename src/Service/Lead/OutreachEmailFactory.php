@@ -67,4 +67,41 @@ final class OutreachEmailFactory
         $lines[] = sprintf('— %s', $this->companyName);
         return implode("\n", $lines);
     }
+
+    public function buildLeadAlreadyClaimedEmail(Lead $lead, string $to, string $unsubUrl): Email
+    {
+        $subject = sprintf('Lead already claimed: %s in %s', $lead->getService()->getName(), $lead->getCity()->getName());
+
+        // Provide a brief text alternative
+        $textLines = [];
+        $textLines[] = sprintf('The %s lead in %s has already been claimed.', $lead->getService()->getName(), $lead->getCity()->getName());
+        $textLines[] = 'We will notify you about future opportunities.';
+        $textLines[] = sprintf('Unsubscribe: %s', $unsubUrl);
+        $textLines[] = sprintf('— %s', $this->companyName);
+        $text = implode("\n", $textLines);
+
+        if ($this->twig instanceof Environment) {
+            return (new TemplatedEmail())
+                ->from($this->fromAddress)
+                ->to($to)
+                ->subject($subject)
+                ->htmlTemplate('emails/lead_already_claimed.html.twig')
+                ->context([
+                    'lead' => $lead,
+                    'serviceName' => $lead->getService()->getName(),
+                    'cityName' => $lead->getCity()->getName(),
+                    'unsubUrl' => $unsubUrl,
+                    'companyName' => $this->companyName,
+                    'companyAddress' => $this->companyAddress,
+                    'contactEmail' => $this->contactEmail ?: $this->fromAddress,
+                ])
+                ->text($text);
+        }
+
+        return (new Email())
+            ->from($this->fromAddress)
+            ->to($to)
+            ->subject($subject)
+            ->text($text);
+    }
 }
