@@ -69,3 +69,8 @@ services:
     App\Command\SendTestEmailCommand:
         arguments:
             $defaultFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
+
+    Symfony\Component\HttpFoundation\UriSigner:
+        arguments:
+            $secret: '%kernel.secret%'
+            $parameter: 'signature'
