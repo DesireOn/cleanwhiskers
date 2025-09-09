@@ -28,9 +28,13 @@ final class LeadUrlBuilder
 
     public function buildSignedUnsubscribeUrl(string $email): string
     {
-        $query = http_build_query(['email' => $email]);
+        // Long-lived unsubscribe link (1 year)
+        $expires = (new \DateTimeImmutable('+1 year'))->getTimestamp();
+        $query = http_build_query([
+            'email' => $email,
+            'expires' => $expires,
+        ]);
         $url = rtrim($this->appBaseUrl, '/') . '/unsubscribe?' . $query;
         return $this->signer->sign($url);
     }
 }
-

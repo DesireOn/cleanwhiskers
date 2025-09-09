@@ -6,6 +6,7 @@
 parameters:
     feature.leads.enabled: '%env(bool:LEADS_FEATURE_ENABLED)%'
     lead.claim_ttl_minutes: '%env(int:LEAD_CLAIM_TTL_MINUTES)%'
+    alerts.admin_email: '%env(string:ALERT_EMAIL)%'
 
 services:
     # default configuration for services in *this* file
@@ -51,6 +52,7 @@ services:
             $appBaseUrl: '%env(APP_BASE_URL)%'
             $outreachFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+            $alertsRecipient: '%alerts.admin_email%'
             $recipientTokenFactory: '@App\Service\Lead\LeadRecipientTokenFactory'
             $urlBuilder: '@App\Service\Lead\LeadUrlBuilder'
             $emailFactory: '@App\Service\Lead\OutreachEmailFactory'
@@ -63,7 +65,14 @@ services:
         arguments:
             $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+            $companyAddress: '%env(string:OUTREACH_COMPANY_ADDRESS)%'
+            $contactEmail: '%env(OUTREACH_CONTACT_EMAIL)%'
  
     App\Command\SendTestEmailCommand:
         arguments:
             $defaultFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
+
+    Symfony\Component\HttpFoundation\UriSigner:
+        arguments:
+            $secret: '%kernel.secret%'
+            $hashParameter: 'signature'
