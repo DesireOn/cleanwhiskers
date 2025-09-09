@@ -21,7 +21,7 @@ final class OutreachEmailFactory
 
     public function buildLeadInviteEmail(Lead $lead, string $to, string $claimUrl, string $unsubUrl, \DateTimeImmutable $expiresAt): Email
     {
-        $subject = sprintf('New %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
+        $subject = sprintf('A pet owner in %s needs %s', $lead->getCity()->getName(), $lead->getService()->getName());
         $text = $this->renderPlainTextEmail($lead, $claimUrl, $unsubUrl, $expiresAt);
 
         if ($this->twig instanceof Environment) {
@@ -57,12 +57,18 @@ final class OutreachEmailFactory
     private function renderPlainTextEmail(Lead $lead, string $claimUrl, string $unsubUrl, \DateTimeImmutable $expiresAt): string
     {
         $lines = [];
-        $lines[] = sprintf('You have a new %s lead in %s.', $lead->getService()->getName(), $lead->getCity()->getName());
+        $lines[] = sprintf('A pet owner in %s needs %s.', $lead->getCity()->getName(), $lead->getService()->getName());
+        $lines[] = sprintf('We are %s — a new platform connecting local groomers with nearby pet owners.', $this->companyName);
         $lines[] = '';
-        $lines[] = sprintf('Claim this lead: %s', $claimUrl);
-        $lines[] = sprintf('This claim link expires on %s.', $expiresAt->format('Y-m-d H:i T'));
+        $lines[] = 'Preview the request and claim it if it’s a fit:';
+        $lines[] = $claimUrl;
+        $lines[] = sprintf('This secure link expires on %s.', $expiresAt->format('Y-m-d H:i T'));
         $lines[] = '';
-        $lines[] = sprintf('If you no longer wish to receive outreach emails, unsubscribe here: %s', $unsubUrl);
+        $lines[] = 'No obligation — you can ignore this if it’s not relevant.';
+        $lines[] = '';
+        $contact = $this->contactEmail !== '' ? $this->contactEmail : $this->fromAddress;
+        $lines[] = sprintf('Questions? Email us: %s', $contact);
+        $lines[] = sprintf('Unsubscribe instantly: %s', $unsubUrl);
         $lines[] = '';
         $lines[] = sprintf('— %s', $this->companyName);
         return implode("\n", $lines);

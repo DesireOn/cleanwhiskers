@@ -32,36 +32,47 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ service_name ? ('New ' ~ service_name ~ ' lead') : 'New lead available' }}</title>
+    <title>{{ service_name and city_name ? ('Pet owner needs ' ~ service_name ~ ' in ' ~ city_name) : (service_name ? ('Pet owner needs ' ~ service_name) : 'New request available') }}</title>
     <style>
       /* Minimal, email-friendly styles (inline where important) */
-      .btn { background:#2d6cdf; color:#ffffff !important; text-decoration:none; padding:12px 18px; border-radius:6px; display:inline-block; }
+      .btn { background:#2563eb; color:#ffffff !important; text-decoration:none; padding:12px 18px; border-radius:6px; display:inline-block; font-weight:600; }
       .text-muted { color:#6b7280; }
       .small { font-size:12px; }
       .container { max-width:640px; margin:0 auto; padding:0 16px; }
+      .badge { display:inline-block; padding:2px 8px; font-size:12px; color:#1f2937; background:#e5e7eb; border-radius:999px; }
     </style>
   </head>
   <body style="margin:0; padding:0; background:#f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#111827;">
+    {# Preheader (hidden in most clients) #}
+    <div style="display:none; max-height:0; overflow:hidden; mso-hide:all; font-size:1px; line-height:1px; color:#f6f8fb;">
+      {% if service_name and city_name %}A pet owner requested {{ service_name }} in {{ city_name }}. Preview and claim. {% else %}A new local request is available. Preview and claim. {% endif %}
+    </div>
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f6f8fb;">
       <tr>
         <td align="center" style="padding:24px 0;">
           <table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" class="container" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
             <tr>
               <td style="padding:24px 24px 8px 24px;">
-                <h1 style="margin:0 0 8px 0; font-size:20px;">You have a new lead</h1>
-                {% if service_name and city_name %}
-                  <p style="margin:0; color:#374151;">A {{ service_name }} lead in {{ city_name }} is available for you to claim.</p>
-                {% elseif service_name %}
-                  <p style="margin:0; color:#374151;">A {{ service_name }} lead is available for you to claim.</p>
-                {% else %}
-                  <p style="margin:0; color:#374151;">A new lead is available for you to claim.</p>
-                {% endif %}
+                <div class="badge" style="display:inline-block; padding:2px 8px; font-size:12px; color:#1f2937; background:#e5e7eb; border-radius:999px;">New request</div>
+                <h1 style="margin:8px 0 8px 0; font-size:22px; line-height:1.3;">
+                  {% if service_name and city_name %}
+                    A pet owner in {{ city_name }} needs {{ service_name }}
+                  {% elseif service_name %}
+                    A pet owner needs {{ service_name }}
+                  {% else %}
+                    A local pet owner needs your help
+                  {% endif %}
+                </h1>
+                <p style="margin:0; color:#374151;">
+                  We’re {{ company_name }}, a new platform helping local groomers connect with nearby pet owners.
+                  This request looks like a good match for your business.
+                </p>
               </td>
             </tr>
 
             <tr>
               <td style="padding:8px 24px 0 24px;">
-                <p style="margin:0 0 16px 0; color:#111827;">Claiming reserves this lead for you. The claim link expires
+                <p style="margin:0 0 16px 0; color:#111827;">Preview the details and claim it if it’s a fit. The secure link expires
                   {% if expiresAt is defined and expiresAt %}
                     on <strong>{{ expiresAt|date('Y-m-d H:i T') }}</strong>.
                   {% else %}
@@ -70,7 +81,7 @@
                 </p>
                 {% if claimUrl is defined and claimUrl %}
                   <p style="margin:0 0 24px 0;">
-                    <a class="btn" href="{{ claimUrl }}" target="_blank" rel="noopener">Claim this lead</a>
+                    <a class="btn" href="{{ claimUrl }}" target="_blank" rel="noopener">View request and claim</a>
                   </p>
                   <p class="text-muted" style="margin:0 0 8px 0; color:#6b7280;">If the button doesn’t work, copy and paste this link:</p>
                   <p class="small" style="margin:0 0 16px 0; word-break:break-all; color:#374151;">{{ claimUrl }}</p>
@@ -80,16 +91,20 @@
 
             <tr>
               <td style="padding:8px 24px 24px 24px; border-top:1px solid #e5e7eb;">
+                <p style="margin:0 0 6px 0; color:#374151; font-weight:600;">Why this email is safe</p>
+                <p class="small text-muted" style="margin:0 0 4px 0; color:#6b7280; font-size:12px;">• See the request before you decide.</p>
+                <p class="small text-muted" style="margin:0 0 4px 0; color:#6b7280; font-size:12px;">• No obligation — ignore if it’s not a fit.</p>
+                <p class="small text-muted" style="margin:0 12px 12px 0; color:#6b7280; font-size:12px;">• One‑click unsubscribe anytime.</p>
+
                 <p class="small text-muted" style="margin:0 0 8px 0; color:#6b7280; font-size:12px;">
-                  Reason for contact: legitimate interest. You’re receiving this because your business matches a pet owner’s
-                  request in our system.
+                  Reason for contact: your business appears to match a pet owner’s request in our system (legitimate interest).
                 </p>
                 <p class="small text-muted" style="margin:0 0 8px 0; color:#6b7280; font-size:12px;">
-                  Questions? Email us at <a href="mailto:{{ contact_email }}" style="color:#374151;">{{ contact_email }}</a>.
+                  Questions or feedback? Email <a href="mailto:{{ contact_email }}" style="color:#374151;">{{ contact_email }}</a> — we’re in early access and would love your input.
                 </p>
                 {% if unsubUrl is defined and unsubUrl %}
                   <p class="small text-muted" style="margin:0 0 0 0; color:#6b7280; font-size:12px;">
-                    One-click unsubscribe:
+                    Unsubscribe instantly:
                     <a href="{{ unsubUrl }}" target="_blank" rel="noopener" style="color:#374151;">{{ unsubUrl }}</a>
                   </p>
                 {% endif %}
@@ -108,4 +123,3 @@
     </table>
   </body>
   </html>
-
