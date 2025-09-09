@@ -47,6 +47,13 @@
         <env name="APP_ENV" value="test"/>
         <env name="APP_DEBUG" value="1"/>
         <env name="KERNEL_CLASS" value="App\Kernel"/>
+        <!-- Ensure mailer uses null transport in tests -->
+        <env name="MAILER_DSN" value="null://null"/>
+        <!-- Email defaults used by services -->
+        <env name="OUTREACH_CONTACT_EMAIL" value="support@example.com"/>
+        <env name="OUTREACH_COMPANY_NAME" value="CleanWhiskers"/>
+        <env name="OUTREACH_COMPANY_ADDRESS" value="123 Business Rd, City, Country"/>
+        <env name="ALERT_EMAIL" value="alerts@example.com"/>
         <!-- Point to a dedicated test DB (override in .env.test.local if needed) -->
         <env name="DATABASE_URL" value="mysql://user:pass@127.0.0.1:3306/app_test?serverVersion=8.0&amp;charset=utf8mb4"/>
         <!-- Provide safe defaults for transports to avoid EnvNotFound errors in tests -->
