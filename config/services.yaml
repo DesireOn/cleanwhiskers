@@ -63,7 +63,14 @@ services:
         arguments:
             $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
             $companyName: '%env(OUTREACH_COMPANY_NAME)%'
+            $companyAddress: '%env(string:OUTREACH_COMPANY_ADDRESS)%'
+            $contactEmail: '%env(OUTREACH_CONTACT_EMAIL)%'
  
     App\Command\SendTestEmailCommand:
         arguments:
             $defaultFrom: '%env(OUTREACH_CONTACT_EMAIL)%'
+
+    Symfony\Component\HttpFoundation\UriSigner:
+        arguments:
+            $secret: '%kernel.secret%'
+            $hashParameter: 'signature'

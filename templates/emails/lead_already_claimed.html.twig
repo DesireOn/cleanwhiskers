@@ -1,0 +1,75 @@
+{#
+  Lead already claimed (HTML)
+  Shown when a recipient clicks a claim link after it’s no longer valid.
+  Expected context (optional):
+    - serviceName, cityName (strings) or `lead` entity for display context
+    - unsubUrl (string)
+    - companyName, companyAddress, contactEmail (strings)
+#}
+{% set service_name = serviceName is defined ? serviceName : (lead is defined ? lead.service.name : null) %}
+{% set city_name = cityName is defined ? cityName : (lead is defined ? lead.city.name : null) %}
+
+{# Company/contact fallbacks #}
+{% set company_name = companyName is defined and companyName ? companyName : 'CleanWhiskers' %}
+{% set company_address = companyAddress is defined and companyAddress ? companyAddress : '123 Business Rd, City, Country' %}
+{% set contact_email = contactEmail is defined and contactEmail ? contactEmail : 'support@example.com' %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lead already claimed</title>
+    <style>
+      .text-muted { color:#6b7280; }
+      .small { font-size:12px; }
+      .container { max-width:640px; margin:0 auto; padding:0 16px; }
+      .btn { background:#6b7280; color:#ffffff !important; text-decoration:none; padding:10px 16px; border-radius:6px; display:inline-block; }
+    </style>
+  </head>
+  <body style="margin:0; padding:0; background:#f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#111827;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f6f8fb;">
+      <tr>
+        <td align="center" style="padding:24px 0;">
+          <table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" class="container" style="background:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+            <tr>
+              <td style="padding:24px;">
+                <h1 style="margin:0 0 8px 0; font-size:20px;">This lead has already been claimed</h1>
+                {% if service_name and city_name %}
+                  <p style="margin:0; color:#374151;">The {{ service_name }} lead in {{ city_name }} was claimed by another business.</p>
+                {% else %}
+                  <p style="margin:0; color:#374151;">Thanks for your interest—this lead was claimed by another business.</p>
+                {% endif %}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 24px 24px 24px;">
+                <p style="margin:0 0 12px 0; color:#111827;">We regularly match and notify local groomers when new requests arrive. You’ll get future opportunities automatically—no action needed.</p>
+                <p class="text-muted small" style="margin:0 0 16px 0; color:#6b7280; font-size:12px;">Reason for contact: legitimate interest.</p>
+                <p style="margin:0; color:#111827;">Questions? Email us at <a href="mailto:{{ contact_email }}" style="color:#374151;">{{ contact_email }}</a>.</p>
+              </td>
+            </tr>
+
+            {% if unsubUrl is defined and unsubUrl %}
+              <tr>
+                <td style="padding:0 24px 24px 24px;">
+                  <p class="small text-muted" style="margin:0; color:#6b7280; font-size:12px;">One-click unsubscribe: <a href="{{ unsubUrl }}" target="_blank" rel="noopener" style="color:#374151;">{{ unsubUrl }}</a></p>
+                </td>
+              </tr>
+            {% endif %}
+
+            <tr>
+              <td style="padding:16px 24px 24px 24px; background:#f9fafb; border-top:1px solid #e5e7eb;">
+                <p class="small text-muted" style="margin:0 0 4px 0; color:#6b7280; font-size:12px;">— {{ company_name }}</p>
+                <p class="small text-muted" style="margin:0; color:#6b7280; font-size:12px;">{{ company_address }}</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+  </html>
+
