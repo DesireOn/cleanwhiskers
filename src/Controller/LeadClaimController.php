@@ -166,6 +166,43 @@ final class LeadClaimController extends AbstractController
         }
 
         $this->addFlash('success', 'Lead claimed successfully.');
-        return $this->redirectToRoute('app_homepage');
+        return $this->redirectToRoute('lead_claim_success', ['lid' => $lead->getId()]);
+    }
+
+    #[Route(path: '/leads/claim/success', name: 'lead_claim_success', methods: ['GET'])]
+    public function success(Request $request): Response
+    {
+        $lid = (string) $request->query->get('lid', '');
+        if (!ctype_digit($lid)) {
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => 'missing_params',
+            ], new Response('', Response::HTTP_BAD_REQUEST));
+        }
+
+        $lead = $this->leads->find((int) $lid);
+        if (!$lead instanceof Lead) {
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => 'not_found',
+            ], new Response('', Response::HTTP_NOT_FOUND));
+        }
+
+        $user = $this->getUser();
+        $profile = null;
+        if ($user !== null) {
+            $profile = $this->groomers->findOneBy(['user' => $user]);
+        }
+
+        // Only the groomer who claimed this lead can view the success page
+        if (!$profile instanceof GroomerProfile || $lead->getClaimedBy()?->getId() !== $profile->getId()) {
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => 'not_found',
+            ], new Response('', Response::HTTP_NOT_FOUND));
+        }
+
+        return $this->render('lead/claim_success.html.twig', [
+            'lead' => $lead,
+            'serviceName' => $lead->getService()->getName(),
+            'cityName' => $lead->getCity()->getName(),
+        ]);
     }
 }

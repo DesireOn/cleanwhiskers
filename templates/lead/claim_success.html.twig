@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lead Claimed{% endblock %}
+
+{% block body %}
+  <section class="container" style="max-width:720px;margin:2rem auto;">
+    <h1>Lead claimed successfully</h1>
+    <p>
+      You claimed the {{ serviceName }} lead in {{ cityName }}.
+    </p>
+
+    <div class="card" style="margin-top:1rem;padding:1rem;">
+      <p style="margin:0 0 .25rem 0;"><strong>Service:</strong> {{ serviceName }}</p>
+      <p style="margin:0 0 .25rem 0;"><strong>City:</strong> {{ cityName }}</p>
+      {% if lead.claimedAt %}
+        <p style="margin:0;"><strong>Claimed at:</strong> {{ lead.claimedAt|date('H:i, M j') }}</p>
+      {% endif %}
+    </div>
+
+    <div style="margin-top:1.25rem;">
+      <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
+    </div>
+  </section>
+{% endblock %}
+
