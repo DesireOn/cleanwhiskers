@@ -19,6 +19,8 @@
         {% if cooldown_until is defined and cooldown_until %}
           You can try again after {{ cooldown_until|date('H:i, M j') }}.
         {% endif %}
+      {% elseif reason == 'needs_profile' %}
+        You’re logged in but don’t have a groomer profile yet. Create your profile to claim leads.
       {% else %}
         The link appears invalid. Please try again.
       {% endif %}
