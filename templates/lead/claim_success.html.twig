@@ -59,7 +59,52 @@ Next steps: [how to book or what you need from them]
       {% if lead.phone %}
         <a class="btn" href="tel:{{ lead.phone }}">Call the owner</a>
       {% endif %}
+      {% set copy_text -%}
+Owner: {{ lead.fullName }}
+Email: {{ lead.email }}
+{% if lead.phone %}Phone: {{ lead.phone }}
+{% endif %}Service: {{ serviceName }}
+City: {{ cityName }}
+{% if lead.petType %}Pet type: {{ lead.petType }}
+{% endif %}{% if lead.breedSize %}Breed/Size: {{ lead.breedSize }}
+{% endif %}{% if lead.claimedAt %}Claimed at: {{ lead.claimedAt|date('c') }}
+{% endif %}
+      {%- endset %}
+      <button class="btn" id="copy-details">Copy details</button>
     </div>
+
+    <script>
+      (function () {
+        var btn = document.getElementById('copy-details');
+        if (!btn) return;
+        var text = {{ copy_text|json_encode|raw }};
+        btn.addEventListener('click', function () {
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(function () {
+                btn.textContent = 'Copied!';
+                setTimeout(function(){ btn.textContent = 'Copy details'; }, 2000);
+              });
+            } else {
+              var ta = document.createElement('textarea');
+              ta.value = text;
+              ta.style.position = 'fixed';
+              ta.style.opacity = '0';
+              document.body.appendChild(ta);
+              ta.focus();
+              ta.select();
+              document.execCommand('copy');
+              document.body.removeChild(ta);
+              btn.textContent = 'Copied!';
+              setTimeout(function(){ btn.textContent = 'Copy details'; }, 2000);
+            }
+          } catch (e) {
+            btn.textContent = 'Copy failed';
+            setTimeout(function(){ btn.textContent = 'Copy details'; }, 2000);
+          }
+        });
+      })();
+    </script>
 
     <div style="margin-top:1.25rem;">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
