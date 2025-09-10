@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Claim Link Invalid{% endblock %}
+
+{% block body %}
+  <section class="container" style="max-width:720px;margin:2rem auto;">
+    <h1>We couldn’t verify your claim link</h1>
+    <p>
+      {% if reason == 'expired' %}
+        This link has expired. For security, claim links are time-limited.
+      {% elseif reason == 'invalid_signature' %}
+        The link signature is invalid. It may have been modified or is incomplete.
+      {% elseif reason == 'missing_params' %}
+        The link is missing required information.
+      {% elseif reason == 'not_found' %}
+        We couldn’t find a matching lead for this link.
+      {% else %}
+        The link appears invalid. Please try again.
+      {% endif %}
+    </p>
+
+    <div style="margin-top:1.25rem;">
+      <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
+      <a class="btn" style="margin-left:.75rem;" href="{{ path('app_register', { role: 'groomer' }) }}">Register as Groomer</a>
+    </div>
+  </section>
+{% endblock %}
+

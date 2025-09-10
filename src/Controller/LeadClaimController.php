@@ -39,13 +39,16 @@ final class LeadClaimController extends AbstractController
         $notExpired = ctype_digit($exp) && (int) $exp >= $now;
 
         if (!$isSigned || !$notExpired) {
+            $reason = !$isSigned ? 'invalid_signature' : 'expired';
             $this->logger->info('Lead claim denied: invalid or expired link', [
                 'signed' => $isSigned,
                 'exp' => $exp,
+                'reason' => $reason,
             ]);
-            $this->addFlash('error', 'This claim link is invalid or has expired.');
 
-            return $this->redirectToRoute('app_homepage');
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => $reason,
+            ], new Response('', Response::HTTP_BAD_REQUEST));
         }
 
         // Extract and validate required params
@@ -61,8 +64,9 @@ final class LeadClaimController extends AbstractController
                 'email' => $email !== '',
                 'token' => $token !== '',
             ]);
-            $this->addFlash('error', 'This claim link is invalid.');
-            return $this->redirectToRoute('app_homepage');
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => 'missing_params',
+            ], new Response('', Response::HTTP_BAD_REQUEST));
         }
 
         $lead = $this->leads->find((int) $lid);
@@ -73,8 +77,9 @@ final class LeadClaimController extends AbstractController
                 'lid' => $lid,
                 'rid' => $rid,
             ]);
-            $this->addFlash('error', 'This claim link is invalid.');
-            return $this->redirectToRoute('app_homepage');
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => 'not_found',
+            ], new Response('', Response::HTTP_NOT_FOUND));
         }
 
         // Sanity checks: email and token hash match, and token not expired
@@ -84,14 +89,17 @@ final class LeadClaimController extends AbstractController
         $recipientNotExpired = $recipient->getTokenExpiresAt()->getTimestamp() >= $now;
 
         if (!$hashOk || !$emailOk || !$recipientNotExpired) {
+            $reason = !$recipientNotExpired ? 'expired' : 'invalid_token_or_email';
             $this->logger->info('Lead claim denied: token/email mismatch or expired', [
                 'hashOk' => $hashOk,
                 'emailOk' => $emailOk,
                 'recipientExp' => $recipient->getTokenExpiresAt()->getTimestamp(),
                 'now' => $now,
+                'reason' => $reason,
             ]);
-            $this->addFlash('error', 'This claim link is invalid or has expired.');
-            return $this->redirectToRoute('app_homepage');
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => $reason,
+            ], new Response('', Response::HTTP_BAD_REQUEST));
         }
 
         // If not logged in as/linked to a groomer, store claim intent and redirect to register/login
@@ -121,4 +129,3 @@ final class LeadClaimController extends AbstractController
         return $this->redirectToRoute('app_homepage');
     }
 }
-
