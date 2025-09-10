@@ -9,8 +9,10 @@ use App\Entity\Lead;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\LeadRecipientRepository;
 use App\Repository\LeadRepository;
+use App\Repository\AuditLogRepository;
 use App\Service\Lead\LeadClaimPolicy;
 use App\Service\Lead\LeadClaimService;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +29,8 @@ final class LeadClaimController extends AbstractController
         private readonly GroomerProfileRepository $groomers,
         private readonly LeadClaimPolicy $claimPolicy,
         private readonly LeadClaimService $claimService,
+        private readonly AuditLogRepository $auditLogs,
+        private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -115,6 +119,20 @@ final class LeadClaimController extends AbstractController
         }
 
         if ($user === null || !$hasGroomerProfile) {
+            // Record audit: claim attempt (unauthenticated or no profile yet)
+            if ($lead->getId() !== null && $recipient->getId() !== null) {
+                $this->auditLogs->log(
+                    event: 'claim_attempt',
+                    subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                    subjectId: (int) $lead->getId(),
+                    metadata: [
+                        'recipientId' => $recipient->getId(),
+                        'recipientEmail' => $recipient->getEmail(),
+                        'authenticated' => $user !== null,
+                    ],
+                );
+                $this->em->flush();
+            }
             // Persist minimal intent in session
             $session = $request->getSession();
             $session->set('lead_claim_intent', [
@@ -132,6 +150,24 @@ final class LeadClaimController extends AbstractController
         if ($profile instanceof GroomerProfile) {
             $allowance = $this->claimPolicy->canClaim($profile);
             if (!$allowance->isAllowed()) {
+                // Record audit: claim attempt blocked by cooldown
+                if ($lead->getId() !== null && $recipient->getId() !== null) {
+                    $this->auditLogs->log(
+                        event: 'claim_attempt',
+                        subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                        subjectId: (int) $lead->getId(),
+                        metadata: [
+                            'recipientId' => $recipient->getId(),
+                            'recipientEmail' => $recipient->getEmail(),
+                            'blocked' => 'cooldown',
+                            'groomerId' => $profile->getId(),
+                            'nextAllowedAt' => $allowance->getNextAllowedAt()?->format(DATE_ATOM),
+                        ],
+                        actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                        actorId: $profile->getId(),
+                    );
+                    $this->em->flush();
+                }
                 $this->logger->info('Lead claim blocked by cooldown policy', [
                     'groomerId' => $profile->getId(),
                     'reason' => $allowance->getReason(),
@@ -146,12 +182,48 @@ final class LeadClaimController extends AbstractController
             }
         }
 
+        // Audit: record a claim attempt (authenticated)
+        if ($lead->getId() !== null && $recipient->getId() !== null && $profile instanceof GroomerProfile) {
+            $this->auditLogs->log(
+                event: 'claim_attempt',
+                subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                subjectId: (int) $lead->getId(),
+                metadata: [
+                    'recipientId' => $recipient->getId(),
+                    'recipientEmail' => $recipient->getEmail(),
+                    'groomerId' => $profile->getId(),
+                ],
+                actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                actorId: $profile->getId(),
+            );
+            $this->em->flush();
+        }
+
         // Attempt to claim atomically via service (with DB lock)
         $result = $this->claimService->claim($lead, $recipient, $profile);
 
         if (!$result->isSuccess()) {
             $code = $result->getCode();
             $status = $code === 'already_claimed' ? Response::HTTP_CONFLICT : Response::HTTP_BAD_REQUEST;
+
+            // Audit: conflict when already claimed
+            if ($code === 'already_claimed' && $lead->getId() !== null && $recipient->getId() !== null) {
+                $this->auditLogs->log(
+                    event: 'claim_conflict',
+                    subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                    subjectId: (int) $lead->getId(),
+                    metadata: [
+                        'recipientId' => $recipient->getId(),
+                        'recipientEmail' => $recipient->getEmail(),
+                        'groomerId' => $profile->getId(),
+                        'leadStatus' => $lead->getStatus(),
+                        'claimedById' => $lead->getClaimedBy()?->getId(),
+                    ],
+                    actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                    actorId: $profile->getId(),
+                );
+                $this->em->flush();
+            }
 
             $this->logger->info('Lead claim failed', [
                 'groomerId' => $profile->getId(),
@@ -163,6 +235,23 @@ final class LeadClaimController extends AbstractController
             return $this->render('lead/claim_invalid.html.twig', [
                 'reason' => $code,
             ], new Response('', $status));
+        }
+
+        // Audit: claim success
+        if ($lead->getId() !== null && $recipient->getId() !== null) {
+            $this->auditLogs->log(
+                event: 'claim_success',
+                subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                subjectId: (int) $lead->getId(),
+                metadata: [
+                    'recipientId' => $recipient->getId(),
+                    'recipientEmail' => $recipient->getEmail(),
+                    'groomerId' => $profile->getId(),
+                ],
+                actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                actorId: $profile->getId(),
+            );
+            $this->em->flush();
         }
 
         $this->addFlash('success', 'Lead claimed successfully.');
