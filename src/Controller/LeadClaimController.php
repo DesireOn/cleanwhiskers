@@ -9,6 +9,7 @@ use App\Entity\Lead;
 use App\Repository\GroomerProfileRepository;
 use App\Repository\LeadRecipientRepository;
 use App\Repository\LeadRepository;
+use App\Service\Lead\LeadClaimPolicy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ final class LeadClaimController extends AbstractController
         private readonly LeadRepository $leads,
         private readonly LeadRecipientRepository $recipients,
         private readonly GroomerProfileRepository $groomers,
+        private readonly LeadClaimPolicy $claimPolicy,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -123,8 +125,26 @@ final class LeadClaimController extends AbstractController
             return $this->redirectToRoute('app_register', ['role' => 'groomer']);
         }
 
-        // Placeholder: user already linked to a groomer. Subsequent implementation can finalize the claim.
-        // For now, redirect to homepage with a friendly notice.
+        // User already linked to a groomer — enforce claim cooldown policy
+        $profile = $this->groomers->findOneBy(['user' => $user]);
+        if ($profile instanceof GroomerProfile) {
+            $allowance = $this->claimPolicy->canClaim($profile);
+            if (!$allowance->isAllowed()) {
+                $this->logger->info('Lead claim blocked by cooldown policy', [
+                    'groomerId' => $profile->getId(),
+                    'reason' => $allowance->getReason(),
+                    'nextAllowedAt' => $allowance->getNextAllowedAt()?->format(DATE_ATOM),
+                ]);
+
+                return $this->render('lead/claim_invalid.html.twig', [
+                    'reason' => 'cooldown',
+                    'cooldown_until' => $allowance->getNextAllowedAt(),
+                    'cooldown_remaining_minutes' => $allowance->getRemainingMinutes(),
+                ], new Response('', Response::HTTP_TOO_MANY_REQUESTS));
+            }
+        }
+
+        // Placeholder: proceed with actual claim process in a subsequent step
         $this->addFlash('success', 'You are ready to claim this lead.');
         return $this->redirectToRoute('app_homepage');
     }

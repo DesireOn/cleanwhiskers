@@ -14,6 +14,11 @@
         The link is missing required information.
       {% elseif reason == 'not_found' %}
         We couldn’t find a matching lead for this link.
+      {% elseif reason == 'cooldown' %}
+        You claimed a lead recently. To prevent hoarding, please wait before claiming another.
+        {% if cooldown_until is defined and cooldown_until %}
+          You can try again after {{ cooldown_until|date('H:i, M j') }}.
+        {% endif %}
       {% else %}
         The link appears invalid. Please try again.
       {% endif %}
@@ -25,4 +30,3 @@
     </div>
   </section>
 {% endblock %}
-
