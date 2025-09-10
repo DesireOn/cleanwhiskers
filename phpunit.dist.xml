@@ -48,6 +48,10 @@
         <env name="MESSENGER_TRANSPORT_DSN" value="in-memory://"/>
         <env name="MESSENGER_FAILURE_TRANSPORT_DSN" value="in-memory://"/>
         <env name="CORS_ALLOW_ORIGIN" value="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"/>
+        <env name="MAILER_DSN" value="null://null"/>
+        <env name="OUTREACH_CONTACT_EMAIL" value="support@example.com"/>
+        <env name="OUTREACH_COMPANY_NAME" value="CleanWhiskers"/>
+        <env name="OUTREACH_COMPANY_ADDRESS" value="123 Business Rd, City, Country"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>
