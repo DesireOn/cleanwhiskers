@@ -38,6 +38,29 @@
       <li>If no response, follow up politely within 24–48 hours.</li>
     </ol>
 
+    {% set email_subject = 'Regarding your ' ~ serviceName ~ ' request in ' ~ cityName %}
+    {% set email_body -%}
+Hi {{ lead.fullName }},
+
+This is {{ groomerName }}. I just claimed your {{ serviceName }} request in {{ cityName }} and would love to help.
+
+Availability: [share a couple of time windows]
+Pricing: [share a simple estimate or range]
+Next steps: [how to book or what you need from them]
+
+{% if groomerPhone %}You can also call/text me at {{ groomerPhone }}.
+
+{% endif %}Thanks!
+{{ groomerName }}
+    {%- endset %}
+
+    <div style="margin-top:1rem; display:flex; gap:.75rem; flex-wrap:wrap;">
+      <a class="btn" href="mailto:{{ lead.email }}?subject={{ email_subject|url_encode }}&body={{ email_body|url_encode }}">Email the owner now</a>
+      {% if lead.phone %}
+        <a class="btn" href="tel:{{ lead.phone }}">Call the owner</a>
+      {% endif %}
+    </div>
+
     <div style="margin-top:1.25rem;">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
     </div>

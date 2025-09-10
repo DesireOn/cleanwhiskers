@@ -203,6 +203,8 @@ final class LeadClaimController extends AbstractController
             'lead' => $lead,
             'serviceName' => $lead->getService()->getName(),
             'cityName' => $lead->getCity()->getName(),
+            'groomerName' => $profile->getBusinessName(),
+            'groomerPhone' => $profile->getPhone(),
         ]);
     }
 }
