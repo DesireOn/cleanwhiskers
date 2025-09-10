@@ -29,6 +29,9 @@
     <div style="margin-top:1.25rem;">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
       <a class="btn" style="margin-left:.75rem;" href="{{ path('app_register', { role: 'groomer' }) }}">Register as Groomer</a>
+      {% if reason == 'needs_profile' and is_granted('ROLE_GROOMER') %}
+        <a class="btn" style="margin-left:.75rem;" href="{{ path('groomer_onboarding') }}">Create Groomer Profile</a>
+      {% endif %}
     </div>
   </section>
 {% endblock %}
