@@ -10,6 +10,7 @@ use App\Repository\GroomerProfileRepository;
 use App\Repository\LeadRecipientRepository;
 use App\Repository\LeadRepository;
 use App\Service\Lead\LeadClaimPolicy;
+use App\Service\Lead\LeadClaimService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +26,7 @@ final class LeadClaimController extends AbstractController
         private readonly LeadRecipientRepository $recipients,
         private readonly GroomerProfileRepository $groomers,
         private readonly LeadClaimPolicy $claimPolicy,
+        private readonly LeadClaimService $claimService,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -144,8 +146,26 @@ final class LeadClaimController extends AbstractController
             }
         }
 
-        // Placeholder: proceed with actual claim process in a subsequent step
-        $this->addFlash('success', 'You are ready to claim this lead.');
+        // Attempt to claim atomically via service (with DB lock)
+        $result = $this->claimService->claim($lead, $recipient, $profile);
+
+        if (!$result->isSuccess()) {
+            $code = $result->getCode();
+            $status = $code === 'already_claimed' ? Response::HTTP_CONFLICT : Response::HTTP_BAD_REQUEST;
+
+            $this->logger->info('Lead claim failed', [
+                'groomerId' => $profile->getId(),
+                'leadId' => $lead->getId(),
+                'recipientId' => $recipient->getId(),
+                'code' => $code,
+            ]);
+
+            return $this->render('lead/claim_invalid.html.twig', [
+                'reason' => $code,
+            ], new Response('', $status));
+        }
+
+        $this->addFlash('success', 'Lead claimed successfully.');
         return $this->redirectToRoute('app_homepage');
     }
 }
