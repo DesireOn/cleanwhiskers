@@ -22,7 +22,7 @@ final class LeadClaimService
     ) {
     }
 
-    public function claim(Lead $lead, LeadRecipient $recipient, GroomerProfile $groomer): LeadClaimResult
+    public function claim(Lead $lead, LeadRecipient $recipient, ?GroomerProfile $groomer): LeadClaimResult
     {
         $leadId = $lead->getId();
         $recipientId = $recipient->getId();
@@ -56,11 +56,14 @@ final class LeadClaimService
             // Perform the claim
             $now = new DateTimeImmutable();
             $lockedLead->setStatus(Lead::STATUS_CLAIMED);
+            // Allow guest claims: when $groomer is null, we still mark the lead as claimed
+            // so it cannot be claimed again. claimedBy may remain null in that case.
             $lockedLead->setClaimedBy($groomer);
             $lockedLead->setClaimedAt($now);
             $lockedLead->setUpdatedAt($now);
 
             // Associate the recipient with the groomer that claimed it (optional but useful)
+            // Link recipient to claiming groomer when available (nullable for guest claims)
             $managedRecipient->setGroomerProfile($groomer);
 
             $this->em->flush();
@@ -72,4 +75,3 @@ final class LeadClaimService
         return $outcome;
     }
 }
-

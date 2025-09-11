@@ -110,40 +110,14 @@ final class LeadClaimController extends AbstractController
             ], new Response('', Response::HTTP_BAD_REQUEST));
         }
 
-        // If not logged in as/linked to a groomer, store claim intent and redirect to register/login
+        // Determine if user has a groomer profile; allow guest claims otherwise
         $user = $this->getUser();
         $hasGroomerProfile = false;
         if ($user !== null) {
             $profile = $this->groomers->findOneBy(['user' => $user]);
             $hasGroomerProfile = $profile instanceof GroomerProfile;
         }
-
-        if ($user === null || !$hasGroomerProfile) {
-            // Record audit: claim attempt (unauthenticated or no profile yet)
-            if ($lead->getId() !== null && $recipient->getId() !== null) {
-                $this->auditLogs->log(
-                    event: 'claim_attempt',
-                    subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
-                    subjectId: (int) $lead->getId(),
-                    metadata: [
-                        'recipientId' => $recipient->getId(),
-                        'recipientEmail' => $recipient->getEmail(),
-                        'authenticated' => $user !== null,
-                    ],
-                );
-                $this->em->flush();
-            }
-            // Persist minimal intent in session
-            $session = $request->getSession();
-            $session->set('lead_claim_intent', [
-                'lead_id' => (int) $lid,
-                'recipient_id' => (int) $rid,
-                'email' => $normalizedEmail,
-            ]);
-
-            // Prefer registering as a groomer to complete the claim
-            return $this->redirectToRoute('app_register', ['role' => 'groomer']);
-        }
+        $isGuestClaim = ($user === null || !$hasGroomerProfile);
 
         // User already linked to a groomer — enforce claim cooldown policy
         $profile = $this->groomers->findOneBy(['user' => $user]);
@@ -183,24 +157,40 @@ final class LeadClaimController extends AbstractController
         }
 
         // Audit: record a claim attempt (authenticated)
-        if ($lead->getId() !== null && $recipient->getId() !== null && $profile instanceof GroomerProfile) {
-            $this->auditLogs->log(
-                event: 'claim_attempt',
-                subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
-                subjectId: (int) $lead->getId(),
-                metadata: [
-                    'recipientId' => $recipient->getId(),
-                    'recipientEmail' => $recipient->getEmail(),
-                    'groomerId' => $profile->getId(),
-                ],
-                actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
-                actorId: $profile->getId(),
-            );
+        if ($lead->getId() !== null && $recipient->getId() !== null) {
+            if ($isGuestClaim) {
+                $this->auditLogs->log(
+                    event: 'claim_attempt',
+                    subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                    subjectId: (int) $lead->getId(),
+                    metadata: [
+                        'recipientId' => $recipient->getId(),
+                        'recipientEmail' => $recipient->getEmail(),
+                        'guest' => true,
+                        'guestEmail' => $normalizedEmail,
+                    ],
+                    actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                    actorId: null,
+                );
+            } elseif ($profile instanceof GroomerProfile) {
+                $this->auditLogs->log(
+                    event: 'claim_attempt',
+                    subjectType: \App\Entity\AuditLog::SUBJECT_LEAD,
+                    subjectId: (int) $lead->getId(),
+                    metadata: [
+                        'recipientId' => $recipient->getId(),
+                        'recipientEmail' => $recipient->getEmail(),
+                        'groomerId' => $profile->getId(),
+                    ],
+                    actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
+                    actorId: $profile->getId(),
+                );
+            }
             $this->em->flush();
         }
 
         // Attempt to claim atomically via service (with DB lock)
-        $result = $this->claimService->claim($lead, $recipient, $profile);
+        $result = $this->claimService->claim($lead, $recipient, $profile instanceof GroomerProfile ? $profile : null);
 
         if (!$result->isSuccess()) {
             $code = $result->getCode();
@@ -215,18 +205,18 @@ final class LeadClaimController extends AbstractController
                     metadata: [
                         'recipientId' => $recipient->getId(),
                         'recipientEmail' => $recipient->getEmail(),
-                        'groomerId' => $profile->getId(),
+                        'groomerId' => $profile instanceof GroomerProfile ? $profile->getId() : null,
                         'leadStatus' => $lead->getStatus(),
                         'claimedById' => $lead->getClaimedBy()?->getId(),
                     ],
                     actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
-                    actorId: $profile->getId(),
+                    actorId: $profile instanceof GroomerProfile ? $profile->getId() : null,
                 );
                 $this->em->flush();
             }
 
             $this->logger->info('Lead claim failed', [
-                'groomerId' => $profile->getId(),
+                'groomerId' => $profile instanceof GroomerProfile ? $profile->getId() : null,
                 'leadId' => $lead->getId(),
                 'recipientId' => $recipient->getId(),
                 'code' => $code,
@@ -246,16 +236,24 @@ final class LeadClaimController extends AbstractController
                 metadata: [
                     'recipientId' => $recipient->getId(),
                     'recipientEmail' => $recipient->getEmail(),
-                    'groomerId' => $profile->getId(),
+                    'groomerId' => $profile instanceof GroomerProfile ? $profile->getId() : null,
+                    'guest' => $isGuestClaim,
                 ],
                 actorType: \App\Entity\AuditLog::ACTOR_GROOMER,
-                actorId: $profile->getId(),
+                actorId: $profile instanceof GroomerProfile ? $profile->getId() : null,
             );
             $this->em->flush();
         }
 
+        // Render success directly so guests don't need registration
         $this->addFlash('success', 'Lead claimed successfully.');
-        return $this->redirectToRoute('lead_claim_success', ['lid' => $lead->getId()]);
+        return $this->render('lead/claim_success.html.twig', [
+            'lead' => $lead,
+            'serviceName' => $lead->getService()->getName(),
+            'cityName' => $lead->getCity()->getName(),
+            'groomerName' => $profile instanceof GroomerProfile ? $profile->getBusinessName() : null,
+            'groomerPhone' => $profile instanceof GroomerProfile ? $profile->getPhone() : null,
+        ]);
     }
 
     #[Route(path: '/leads/claim/success', name: 'lead_claim_success', methods: ['GET'])]
