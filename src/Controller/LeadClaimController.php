@@ -118,7 +118,7 @@ final class LeadClaimController extends AbstractController
             $hasGroomerProfile = $profile instanceof GroomerProfile;
         }
 
-        if ($user === null) {
+        if ($user === null || !$hasGroomerProfile) {
             // Record audit: claim attempt (unauthenticated or no profile yet)
             if ($lead->getId() !== null && $recipient->getId() !== null) {
                 $this->auditLogs->log(
@@ -145,14 +145,6 @@ final class LeadClaimController extends AbstractController
 
             // Prefer registering as a groomer to complete the claim
             return $this->redirectToRoute('app_register', ['role' => 'groomer']);
-        }
-
-        if (!$hasGroomerProfile) {
-            // Logged-in but no groomer profile yet: avoid redirect loop back to register
-            // and inform the user they need a profile to claim leads.
-            return $this->render('lead/claim_invalid.html.twig', [
-                'reason' => 'needs_profile',
-            ], new Response('', Response::HTTP_FORBIDDEN));
         }
 
         // User already linked to a groomer — enforce claim cooldown policy
