@@ -45,31 +45,6 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // After successful registration, if user registered as a groomer and
-            // we have a stored lead claim intent, redirect to re-attempt the claim
-            $session = $request->getSession();
-            $intent = $session->get('lead_claim_intent');
-            if ($selectedRole === User::ROLE_GROOMER && \is_array($intent)) {
-                $claimUrl = (string) ($intent['claim_url'] ?? '');
-                if ($claimUrl !== '') {
-                    // Check expiration from query (if provided)
-                    $qs = (string) parse_url($claimUrl, PHP_URL_QUERY);
-                    $params = [];
-                    if ($qs !== '') {
-                        parse_str($qs, $params);
-                    }
-                    $exp = isset($params['exp']) && ctype_digit((string) $params['exp']) ? (int) $params['exp'] : null;
-                    $stillValid = $exp === null || $exp >= time();
-
-                    // Clear the intent to avoid loops
-                    $session->remove('lead_claim_intent');
-
-                    if ($stillValid) {
-                        return $this->redirect($claimUrl);
-                    }
-                }
-            }
-
             return $this->redirectToRoute('app_homepage');
         }
 

@@ -133,14 +133,12 @@ final class LeadClaimController extends AbstractController
                 );
                 $this->em->flush();
             }
-            // Persist intent in session so we can retry after auth/registration
+            // Persist minimal intent in session
             $session = $request->getSession();
             $session->set('lead_claim_intent', [
                 'lead_id' => (int) $lid,
                 'recipient_id' => (int) $rid,
                 'email' => $normalizedEmail,
-                // Persist the fully signed URL so we can safely re-attempt later
-                'claim_url' => $uri,
             ]);
 
             // Prefer registering as a groomer to complete the claim
