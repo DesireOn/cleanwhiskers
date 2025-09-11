@@ -7,7 +7,6 @@
       <h3 style="margin:16px 0 8px 0; font-size:16px;">Lead details</h3>
       <ul style="margin:0 0 16px 20px; padding:0;">
         <li><strong>Name:</strong> {{ lead.fullName }}</li>
-        <li><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></li>
         {% if lead.phone %}
           <li><strong>Phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></li>
         {% endif %}
@@ -43,4 +42,3 @@
     </td>
   </tr>
 </table>
-
