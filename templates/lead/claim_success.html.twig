@@ -42,7 +42,7 @@
     {% set email_body -%}
 Hi {{ lead.fullName }},
 
-This is {{ groomerName }}. I just claimed your {{ serviceName }} request in {{ cityName }} and would love to help.
+This is {% if groomerName %}{{ groomerName }}{% else %}a local groomer{% endif %}. I just claimed your {{ serviceName }} request in {{ cityName }} and would love to help.
 
 Availability: [share a couple of time windows]
 Pricing: [share a simple estimate or range]
@@ -51,7 +51,7 @@ Next steps: [how to book or what you need from them]
 {% if groomerPhone %}You can also call/text me at {{ groomerPhone }}.
 
 {% endif %}Thanks!
-{{ groomerName }}
+{% if groomerName %}{{ groomerName }}{% else %}Your Groomer{% endif %}
     {%- endset %}
 
     <div style="margin-top:1rem; display:flex; gap:.75rem; flex-wrap:wrap;">

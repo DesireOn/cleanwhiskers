@@ -253,6 +253,7 @@ final class LeadClaimController extends AbstractController
             'cityName' => $lead->getCity()->getName(),
             'groomerName' => $profile instanceof GroomerProfile ? $profile->getBusinessName() : null,
             'groomerPhone' => $profile instanceof GroomerProfile ? $profile->getPhone() : null,
+            'isGuestClaim' => $isGuestClaim,
         ]);
     }
 
