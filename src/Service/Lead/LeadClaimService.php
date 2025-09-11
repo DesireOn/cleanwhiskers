@@ -65,6 +65,7 @@ final class LeadClaimService
             // Associate the recipient with the groomer that claimed it (optional but useful)
             // Link recipient to claiming groomer when available (nullable for guest claims)
             $managedRecipient->setGroomerProfile($groomer);
+            $managedRecipient->setClaimedAt($now);
 
             $this->em->flush();
 

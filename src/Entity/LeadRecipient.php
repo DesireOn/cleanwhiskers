@@ -50,6 +50,9 @@ class LeadRecipient
     #[ORM\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $createdAt;
 
+    #[ORM\Column(name: 'claimed_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $claimedAt = null;
+
     public function __construct(Lead $lead, string $email, string $claimTokenHash, \DateTimeImmutable $tokenExpiresAt)
     {
         $this->lead = $lead;
@@ -81,4 +84,7 @@ class LeadRecipient
     public function setTokenExpiresAt(\DateTimeImmutable $at): void { $this->tokenExpiresAt = $at; }
 
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+
+    public function getClaimedAt(): ?\DateTimeImmutable { return $this->claimedAt; }
+    public function setClaimedAt(?\DateTimeImmutable $claimedAt): void { $this->claimedAt = $claimedAt; }
 }

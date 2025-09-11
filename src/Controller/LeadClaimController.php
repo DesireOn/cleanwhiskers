@@ -47,6 +47,43 @@ final class LeadClaimController extends AbstractController
         $notExpired = ctype_digit($exp) && (int) $exp >= $now;
 
         if (!$isSigned || !$notExpired) {
+            // Attempt graceful fallback: if this exact recipient already claimed the lead,
+            // allow viewing details again even if link expired/invalid.
+            $lid = (string) $request->query->get('lid', '');
+            $rid = (string) $request->query->get('rid', '');
+            $email = (string) $request->query->get('email', '');
+            $token = (string) $request->query->get('token', '');
+
+            if (ctype_digit($lid) && ctype_digit($rid) && $email !== '' && $token !== '') {
+                $lead = $this->leads->find((int) $lid);
+                $recipient = $this->recipients->find((int) $rid);
+
+                if ($lead instanceof Lead && $recipient !== null && $recipient->getLead()->getId() === $lead->getId()) {
+                    $normalizedEmail = mb_strtolower(trim($email));
+                    $hashOk = hash('sha256', $token) === $recipient->getClaimTokenHash();
+                    $emailOk = $normalizedEmail !== '' && $normalizedEmail === mb_strtolower($recipient->getEmail());
+
+                    if ($hashOk && $emailOk && $recipient->getClaimedAt() !== null) {
+                        $this->logger->info('Lead claim link expired/invalid but recipient previously claimed; rendering details');
+
+                        $user = $this->getUser();
+                        $profile = null;
+                        if ($user !== null) {
+                            $profile = $this->groomers->findOneBy(['user' => $user]);
+                        }
+
+                        return $this->render('lead/claim_success.html.twig', [
+                            'lead' => $lead,
+                            'serviceName' => $lead->getService()->getName(),
+                            'cityName' => $lead->getCity()->getName(),
+                            'groomerName' => $profile instanceof GroomerProfile ? $profile->getBusinessName() : null,
+                            'groomerPhone' => $profile instanceof GroomerProfile ? $profile->getPhone() : null,
+                            'isGuestClaim' => !($profile instanceof GroomerProfile),
+                        ]);
+                    }
+                }
+            }
+
             $reason = !$isSigned ? 'invalid_signature' : 'expired';
             $this->logger->info('Lead claim denied: invalid or expired link', [
                 'signed' => $isSigned,
@@ -194,6 +231,18 @@ final class LeadClaimController extends AbstractController
 
         if (!$result->isSuccess()) {
             $code = $result->getCode();
+            // If this specific recipient already claimed the lead earlier, show success again
+            if ($code === 'already_claimed' && $recipient->getClaimedAt() !== null) {
+                return $this->render('lead/claim_success.html.twig', [
+                    'lead' => $lead,
+                    'serviceName' => $lead->getService()->getName(),
+                    'cityName' => $lead->getCity()->getName(),
+                    'groomerName' => $profile instanceof GroomerProfile ? $profile->getBusinessName() : null,
+                    'groomerPhone' => $profile instanceof GroomerProfile ? $profile->getPhone() : null,
+                    'isGuestClaim' => $isGuestClaim,
+                ]);
+            }
+
             $status = $code === 'already_claimed' ? Response::HTTP_CONFLICT : Response::HTTP_BAD_REQUEST;
 
             // Audit: conflict when already claimed
