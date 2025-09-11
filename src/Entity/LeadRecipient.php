@@ -9,7 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LeadRecipientRepository;
 
 #[ORM\Entity(repositoryClass: LeadRecipientRepository::class)]
-#[ORM\Table(name: 'lead_recipient')]
+#[ORM\Table(
+    name: 'lead_recipient',
+    indexes: [
+        new ORM\Index(name: 'idx_lead_recipient_claimed_at', columns: ['claimed_at'])
+    ]
+)]
 #[ORM\UniqueConstraint(name: 'uniq_lead_recipient_lead_email', columns: ['lead_id', 'email'])]
 class LeadRecipient
 {
