@@ -28,7 +28,8 @@
     <h2 style="margin-top:1.5rem;">Owner contact</h2>
     <div class="card" style="margin-top:.5rem;padding:1rem;">
       <p style="margin:0 0 .25rem 0;"><strong>Name:</strong> {{ lead.fullName }}</p>
-      <p style="margin:0 0 .25rem 0;"><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></p>
+      {# Temporarily hide email on success page #}
+      {# <p style="margin:0 0 .25rem 0;"><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></p> #}
       {% if lead.phone %}
         <p style="margin:0 0 .25rem 0;"><strong>Phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></p>
       {% endif %}
@@ -42,7 +43,7 @@
 
     <h2 style="margin-top:1.5rem;">Next steps</h2>
     <ol style="margin-top:.5rem; padding-left:1.25rem;">
-      <li>Introduce yourself by email or phone within 1–2 hours.</li>
+      <li>Introduce yourself by phone within 1–2 hours.</li>
       <li>Reference their request for {{ serviceName }} in {{ cityName }}.</li>
       <li>Share availability, pricing, and how to book.</li>
       <li>If no response, follow up politely within 24–48 hours.</li>
