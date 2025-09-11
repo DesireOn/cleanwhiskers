@@ -12,6 +12,8 @@ use App\Repository\LeadRepository;
 use App\Repository\AuditLogRepository;
 use App\Service\Lead\LeadClaimPolicy;
 use App\Service\Lead\LeadClaimService;
+use App\Service\Lead\LeadUrlBuilder;
+use App\Service\Lead\OutreachEmailFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +34,9 @@ final class LeadClaimController extends AbstractController
         private readonly AuditLogRepository $auditLogs,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
+        private readonly \Symfony\Component\Mailer\MailerInterface $mailer,
+        private readonly LeadUrlBuilder $urlBuilder,
+        private readonly OutreachEmailFactory $emailFactory,
     ) {
     }
 
@@ -292,6 +297,20 @@ final class LeadClaimController extends AbstractController
                 actorId: $profile instanceof GroomerProfile ? $profile->getId() : null,
             );
             $this->em->flush();
+        }
+
+        // Email the claimer with lead details and next steps
+        try {
+            $unsubUrl = $this->urlBuilder->buildSignedUnsubscribeUrl($recipient->getEmail());
+            $email = $this->emailFactory->buildLeadClaimSuccessEmail($lead, $recipient->getEmail(), $profile instanceof GroomerProfile ? $profile : null, $unsubUrl);
+            $this->mailer->send($email);
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed sending claim success email', [
+                'leadId' => $lead->getId(),
+                'recipientId' => $recipient->getId(),
+                'email' => $recipient->getEmail(),
+                'error' => $e->getMessage(),
+            ]);
         }
 
         // Render success directly so guests don't need registration
