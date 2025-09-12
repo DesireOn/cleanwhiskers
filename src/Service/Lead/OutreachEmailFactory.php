@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lead;
 
 use App\Entity\Lead;
+use App\Entity\GroomerProfile;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -140,6 +141,62 @@ final class OutreachEmailFactory
                     'companyName' => $this->companyName,
                     'companyAddress' => $this->companyAddress,
                     'contactEmail' => $this->contactEmail ?: $this->fromAddress,
+                ])
+                ->text($text);
+        }
+
+        return (new Email())
+            ->from($this->fromAddress)
+            ->to($to)
+            ->subject($subject)
+            ->text($text);
+    }
+
+    public function buildLeadClaimSuccessEmail(Lead $lead, string $to, ?GroomerProfile $groomer, string $unsubUrl): Email
+    {
+        $subject = sprintf('You claimed the %s lead in %s', $lead->getService()->getName(), $lead->getCity()->getName());
+
+        // Plain text fallback
+        $lines = [];
+        $lines[] = $subject;
+        $lines[] = '';
+        $lines[] = 'Lead details:';
+        $lines[] = sprintf('- Name: %s', $lead->getFullName());
+        $lines[] = sprintf('- Email: %s', $lead->getEmail());
+        if ($lead->getPhone()) {
+            $lines[] = sprintf('- Phone: %s', $lead->getPhone());
+        }
+        if ($lead->getPetType()) {
+            $lines[] = sprintf('- Pet: %s', $lead->getPetType());
+        }
+        if ($lead->getBreedSize()) {
+            $lines[] = sprintf('- Notes: %s', $lead->getBreedSize());
+        }
+        $lines[] = '';
+        $lines[] = 'Next steps:';
+        $lines[] = '- Reach out within 1 business hour.';
+        $lines[] = '- Confirm service details and availability.';
+        $lines[] = '- Schedule the appointment and follow up by email.';
+        $lines[] = '';
+        $lines[] = sprintf('Unsubscribe from future invites: %s', $unsubUrl);
+        $lines[] = sprintf('— %s', $this->companyName);
+        $text = implode("\n", $lines);
+
+        if ($this->twig instanceof Environment) {
+            return (new TemplatedEmail())
+                ->from($this->fromAddress)
+                ->to($to)
+                ->subject($subject)
+                ->htmlTemplate('emails/lead_claim_success.html.twig')
+                ->context([
+                    'lead' => $lead,
+                    'serviceName' => $lead->getService()->getName(),
+                    'cityName' => $lead->getCity()->getName(),
+                    'groomer' => $groomer,
+                    'companyName' => $this->companyName,
+                    'companyAddress' => $this->companyAddress,
+                    'contactEmail' => $this->contactEmail ?: $this->fromAddress,
+                    'unsubUrl' => $unsubUrl,
                 ])
                 ->text($text);
         }

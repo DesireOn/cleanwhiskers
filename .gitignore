@@ -63,3 +63,5 @@ public/styles/*
 public/styles/blocks/*
 public/styles/blocks/*.css
 public/illustrations/*.svg
+public/main.css
+public/main.js

@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\City;
 use App\Entity\Lead;
+use App\Entity\GroomerProfile;
 use App\Entity\Service;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -45,5 +46,21 @@ class LeadRepository extends ServiceEntityRepository
     {
         return $this->findOneBy(['ownerTokenHash' => $hash]);
     }
-}
 
+    public function findLastClaimedByGroomer(GroomerProfile $groomer): ?Lead
+    {
+        /** @var Lead|null $lead */
+        $lead = $this->createQueryBuilder('l')
+            ->where('l.claimedBy = :g')
+            ->andWhere('l.status = :status')
+            ->andWhere('l.claimedAt IS NOT NULL')
+            ->setParameter('g', $groomer)
+            ->setParameter('status', Lead::STATUS_CLAIMED)
+            ->orderBy('l.claimedAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $lead;
+    }
+}

@@ -62,31 +62,43 @@ $normalize = static function (string $p): string {
 };
 
 // If we have no changed PHP files or git diff failed, fall back to overall coverage
+// We'll further filter out controllers from the changed set before deciding.
 $useOverall = ($rcDiff !== 0) || count($changedFiles) === 0;
 
 $totalStatements = 0;
 $totalCovered = 0;
 
 if ($useOverall) {
-    // Sum all files under src/
-    foreach ($filesCoverage as $path => [$s, $c]) {
-        if (str_starts_with($normalize($path), 'src/')) {
-            $totalStatements += $s;
-            $totalCovered += $c;
-        }
-    }
-    $scope = 'overall src/';
-} else {
-    // Only consider changed files found in clover
-    $changedSet = array_flip(array_map($normalize, $changedFiles));
+    // Sum all files under src/, excluding src/Entity
     foreach ($filesCoverage as $path => [$s, $c]) {
         $np = $normalize($path);
-        if (isset($changedSet[$np])) {
+        if (str_starts_with($np, 'src/') && !str_starts_with($np, 'src/Entity/')) {
             $totalStatements += $s;
             $totalCovered += $c;
         }
     }
-    $scope = 'changed PHP files';
+    $scope = 'overall src/ (excluding src/Entity)';
+} else {
+    // Only consider changed files found in clover, excluding src/Controller/* and src/Entity/*
+    $normalizedChanged = array_map($normalize, $changedFiles);
+    $normalizedChanged = array_values(array_filter($normalizedChanged, static function (string $p): bool {
+        return !str_starts_with($p, 'src/Controller/') && !str_starts_with($p, 'src/Entity/');
+    }));
+
+    // If no non-controller/entity files remain, treat as nothing to check
+    if (count($normalizedChanged) === 0) {
+        $scope = 'changed PHP files (no non-controller/entity changes)';
+    } else {
+        $changedSet = array_flip($normalizedChanged);
+        foreach ($filesCoverage as $path => [$s, $c]) {
+            $np = $normalize($path);
+            if (isset($changedSet[$np])) {
+                $totalStatements += $s;
+                $totalCovered += $c;
+            }
+        }
+        $scope = 'changed PHP files (excluding src/Controller/* and src/Entity/*)';
+    }
 }
 
 // If no statements found (e.g., files without executable lines), treat as fully covered
