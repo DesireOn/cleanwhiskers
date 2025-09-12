@@ -58,6 +58,21 @@ jobs:
           if [ -n "${RECAPTCHA_SECRET}" ]; then echo "RECAPTCHA_SECRET='${RECAPTCHA_SECRET}'" >> .env; fi
           if [ -n "${HCAPTCHA_SITE_KEY}" ]; then echo "HCAPTCHA_SITE_KEY='${HCAPTCHA_SITE_KEY}'" >> .env; fi
           if [ -n "${HCAPTCHA_SECRET}" ]; then echo "HCAPTCHA_SECRET='${HCAPTCHA_SECRET}'" >> .env; fi
+          # Fallback: disable CAPTCHA if provider/keys are incomplete; enable only when valid
+          PROV_LOWER="$(printf '%s' "${CAPTCHA_PROVIDER}" | tr '[:upper:]' '[:lower:]')"
+          CAPTCHA_OK=false
+          if [ "$PROV_LOWER" = "recaptcha" ] || [ "$PROV_LOWER" = "google" ]; then
+            if [ -n "${RECAPTCHA_SITE_KEY}" ] && [ -n "${RECAPTCHA_SECRET}" ]; then CAPTCHA_OK=true; fi
+          elif [ "$PROV_LOWER" = "hcaptcha" ]; then
+            if [ -n "${HCAPTCHA_SITE_KEY}" ] && [ -n "${HCAPTCHA_SECRET}" ]; then CAPTCHA_OK=true; fi
+          fi
+          if [ "$CAPTCHA_OK" = true ]; then
+            echo "CAPTCHA_ENABLED='true'" >> .env
+            echo "CAPTCHA_PROVIDER='${PROV_LOWER}'" >> .env
+          else
+            echo "CAPTCHA_ENABLED='false'" >> .env
+            echo "CAPTCHA_PROVIDER='none'" >> .env
+          fi
 
       - name: Install Dependencies
         env:
