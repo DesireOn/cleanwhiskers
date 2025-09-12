@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lead Claimed{% endblock %}
+
+{% block body %}
+  <section class="container" style="max-width:720px;margin:2rem auto;">
+    <h1>Lead claimed successfully</h1>
+    <p>You claimed the {{ serviceName }} lead in {{ cityName }}.</p>
+
+    <div class="card" style="margin-top:1rem;padding:1rem;">
+      <p style="margin:0 0 .25rem 0;"><strong>Service:</strong> {{ serviceName }}</p>
+      <p style="margin:0 0 .25rem 0;"><strong>City:</strong> {{ cityName }}</p>
+      {% if lead.claimedAt %}
+        <p style="margin:0 0 .25rem 0;"><strong>Claimed at:</strong> {{ lead.claimedAt|date('H:i, M j') }}</p>
+      {% endif %}
+    </div>
+
+    <div class="card" style="margin-top:1rem;padding:1rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;color:#0f172a;">
+      <p style="margin:0 0 .25rem 0;">
+        <strong>Free leads for the next 2 months</strong>
+      </p>
+      <p style="margin:0;">
+        We’ll send new grooming leads to your inbox for free over the next two months. After that, leads will be paid.
+        If you’re fine with this, no action is needed — just watch your inbox. You can unsubscribe anytime from any email we send.
+      </p>
+    </div>
+
+    <h2 style="margin-top:1.5rem;">Owner contact</h2>
+    <div class="card" style="margin-top:.5rem;padding:1rem;">
+      <p style="margin:0 0 .25rem 0;"><strong>Name:</strong> {{ lead.fullName }}</p>
+      {# Temporarily hide email on success page #}
+      {# <p style="margin:0 0 .25rem 0;"><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></p> #}
+      {% if lead.phone %}
+        <p style="margin:0 0 .25rem 0;"><strong>Phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></p>
+      {% endif %}
+      {% if lead.petType %}
+        <p style="margin:0 0 .25rem 0;"><strong>Pet type:</strong> {{ lead.petType }}</p>
+      {% endif %}
+      {% if lead.breedSize %}
+        <p style="margin:0;"><strong>Breed/Size:</strong> {{ lead.breedSize }}</p>
+      {% endif %}
+    </div>
+
+    <h2 style="margin-top:1.5rem;">Next steps</h2>
+    <ol style="margin-top:.5rem; padding-left:1.25rem;">
+      <li>Introduce yourself by phone within 1–2 hours.</li>
+      <li>Reference their request for {{ serviceName }} in {{ cityName }}.</li>
+      <li>Share availability, pricing, and how to book.</li>
+      <li>If no response, follow up politely within 24–48 hours.</li>
+    </ol>
+
+  </section>
+{% endblock %}

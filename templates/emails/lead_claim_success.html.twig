@@ -1,0 +1,44 @@
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="font-family: Arial, sans-serif; color:#333;">
+  <tr>
+    <td>
+      <h2 style="margin:0 0 12px 0; font-size:20px;">You claimed the {{ serviceName }} lead in {{ cityName }}</h2>
+      <p style="margin:0 0 16px 0;">Great news — this lead is now yours. Below are the details and suggested next steps.</p>
+
+      <h3 style="margin:16px 0 8px 0; font-size:16px;">Lead details</h3>
+      <ul style="margin:0 0 16px 20px; padding:0;">
+        <li><strong>Name:</strong> {{ lead.fullName }}</li>
+        {% if lead.phone %}
+          <li><strong>Phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></li>
+        {% endif %}
+        {% if lead.petType %}
+          <li><strong>Pet:</strong> {{ lead.petType }}</li>
+        {% endif %}
+        {% if lead.breedSize %}
+          <li><strong>Notes:</strong> {{ lead.breedSize }}</li>
+        {% endif %}
+      </ul>
+
+      <h3 style="margin:16px 0 8px 0; font-size:16px;">Next steps</h3>
+      <ol style="margin:0 0 16px 20px; padding:0;">
+        <li>Contact the customer within 1 business hour.</li>
+        <li>Confirm services, pricing, and availability.</li>
+        <li>Schedule the appointment and send a confirmation.</li>
+        <li>Follow up if you can’t reach them within 24 hours.</li>
+      </ol>
+
+      {% if groomer %}
+        <p style="margin:0 0 16px 0;">Claimed by: <strong>{{ groomer.businessName }}</strong>{% if groomer.phone %} — {{ groomer.phone }}{% endif %}</p>
+      {% endif %}
+
+      <p style="color:#666; font-size:12px; margin:24px 0 0 0;">
+        This message was sent by {{ companyName }}. If you no longer wish to receive lead invites, you can <a href="{{ unsubUrl }}">unsubscribe here</a>.
+      </p>
+      {% if companyAddress %}
+        <p style="color:#666; font-size:12px; margin:4px 0 0 0;">{{ companyAddress }}</p>
+      {% endif %}
+      {% if contactEmail %}
+        <p style="color:#666; font-size:12px; margin:4px 0 0 0;">Contact: <a href="mailto:{{ contactEmail }}">{{ contactEmail }}</a></p>
+      {% endif %}
+    </td>
+  </tr>
+</table>
