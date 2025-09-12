@@ -69,24 +69,25 @@ $totalStatements = 0;
 $totalCovered = 0;
 
 if ($useOverall) {
-    // Sum all files under src/
+    // Sum all files under src/, excluding src/Entity
     foreach ($filesCoverage as $path => [$s, $c]) {
-        if (str_starts_with($normalize($path), 'src/')) {
+        $np = $normalize($path);
+        if (str_starts_with($np, 'src/') && !str_starts_with($np, 'src/Entity/')) {
             $totalStatements += $s;
             $totalCovered += $c;
         }
     }
-    $scope = 'overall src/';
+    $scope = 'overall src/ (excluding src/Entity)';
 } else {
-    // Only consider changed files found in clover, excluding src/Controller/*
+    // Only consider changed files found in clover, excluding src/Controller/* and src/Entity/*
     $normalizedChanged = array_map($normalize, $changedFiles);
     $normalizedChanged = array_values(array_filter($normalizedChanged, static function (string $p): bool {
-        return !str_starts_with($p, 'src/Controller/');
+        return !str_starts_with($p, 'src/Controller/') && !str_starts_with($p, 'src/Entity/');
     }));
 
-    // If no non-controller files remain, treat as nothing to check
+    // If no non-controller/entity files remain, treat as nothing to check
     if (count($normalizedChanged) === 0) {
-        $scope = 'changed PHP files (no non-controller changes)';
+        $scope = 'changed PHP files (no non-controller/entity changes)';
     } else {
         $changedSet = array_flip($normalizedChanged);
         foreach ($filesCoverage as $path => [$s, $c]) {
@@ -96,7 +97,7 @@ if ($useOverall) {
                 $totalCovered += $c;
             }
         }
-        $scope = 'changed PHP files (excluding src/Controller/*)';
+        $scope = 'changed PHP files (excluding src/Controller/* and src/Entity/*)';
     }
 }
 
