@@ -81,31 +81,5 @@ final class LeadClaimController extends AbstractController
         ], new Response('', $status));
     }
 
-    #[Route(path: '/leads/claim/success', name: 'lead_claim_success', methods: ['GET'])]
-    public function success(Request $request): Response
-    {
-        $lid = (string) $request->query->get('lid', '');
-        if (!ctype_digit($lid)) {
-            return $this->render('lead/claim_invalid.html.twig', [
-                'reason' => 'missing_params',
-            ], new Response('', Response::HTTP_BAD_REQUEST));
-        }
-
-        $lead = $this->leads->find((int) $lid);
-        if (!$lead instanceof Lead) {
-            return $this->render('lead/claim_invalid.html.twig', [
-                'reason' => 'not_found',
-            ], new Response('', Response::HTTP_NOT_FOUND));
-        }
-
-        // Guests can view the success page with basic lead info
-        return $this->render('lead/claim_success.html.twig', [
-            'lead' => $lead,
-            'serviceName' => $lead->getService()->getName(),
-            'cityName' => $lead->getCity()->getName(),
-            'groomerName' => null,
-            'groomerPhone' => null,
-            'isGuestClaim' => true,
-        ]);
-    }
+    // Removed insecure success endpoint that exposed lead details without validation.
 }
