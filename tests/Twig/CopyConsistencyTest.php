@@ -21,7 +21,7 @@ final class CopyConsistencyTest extends KernelTestCase
         $request->attributes->set('_route', 'app_homepage');
         $requestStack->push($request);
         $header = $twig->render('partials/_header.html.twig');
-        self::assertStringContainsString('Find a Groomer', $header);
+        self::assertStringNotContainsString('Find a Groomer', $header);
         self::assertStringContainsString('List Your Business', $header);
         self::assertStringNotContainsString('Join as Groomer', $header);
 

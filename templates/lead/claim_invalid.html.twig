@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  {% if reason == 'already_claimed' %}
+    Lead Already Claimed
+  {% else %}
+    Claim Link Invalid
+  {% endif %}
+{% endblock %}
+
+{% block body %}
+  <section class="container" style="max-width:720px;margin:2rem auto;">
+    <h1>
+      {% if reason == 'already_claimed' %}
+        This lead has already been claimed
+      {% else %}
+        We couldn’t verify your claim link
+      {% endif %}
+    </h1>
+    <p>
+      {% if reason == 'expired' %}
+        This link has expired. For security, claim links are time-limited.
+      {% elseif reason == 'invalid_signature' %}
+        The link signature is invalid. It may have been modified or is incomplete.
+      {% elseif reason == 'missing_params' %}
+        The link is missing required information.
+      {% elseif reason == 'not_found' %}
+        We couldn’t find a matching lead for this link.
+      {% elseif reason == 'cooldown' %}
+        You claimed a lead recently. To prevent hoarding, please wait before claiming another.
+        {% if cooldown_until is defined and cooldown_until %}
+          You can try again after {{ cooldown_until|date('H:i, M j') }}.
+        {% endif %}
+      {% elseif reason == 'already_claimed' %}
+        Thanks for checking — another groomer has already claimed this request. We’ll email you as new opportunities become available.
+      {% else %}
+        The link appears invalid. Please try again.
+      {% endif %}
+    </p>
+
+    <div style="margin-top:1.25rem;">
+      <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
+    </div>
+  </section>
+{% endblock %}
