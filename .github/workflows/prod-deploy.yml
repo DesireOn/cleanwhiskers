@@ -23,6 +23,12 @@ jobs:
       APP_SECRET: ${{ secrets.APP_SECRET }}
       APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
       LEADS_FEATURE_ENABLED: ${{ secrets.LEADS_FEATURE_ENABLED }}
+      # CAPTCHA configuration
+      CAPTCHA_PROVIDER: ${{ secrets.CAPTCHA_PROVIDER }}
+      RECAPTCHA_SITE_KEY: ${{ secrets.RECAPTCHA_SITE_KEY }}
+      RECAPTCHA_SECRET: ${{ secrets.RECAPTCHA_SECRET }}
+      HCAPTCHA_SITE_KEY: ${{ secrets.HCAPTCHA_SITE_KEY }}
+      HCAPTCHA_SECRET: ${{ secrets.HCAPTCHA_SECRET }}
 
     steps:
       - name: Checkout Code
@@ -46,6 +52,12 @@ jobs:
           if [ -n "${APP_SECRET}" ]; then echo "APP_SECRET='${APP_SECRET}'" >> .env; fi
           if [ -n "${APP_BASE_URL}" ]; then echo "APP_BASE_URL='${APP_BASE_URL}'" >> .env; fi
           if [ -n "${LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED='${LEADS_FEATURE_ENABLED}'" >> .env; fi
+          # Inject CAPTCHA settings if provided
+          if [ -n "${CAPTCHA_PROVIDER}" ]; then echo "CAPTCHA_PROVIDER='${CAPTCHA_PROVIDER}'" >> .env; fi
+          if [ -n "${RECAPTCHA_SITE_KEY}" ]; then echo "RECAPTCHA_SITE_KEY='${RECAPTCHA_SITE_KEY}'" >> .env; fi
+          if [ -n "${RECAPTCHA_SECRET}" ]; then echo "RECAPTCHA_SECRET='${RECAPTCHA_SECRET}'" >> .env; fi
+          if [ -n "${HCAPTCHA_SITE_KEY}" ]; then echo "HCAPTCHA_SITE_KEY='${HCAPTCHA_SITE_KEY}'" >> .env; fi
+          if [ -n "${HCAPTCHA_SECRET}" ]; then echo "HCAPTCHA_SECRET='${HCAPTCHA_SECRET}'" >> .env; fi
 
       - name: Install Dependencies
         env:
