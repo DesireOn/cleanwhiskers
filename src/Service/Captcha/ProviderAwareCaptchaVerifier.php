@@ -8,9 +8,9 @@ final class ProviderAwareCaptchaVerifier implements CaptchaVerifierInterface
 {
     public function __construct(
         private readonly string $provider,
-        private readonly NullCaptchaVerifier $nullVerifier,
-        private readonly ?RecaptchaVerifier $recaptchaVerifier = null,
-        private readonly ?HcaptchaVerifier $hcaptchaVerifier = null,
+        private readonly CaptchaVerifierInterface $nullVerifier,
+        private readonly ?CaptchaVerifierInterface $recaptchaVerifier = null,
+        private readonly ?CaptchaVerifierInterface $hcaptchaVerifier = null,
     ) {
     }
 
@@ -24,4 +24,3 @@ final class ProviderAwareCaptchaVerifier implements CaptchaVerifierInterface
         };
     }
 }
-

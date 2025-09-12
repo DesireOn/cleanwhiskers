@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Service\Captcha;
 
 use App\Service\Captcha\CaptchaVerifierInterface;
-use App\Service\Captcha\HcaptchaVerifier;
 use App\Service\Captcha\NullCaptchaVerifier;
 use App\Service\Captcha\ProviderAwareCaptchaVerifier;
-use App\Service\Captcha\RecaptchaVerifier;
 use PHPUnit\Framework\TestCase;
 
 final class ProviderAwareCaptchaVerifierTest extends TestCase
@@ -16,8 +14,8 @@ final class ProviderAwareCaptchaVerifierTest extends TestCase
     public function testDelegatesToRecaptcha(): void
     {
         $null = new NullCaptchaVerifier(false);
-        $recaptcha = $this->createMock(RecaptchaVerifier::class);
-        $hcaptcha = $this->createMock(HcaptchaVerifier::class);
+        $recaptcha = $this->createMock(CaptchaVerifierInterface::class);
+        $hcaptcha = $this->createMock(CaptchaVerifierInterface::class);
 
         $recaptcha->expects(self::once())
             ->method('verify')
@@ -31,8 +29,8 @@ final class ProviderAwareCaptchaVerifierTest extends TestCase
     public function testDelegatesToGoogleAlias(): void
     {
         $null = new NullCaptchaVerifier(false);
-        $recaptcha = $this->createMock(RecaptchaVerifier::class);
-        $hcaptcha = $this->createMock(HcaptchaVerifier::class);
+        $recaptcha = $this->createMock(CaptchaVerifierInterface::class);
+        $hcaptcha = $this->createMock(CaptchaVerifierInterface::class);
 
         $recaptcha->expects(self::once())
             ->method('verify')
@@ -46,8 +44,8 @@ final class ProviderAwareCaptchaVerifierTest extends TestCase
     public function testDelegatesToHcaptcha(): void
     {
         $null = new NullCaptchaVerifier(false);
-        $recaptcha = $this->createMock(RecaptchaVerifier::class);
-        $hcaptcha = $this->createMock(HcaptchaVerifier::class);
+        $recaptcha = $this->createMock(CaptchaVerifierInterface::class);
+        $hcaptcha = $this->createMock(CaptchaVerifierInterface::class);
 
         $hcaptcha->expects(self::once())
             ->method('verify')
@@ -79,4 +77,3 @@ final class ProviderAwareCaptchaVerifierTest extends TestCase
         self::assertFalse($verifier->verify('token', 'ip'));
     }
 }
-

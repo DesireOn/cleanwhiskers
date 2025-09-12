@@ -7,6 +7,7 @@ namespace App\Service\Lead;
 use App\Dto\Lead\LeadSubmissionDto;
 use App\Repository\CityRepository;
 use App\Repository\ServiceRepository;
+use App\Service\Captcha\CaptchaVerifierInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -16,6 +17,7 @@ final class LeadSubmissionValidator
         private readonly ValidatorInterface $validator,
         private readonly CityRepository $cities,
         private readonly ServiceRepository $services,
+        private readonly CaptchaVerifierInterface $captcha,
     ) {
     }
 
@@ -48,6 +50,11 @@ final class LeadSubmissionValidator
         // 4) Phone basic sanity: at least 7 digits
         if ($dto->phone !== '' && !$this->isValidPhone($dto->phone)) {
             $errors[] = 'Please provide a valid phone number.';
+        }
+
+        // 5) CAPTCHA verification
+        if (!$this->captcha->verify($dto->captchaToken, $dto->clientIp)) {
+            $errors[] = 'CAPTCHA verification failed.';
         }
 
         return array_values(array_unique($errors));
