@@ -1,5 +1,9 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        captcha_provider: '%env(string:CAPTCHA_PROVIDER)%'
+        recaptcha_site_key: '%env(string:RECAPTCHA_SITE_KEY)%'
+        hcaptcha_site_key: '%env(string:HCAPTCHA_SITE_KEY)%'
 
 when@test:
     twig:

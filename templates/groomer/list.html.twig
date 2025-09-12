@@ -24,6 +24,14 @@
     <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
     <script type="module" src="{{ asset('js/faq-accordion.js') }}" defer></script>
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
+    {# CAPTCHA widget script (if enabled) #}
+    {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+        {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        {% elseif captcha_provider|lower == 'hcaptcha' %}
+            <script src="https://hcaptcha.com/1/api.js" async defer></script>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
@@ -72,6 +80,23 @@
             <label class="hero__label" for="lead-breed">Breed / Size</label>
             <input class="hero__input hero__input--icon hero__input--icon-breed" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
           </div>
+
+          {# Honeypot field (hidden) #}
+          <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
+            <label for="lead-website">Website</label>
+            <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          {# CAPTCHA widget #}
+          {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+            <div class="hero__field">
+              {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}"></div>
+              {% elseif captcha_provider|lower == 'hcaptcha' %}
+                <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}"></div>
+              {% endif %}
+            </div>
+          {% endif %}
 
           <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
         </form>

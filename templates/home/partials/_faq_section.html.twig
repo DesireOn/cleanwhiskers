@@ -133,6 +133,23 @@
           <input class="hero__input hero__input--icon hero__input--icon-breed" type="text" id="lead2-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
         </div>
 
+        {# Honeypot field (hidden) #}
+        <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
+          <label for="lead2-website">Website</label>
+          <input type="text" id="lead2-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        {# CAPTCHA widget #}
+        {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+          <div class="hero__field">
+            {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+              <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}"></div>
+            {% elseif captcha_provider|lower == 'hcaptcha' %}
+              <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}"></div>
+            {% endif %}
+          </div>
+        {% endif %}
+
         <button type="submit" class="hero__cta btn btn--accent" aria-describedby="second-cta-privacy">Get My Free Quote</button>
         <p id="second-cta-privacy" class="second-cta__note">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
