@@ -62,6 +62,7 @@ $normalize = static function (string $p): string {
 };
 
 // If we have no changed PHP files or git diff failed, fall back to overall coverage
+// We'll further filter out controllers from the changed set before deciding.
 $useOverall = ($rcDiff !== 0) || count($changedFiles) === 0;
 
 $totalStatements = 0;
@@ -77,16 +78,26 @@ if ($useOverall) {
     }
     $scope = 'overall src/';
 } else {
-    // Only consider changed files found in clover
-    $changedSet = array_flip(array_map($normalize, $changedFiles));
-    foreach ($filesCoverage as $path => [$s, $c]) {
-        $np = $normalize($path);
-        if (isset($changedSet[$np])) {
-            $totalStatements += $s;
-            $totalCovered += $c;
+    // Only consider changed files found in clover, excluding src/Controller/*
+    $normalizedChanged = array_map($normalize, $changedFiles);
+    $normalizedChanged = array_values(array_filter($normalizedChanged, static function (string $p): bool {
+        return !str_starts_with($p, 'src/Controller/');
+    }));
+
+    // If no non-controller files remain, treat as nothing to check
+    if (count($normalizedChanged) === 0) {
+        $scope = 'changed PHP files (no non-controller changes)';
+    } else {
+        $changedSet = array_flip($normalizedChanged);
+        foreach ($filesCoverage as $path => [$s, $c]) {
+            $np = $normalize($path);
+            if (isset($changedSet[$np])) {
+                $totalStatements += $s;
+                $totalCovered += $c;
+            }
         }
+        $scope = 'changed PHP files (excluding src/Controller/*)';
     }
-    $scope = 'changed PHP files';
 }
 
 // If no statements found (e.g., files without executable lines), treat as fully covered
