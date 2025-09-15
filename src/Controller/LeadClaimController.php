@@ -21,6 +21,8 @@ final class LeadClaimController extends AbstractController
         private readonly LeadClaimValidator $validator,
         private readonly LeadClaimProcessor $processor,
         private readonly LeadRepository $leads,
+        private readonly \App\Service\Lead\LeadUrlBuilder $urlBuilder,
+        private readonly bool $featureLeadClaimUndo = false,
     ) {}
 
     #[Route(path: '/leads/claim', name: 'lead_claim', methods: ['GET'])]
@@ -65,6 +67,15 @@ final class LeadClaimController extends AbstractController
 
         if ($outcome->isSuccess()) {
             $this->addFlash('success', 'Lead claimed successfully.');
+            $releaseUrl = null;
+            $releaseUntil = null;
+            if ($this->featureLeadClaimUndo) {
+                $allowedUntil = $recipient->getReleaseAllowedUntil();
+                if ($lead->getId() !== null && $recipient->getId() !== null && $allowedUntil instanceof \DateTimeImmutable) {
+                    $releaseUrl = $this->urlBuilder->buildSignedReleaseUrl((int) $lead->getId(), (int) $recipient->getId(), $allowedUntil);
+                    $releaseUntil = $allowedUntil;
+                }
+            }
             return $this->render('lead/claim_success.html.twig', [
                 'lead' => $lead,
                 'serviceName' => $lead->getService()->getName(),
@@ -72,6 +83,9 @@ final class LeadClaimController extends AbstractController
                 'groomerName' => null,
                 'groomerPhone' => null,
                 'isGuestClaim' => true,
+                'undoEnabled' => $this->featureLeadClaimUndo,
+                'releaseUrl' => $releaseUrl,
+                'releaseUntil' => $releaseUntil,
             ]);
         }
 

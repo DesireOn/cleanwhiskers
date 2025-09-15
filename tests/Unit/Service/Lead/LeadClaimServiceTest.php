@@ -161,6 +161,121 @@ final class LeadClaimServiceTest extends TestCase
         self::assertNotNull($recipient->getClaimedAt());
     }
 
+    public function testClearsReleaseAndSetsUndoWindowWhenEnabled(): void
+    {
+        [$lead, $recipient] = $this->makeLeadAndRecipient();
+        $this->setId($lead, 10);
+        $this->setId($recipient, 5);
+
+        // Pre-set previous release markers that should be cleared
+        $recipient->setReleasedAt(new DateTimeImmutable('-5 minutes'));
+        $recipient->setReleaseAllowedUntil(new DateTimeImmutable('+30 minutes'));
+
+        // EntityManager returns managed lead and recipient
+        $this->em->method('find')->willReturnCallback(function (string $cls, int $id) use ($lead, $recipient) {
+            return $cls === Lead::class ? $lead : $recipient;
+        });
+        $this->em->expects(self::once())->method('flush');
+
+        // Enable undo with a custom window
+        $service = new LeadClaimService(
+            $this->em,
+            $this->createMock(\App\Repository\LeadRepository::class),
+            $this->createMock(\App\Repository\LeadRecipientRepository::class),
+            enableUndo: true,
+            undoWindowMinutes: 15,
+        );
+
+        $res = $service->claim($lead, $recipient, null);
+        self::assertTrue($res->isSuccess());
+
+        // releasedAt cleared, new releaseAllowedUntil set relative to claimedAt
+        self::assertNull($recipient->getReleasedAt());
+        self::assertInstanceOf(DateTimeImmutable::class, $recipient->getReleaseAllowedUntil());
+        self::assertInstanceOf(DateTimeImmutable::class, $recipient->getClaimedAt());
+        $delta = $recipient->getReleaseAllowedUntil()->getTimestamp() - $recipient->getClaimedAt()->getTimestamp();
+        self::assertSame(15 * 60, $delta, 'Undo window should be exactly 15 minutes after claimedAt');
+    }
+
+    public function testNoUndoFieldsWhenDisabled(): void
+    {
+        [$lead, $recipient] = $this->makeLeadAndRecipient();
+        $this->setId($lead, 10);
+        $this->setId($recipient, 5);
+
+        // Pre-set to verify they get cleared appropriately
+        $recipient->setReleasedAt(new DateTimeImmutable('-10 minutes'));
+        $recipient->setReleaseAllowedUntil(new DateTimeImmutable('+10 minutes'));
+
+        $this->em->method('find')->willReturnCallback(function (string $cls, int $id) use ($lead, $recipient) {
+            return $cls === Lead::class ? $lead : $recipient;
+        });
+        $this->em->expects(self::once())->method('flush');
+
+        // Disable undo
+        $service = new LeadClaimService(
+            $this->em,
+            $this->createMock(\App\Repository\LeadRepository::class),
+            $this->createMock(\App\Repository\LeadRecipientRepository::class),
+            enableUndo: false,
+            undoWindowMinutes: 10,
+        );
+
+        $res = $service->claim($lead, $recipient, null);
+        self::assertTrue($res->isSuccess());
+        self::assertNull($recipient->getReleasedAt());
+        self::assertNull($recipient->getReleaseAllowedUntil());
+    }
+
+    public function testAlreadyClaimedWhenClaimedByExists(): void
+    {
+        [$lead, $recipient] = $this->makeLeadAndRecipient();
+        $this->setId($lead, 10);
+        $this->setId($recipient, 5);
+
+        // Lead appears pending but has claimedBy set
+        $user = (new User())->setEmail('pro@example.com')->setPassword('x')->setRoles([User::ROLE_GROOMER]);
+        $groomer = new GroomerProfile($user, new City('Sofia'), 'Biz', 'About');
+        $lead->setClaimedBy($groomer);
+
+        $this->em->method('find')->willReturnCallback(function (string $cls, int $id) use ($lead) {
+            return $cls === Lead::class ? $lead : null;
+        });
+
+        $service = new LeadClaimService(
+            $this->em,
+            $this->createMock(\App\Repository\LeadRepository::class),
+            $this->createMock(\App\Repository\LeadRecipientRepository::class)
+        );
+        $res = $service->claim($lead, $recipient, null);
+        self::assertSame('already_claimed', $res->getCode());
+    }
+
+    public function testUndoWindowMinimumOneMinute(): void
+    {
+        [$lead, $recipient] = $this->makeLeadAndRecipient();
+        $this->setId($lead, 10);
+        $this->setId($recipient, 5);
+
+        $this->em->method('find')->willReturnCallback(function (string $cls, int $id) use ($lead, $recipient) {
+            return $cls === Lead::class ? $lead : $recipient;
+        });
+
+        $service = new LeadClaimService(
+            $this->em,
+            $this->createMock(\App\Repository\LeadRepository::class),
+            $this->createMock(\App\Repository\LeadRecipientRepository::class),
+            enableUndo: true,
+            undoWindowMinutes: 0, // should clamp to 1 minute
+        );
+        $res = $service->claim($lead, $recipient, null);
+
+        self::assertTrue($res->isSuccess());
+        self::assertInstanceOf(DateTimeImmutable::class, $recipient->getReleaseAllowedUntil());
+        $delta = $recipient->getReleaseAllowedUntil()->getTimestamp() - $recipient->getClaimedAt()->getTimestamp();
+        self::assertSame(60, $delta, 'Undo window should be minimum 1 minute');
+    }
+
     // No need for repository behavior in these unit tests; we provide mocks above.
 
     /**

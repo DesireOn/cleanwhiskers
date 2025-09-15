@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lead Released{% endblock %}
+
+{% block body %}
+  <section class="container" style="max-width:720px;margin:2rem auto;">
+    <h1>Lead released</h1>
+    <p>You have released the {{ serviceName }} lead in {{ cityName }}. It is now available for other groomers to claim.</p>
+
+    <div style="margin-top:1.25rem;">
+      <a class="btn" href="{{ path('app_homepage') }}">Back to Homepage</a>
+    </div>
+  </section>
+{% endblock %}
+

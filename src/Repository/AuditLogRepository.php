@@ -163,4 +163,23 @@ class AuditLogRepository extends ServiceEntityRepository
             ],
         );
     }
+
+    public function logLeadReleased(Lead $lead, LeadRecipient $recipient): void
+    {
+        if ($lead->getId() === null || $recipient->getId() === null) {
+            return;
+        }
+
+        $this->log(
+            event: 'release_success',
+            subjectType: AuditLog::SUBJECT_LEAD,
+            subjectId: (int) $lead->getId(),
+            metadata: [
+                'recipientId' => $recipient->getId(),
+                'recipientEmail' => $recipient->getEmail(),
+            ],
+            actorType: AuditLog::ACTOR_GROOMER,
+            actorId: null,
+        );
+    }
 }
