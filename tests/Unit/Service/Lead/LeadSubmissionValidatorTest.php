@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Service\Lead;
 use App\Dto\Lead\LeadSubmissionDto;
 use App\Repository\CityRepository;
 use App\Repository\ServiceRepository;
-use App\Service\Captcha\CaptchaVerifierInterface;
 use App\Service\Lead\LeadSubmissionValidator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -22,15 +21,12 @@ final class LeadSubmissionValidatorTest extends TestCase
     private CityRepository $cities;
     /** @var ServiceRepository&MockObject */
     private ServiceRepository $services;
-    /** @var CaptchaVerifierInterface&MockObject */
-    private CaptchaVerifierInterface $captcha;
 
     protected function setUp(): void
     {
         $this->validator = $this->getMockBuilder(\Symfony\Component\Validator\Validator\ValidatorInterface::class)->getMock();
         $this->cities = $this->createMock(CityRepository::class);
         $this->services = $this->createMock(ServiceRepository::class);
-        $this->captcha = $this->createMock(CaptchaVerifierInterface::class);
     }
 
     public function testValidSubmissionReturnsNoErrors(): void
@@ -49,9 +45,7 @@ final class LeadSubmissionValidatorTest extends TestCase
         $this->validator->method('validate')->willReturn(new TestViolationList([]));
         $this->cities->method('findOneBySlug')->with('sofia')->willReturn(new \App\Entity\City('Sofia'));
         $this->services->method('findOneBySlug')->with('mobile-dog-grooming')->willReturn((new \App\Entity\Service())->setName('Mobile Dog Grooming'));
-        $this->captcha->method('verify')->willReturn(true);
-
-        $svc = new LeadSubmissionValidator($this->validator, $this->cities, $this->services, $this->captcha);
+        $svc = new LeadSubmissionValidator($this->validator, $this->cities, $this->services);
         $errors = $svc->validate($dto);
         self::assertSame([], $errors);
     }
@@ -75,9 +69,7 @@ final class LeadSubmissionValidatorTest extends TestCase
         $this->validator->method('validate')->willReturn($violations);
         $this->cities->method('findOneBySlug')->with('invalid-city')->willReturn(null);
         $this->services->method('findOneBySlug')->with('invalid-service')->willReturn(null);
-        $this->captcha->method('verify')->willReturn(false);
-
-        $svc = new LeadSubmissionValidator($this->validator, $this->cities, $this->services, $this->captcha);
+        $svc = new LeadSubmissionValidator($this->validator, $this->cities, $this->services);
         $errors = $svc->validate($dto);
 
         self::assertContains('Full name is required.', $errors);
@@ -86,7 +78,7 @@ final class LeadSubmissionValidatorTest extends TestCase
         self::assertContains('Please select a valid city.', $errors);
         self::assertContains('Please select a valid service.', $errors);
         self::assertContains('Please provide a valid phone number.', $errors);
-        self::assertContains('CAPTCHA verification failed.', $errors);
+        // CAPTCHA is verified once at controller level now; validator no longer checks it.
     }
 }
 
