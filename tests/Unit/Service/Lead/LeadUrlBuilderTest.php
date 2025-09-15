@@ -55,5 +55,40 @@ final class LeadUrlBuilderTest extends TestCase
         $url = $builder->buildSignedUnsubscribeUrl('foo@bar.com');
         self::assertStringEndsWith('#sig', $url);
     }
-}
 
+    public function testBuildSignedReleaseUrl(): void
+    {
+        $builder = new LeadUrlBuilder($this->signer, 'https://example.test');
+
+        $allowedUntil = new \DateTimeImmutable('@1700000000'); // fixed timestamp for determinism
+
+        $this->signer->expects($this->once())
+            ->method('sign')
+            ->with($this->callback(function (string $url) use ($allowedUntil): bool {
+                self::assertStringStartsWith('https://example.test/leads/release?', $url);
+                self::assertStringContainsString('lid=123', $url);
+                self::assertStringContainsString('rid=456', $url);
+                self::assertStringContainsString('exp=' . $allowedUntil->getTimestamp(), $url);
+                return true;
+            }))
+            ->willReturnCallback(static fn(string $url): string => $url.'#sig');
+
+        $signed = $builder->buildSignedReleaseUrl(123, 456, $allowedUntil);
+        self::assertStringEndsWith('#sig', $signed);
+    }
+
+    public function testBuildSignedReleaseUrlWithTrailingSlashBase(): void
+    {
+        $builder = new LeadUrlBuilder($this->signer, 'https://example.test/');
+
+        $allowedUntil = new \DateTimeImmutable('@1700000000');
+
+        $this->signer->expects($this->once())
+            ->method('sign')
+            ->with($this->stringStartsWith('https://example.test/leads/release?'))
+            ->willReturnCallback(static fn(string $url): string => $url.'#sig');
+
+        $signed = $builder->buildSignedReleaseUrl(1, 2, $allowedUntil);
+        self::assertStringEndsWith('#sig', $signed);
+    }
+}

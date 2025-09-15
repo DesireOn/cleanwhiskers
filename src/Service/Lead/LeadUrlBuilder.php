@@ -37,4 +37,15 @@ final class LeadUrlBuilder
         $url = rtrim($this->appBaseUrl, '/') . '/unsubscribe?' . $query;
         return $this->signer->sign($url);
     }
+
+    public function buildSignedReleaseUrl(int $leadId, int $recipientId, \DateTimeImmutable $allowedUntil): string
+    {
+        $query = http_build_query([
+            'lid' => (int) $leadId,
+            'rid' => (int) $recipientId,
+            'exp' => $allowedUntil->getTimestamp(),
+        ]);
+        $url = rtrim($this->appBaseUrl, '/') . '/leads/release?' . $query;
+        return $this->signer->sign($url);
+    }
 }

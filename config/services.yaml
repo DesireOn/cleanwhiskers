@@ -7,6 +7,8 @@ parameters:
     feature.leads.enabled: '%env(bool:LEADS_FEATURE_ENABLED)%'
     lead.claim_ttl_minutes: '%env(int:LEAD_CLAIM_TTL_MINUTES)%'
     alerts.admin_email: '%env(string:ALERT_EMAIL)%'
+    feature.lead_claim_undo: '%env(bool:FEATURE_LEAD_CLAIM_UNDO)%'
+    lead.undo_window_minutes: '%env(int:LEAD_UNDO_WINDOW_MINUTES)%'
 
 services:
     # default configuration for services in *this* file
@@ -74,6 +76,11 @@ services:
         arguments:
             $appBaseUrl: '%env(APP_BASE_URL)%'
 
+    App\Service\Lead\LeadClaimService:
+        arguments:
+            $enableUndo: '%feature.lead_claim_undo%'
+            $undoWindowMinutes: '%lead.undo_window_minutes%'
+
     App\Service\Lead\OutreachEmailFactory:
         arguments:
             $fromAddress: '%env(OUTREACH_CONTACT_EMAIL)%'
@@ -89,3 +96,7 @@ services:
         arguments:
             $secret: '%kernel.secret%'
             $hashParameter: 'signature'
+
+    App\Controller\LeadClaimController:
+        arguments:
+            $featureLeadClaimUndo: '%feature.lead_claim_undo%'

@@ -53,6 +53,12 @@ class LeadRecipient
     #[ORM\Column(name: 'claimed_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $claimedAt = null;
 
+    #[ORM\Column(name: 'release_allowed_until', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $releaseAllowedUntil = null;
+
+    #[ORM\Column(name: 'released_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $releasedAt = null;
+
     public function __construct(Lead $lead, string $email, string $claimTokenHash, \DateTimeImmutable $tokenExpiresAt)
     {
         $this->lead = $lead;
@@ -87,4 +93,10 @@ class LeadRecipient
 
     public function getClaimedAt(): ?\DateTimeImmutable { return $this->claimedAt; }
     public function setClaimedAt(?\DateTimeImmutable $claimedAt): void { $this->claimedAt = $claimedAt; }
+
+    public function getReleaseAllowedUntil(): ?\DateTimeImmutable { return $this->releaseAllowedUntil; }
+    public function setReleaseAllowedUntil(?\DateTimeImmutable $until): void { $this->releaseAllowedUntil = $until; }
+
+    public function getReleasedAt(): ?\DateTimeImmutable { return $this->releasedAt; }
+    public function setReleasedAt(?\DateTimeImmutable $releasedAt): void { $this->releasedAt = $releasedAt; }
 }
