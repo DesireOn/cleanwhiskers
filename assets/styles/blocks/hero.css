@@ -198,6 +198,40 @@
 
 .hero.hero--listing::before { display: none; }
 
+/* Captcha: responsive centering and scaling */
+.captcha-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-block-size: 78px; /* reserve space for widget */
+    margin-block: var(--space-1) var(--space-2);
+}
+
+.captcha-field .g-recaptcha,
+.captcha-field .h-captcha {
+    margin-inline: auto;
+    transform-origin: left top;
+}
+
+/* Scale down captcha on very narrow screens to prevent overflow */
+@media (max-width: 360px) {
+    .captcha-field .g-recaptcha,
+    .captcha-field .h-captcha { transform: scale(0.92); }
+}
+@media (max-width: 330px) {
+    .captcha-field .g-recaptcha,
+    .captcha-field .h-captcha { transform: scale(0.86); }
+}
+@media (max-width: 300px) {
+    .captcha-field .g-recaptcha,
+    .captcha-field .h-captcha { transform: scale(0.80); }
+}
+
+/* Align with inputs on larger screens */
+@media (min-width: 680px) {
+    .captcha-field { justify-content: flex-start; }
+}
+
 .hero--listing .hero__inner {
     inline-size: min(100%, 70rem);
     margin-inline: auto;
