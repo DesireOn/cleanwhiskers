@@ -89,11 +89,11 @@
 
           {# CAPTCHA widget #}
           {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
-            <div class="hero__field">
+            <div class="hero__field captcha-field">
               {% if captcha_provider|lower in ['recaptcha', 'google'] %}
-                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}"></div>
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}" data-theme="dark"></div>
               {% elseif captcha_provider|lower == 'hcaptcha' %}
-                <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}"></div>
+                <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}" data-theme="dark"></div>
               {% endif %}
             </div>
           {% endif %}
