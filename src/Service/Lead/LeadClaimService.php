@@ -19,6 +19,8 @@ final class LeadClaimService
         private readonly EntityManagerInterface $em,
         private readonly LeadRepository $leads,
         private readonly LeadRecipientRepository $recipients,
+        private readonly bool $enableUndo = false,
+        private readonly int $undoWindowMinutes = 10,
     ) {
     }
 
@@ -66,6 +68,12 @@ final class LeadClaimService
             // Link recipient to claiming groomer when available (nullable for guest claims)
             $managedRecipient->setGroomerProfile($groomer);
             $managedRecipient->setClaimedAt($now);
+            if ($this->enableUndo) {
+                $undoMinutes = max(1, $this->undoWindowMinutes);
+                $managedRecipient->setReleaseAllowedUntil($now->modify('+' . $undoMinutes . ' minutes'));
+            } else {
+                $managedRecipient->setReleaseAllowedUntil(null);
+            }
 
             $this->em->flush();
 
