@@ -68,6 +68,8 @@ final class LeadClaimService
             // Link recipient to claiming groomer when available (nullable for guest claims)
             $managedRecipient->setGroomerProfile($groomer);
             $managedRecipient->setClaimedAt($now);
+            // Clear any prior release marker to allow undo on this claim cycle
+            $managedRecipient->setReleasedAt(null);
             if ($this->enableUndo) {
                 $undoMinutes = max(1, $this->undoWindowMinutes);
                 $managedRecipient->setReleaseAllowedUntil($now->modify('+' . $undoMinutes . ' minutes'));

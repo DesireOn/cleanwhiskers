@@ -68,7 +68,10 @@ final class LeadReleaseService
             $lockedLead->setClaimedAt(null);
             $lockedLead->setUpdatedAt($now);
 
-            $managedRecipient->setReleasedAt($now);
+            // Reset recipient claim metadata so future claims/undo behave correctly
+            $managedRecipient->setClaimedAt(null);
+            $managedRecipient->setReleasedAt(null);
+            $managedRecipient->setGroomerProfile(null);
 
             // Audit release success before flushing so it's part of the same transaction
             $this->auditLogs->log(
