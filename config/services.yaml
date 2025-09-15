@@ -40,11 +40,24 @@ services:
         arguments:
             $featureLeadsEnabled: '%feature.leads.enabled%'
 
-    # Captcha verifier (null by default; enable via env if needed)
-    App\Service\Captcha\CaptchaVerifierInterface: '@App\Service\Captcha\NullCaptchaVerifier'
+    # CAPTCHA configuration
+    # Provider-aware delegating verifier; chooses implementation via env CAPTCHA_PROVIDER
+    App\Service\Captcha\CaptchaVerifierInterface: '@App\Service\Captcha\ProviderAwareCaptchaVerifier'
+    App\Service\Captcha\ProviderAwareCaptchaVerifier:
+        arguments:
+            $provider: '%env(string:CAPTCHA_PROVIDER)%'
+            $nullVerifier: '@App\Service\Captcha\NullCaptchaVerifier'
+            $recaptchaVerifier: '@?App\Service\Captcha\RecaptchaVerifier'
+            $hcaptchaVerifier: '@?App\Service\Captcha\HcaptchaVerifier'
     App\Service\Captcha\NullCaptchaVerifier:
         arguments:
             $enabled: '%env(bool:CAPTCHA_ENABLED)%'
+    App\Service\Captcha\RecaptchaVerifier:
+        arguments:
+            $secretKey: '%env(string:RECAPTCHA_SECRET)%'
+    App\Service\Captcha\HcaptchaVerifier:
+        arguments:
+            $secretKey: '%env(string:HCAPTCHA_SECRET)%'
 
     App\MessageHandler\DispatchLeadMessageHandler:
         arguments:

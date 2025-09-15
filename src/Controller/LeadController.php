@@ -8,6 +8,7 @@ use App\Service\FeatureFlags;
 use App\Dto\Lead\LeadSubmissionDto;
 use App\Service\Lead\LeadSubmissionService;
 use App\Service\Lead\LeadSubmissionValidator;
+use App\Service\Captcha\CaptchaVerifierInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,7 @@ final class LeadController extends AbstractController
         private readonly FeatureFlags $featureFlags,
         private readonly LeadSubmissionValidator $validator,
         private readonly LeadSubmissionService $submissionService,
+        private readonly CaptchaVerifierInterface $captcha,
     ) {
     }
 
@@ -30,6 +32,13 @@ final class LeadController extends AbstractController
         }
 
         $dto = $this->buildDtoFromRequest($request);
+
+        // Early CAPTCHA verification (short-circuit on failure)
+        if (!$this->captcha->verify($dto->captchaToken, $dto->clientIp)) {
+            return $this->render('lead/submit_error.html.twig', [
+                'errors' => ['CAPTCHA verification failed.'],
+            ], new Response('', Response::HTTP_BAD_REQUEST));
+        }
 
         $errors = $this->validator->validate($dto);
 
@@ -65,7 +74,10 @@ final class LeadController extends AbstractController
 
         $dto->consentToShare = (bool) $request->request->get('consent_to_share', false);
         $dto->honeypot = (string) $request->request->get('website', '');
-        $dto->captchaToken = (string) $request->request->get('g-recaptcha-response', '');
+        // Capture token from either reCAPTCHA or hCaptcha, depending on provider
+        $recaptcha = $request->request->get('g-recaptcha-response');
+        $hcaptcha = $request->request->get('h-captcha-response');
+        $dto->captchaToken = (string) ($recaptcha ?? $hcaptcha ?? '');
         $dto->clientIp = $request->getClientIp();
 
         return $dto;

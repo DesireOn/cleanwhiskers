@@ -25,6 +25,12 @@ jobs:
       STAGING_APP_SECRET: ${{ secrets.STAGING_APP_SECRET }}
       STAGING_APP_BASE_URL: ${{ secrets.STAGING_APP_BASE_URL }}
       STAGING_LEADS_FEATURE_ENABLED: ${{ secrets.STAGING_LEADS_FEATURE_ENABLED }}
+      # CAPTCHA configuration
+      STAGING_CAPTCHA_PROVIDER: ${{ secrets.STAGING_CAPTCHA_PROVIDER }}
+      STAGING_RECAPTCHA_SITE_KEY: ${{ secrets.STAGING_RECAPTCHA_SITE_KEY }}
+      STAGING_RECAPTCHA_SECRET: ${{ secrets.STAGING_RECAPTCHA_SECRET }}
+      STAGING_HCAPTCHA_SITE_KEY: ${{ secrets.STAGING_HCAPTCHA_SITE_KEY }}
+      STAGING_HCAPTCHA_SECRET: ${{ secrets.STAGING_HCAPTCHA_SECRET }}
 
     steps:
       - name: Checkout Code
@@ -48,6 +54,27 @@ jobs:
           if [ -n "${STAGING_APP_SECRET}" ]; then echo "APP_SECRET='${STAGING_APP_SECRET}'" >> .env; fi
           if [ -n "${STAGING_APP_BASE_URL}" ]; then echo "APP_BASE_URL='${STAGING_APP_BASE_URL}'" >> .env; fi
           if [ -n "${STAGING_LEADS_FEATURE_ENABLED}" ]; then echo "LEADS_FEATURE_ENABLED='${STAGING_LEADS_FEATURE_ENABLED}'" >> .env; fi
+          # Inject CAPTCHA settings if provided
+          if [ -n "${STAGING_CAPTCHA_PROVIDER}" ]; then echo "CAPTCHA_PROVIDER='${STAGING_CAPTCHA_PROVIDER}'" >> .env; fi
+          if [ -n "${STAGING_RECAPTCHA_SITE_KEY}" ]; then echo "RECAPTCHA_SITE_KEY='${STAGING_RECAPTCHA_SITE_KEY}'" >> .env; fi
+          if [ -n "${STAGING_RECAPTCHA_SECRET}" ]; then echo "RECAPTCHA_SECRET='${STAGING_RECAPTCHA_SECRET}'" >> .env; fi
+          if [ -n "${STAGING_HCAPTCHA_SITE_KEY}" ]; then echo "HCAPTCHA_SITE_KEY='${STAGING_HCAPTCHA_SITE_KEY}'" >> .env; fi
+          if [ -n "${STAGING_HCAPTCHA_SECRET}" ]; then echo "HCAPTCHA_SECRET='${STAGING_HCAPTCHA_SECRET}'" >> .env; fi
+          # Fallback: disable CAPTCHA if provider/keys are incomplete; enable only when valid
+          PROV_LOWER="$(printf '%s' "${STAGING_CAPTCHA_PROVIDER}" | tr '[:upper:]' '[:lower:]')"
+          CAPTCHA_OK=false
+          if [ "$PROV_LOWER" = "recaptcha" ] || [ "$PROV_LOWER" = "google" ]; then
+            if [ -n "${STAGING_RECAPTCHA_SITE_KEY}" ] && [ -n "${STAGING_RECAPTCHA_SECRET}" ]; then CAPTCHA_OK=true; fi
+          elif [ "$PROV_LOWER" = "hcaptcha" ]; then
+            if [ -n "${STAGING_HCAPTCHA_SITE_KEY}" ] && [ -n "${STAGING_HCAPTCHA_SECRET}" ]; then CAPTCHA_OK=true; fi
+          fi
+          if [ "$CAPTCHA_OK" = true ]; then
+            echo "CAPTCHA_ENABLED='true'" >> .env
+            echo "CAPTCHA_PROVIDER='${PROV_LOWER}'" >> .env
+          else
+            echo "CAPTCHA_ENABLED='false'" >> .env
+            echo "CAPTCHA_PROVIDER='none'" >> .env
+          fi
 
       - name: Install Dependencies
         env:
