@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Service\Lead;
 
+use App\Entity\AuditLog;
 use App\Entity\Lead;
 use App\Entity\LeadRecipient;
 use DateTimeImmutable;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AuditLogRepository;
 
 final class LeadReleaseService
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly AuditLogRepository $auditLogs,
+    )
     {
     }
 
@@ -65,6 +70,19 @@ final class LeadReleaseService
 
             $managedRecipient->setReleasedAt($now);
 
+            // Audit release success before flushing so it's part of the same transaction
+            $this->auditLogs->log(
+                event: 'release_success',
+                subjectType: AuditLog::SUBJECT_LEAD,
+                subjectId: (int) $lockedLead->getId(),
+                metadata: [
+                    'recipientId' => $managedRecipient->getId(),
+                    'recipientEmail' => $managedRecipient->getEmail(),
+                ],
+                actorType: AuditLog::ACTOR_GROOMER,
+                actorId: null,
+            );
+
             $this->em->flush();
             $outcome = LeadReleaseResult::success();
         });
@@ -73,4 +91,3 @@ final class LeadReleaseService
         return $outcome;
     }
 }
-
