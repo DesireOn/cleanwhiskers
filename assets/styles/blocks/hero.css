@@ -365,13 +365,14 @@
 }
 
 @media (min-width: 768px) {
+    /* Keep CTA forms single-column on all devices */
     .lead-capture-form {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         column-gap: var(--space-3);
         row-gap: var(--space-3);
         align-items: end;
     }
     .lead-capture-form .hero__cta {
-        grid-column: 1 / -1; /* keep CTA spanning both columns */
+        grid-column: 1 / -1; /* CTA remains full width */
     }
 }
