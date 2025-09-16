@@ -16,6 +16,8 @@
             <a class="nav__link nav__link--cta is-disabled" aria-disabled="true" tabindex="-1" title="{{ 'Coming soon'|trans }}" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }} <span class="badge">{{ 'Coming soon'|trans }}</span></a>
           </li>
           <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
+          <li class="nav__item"><a class="nav__link" href="{{ path('app_privacy') }}" {% if currentRoute == 'app_privacy' %}aria-current="page"{% endif %}>{{ 'Privacy'|trans }}</a></li>
+          <li class="nav__item"><a class="nav__link" href="{{ path('app_terms') }}" {% if currentRoute == 'app_terms' %}aria-current="page"{% endif %}>{{ 'Terms'|trans }}</a></li>
         </ul>
       </nav>
     </div>
