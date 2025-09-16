@@ -383,6 +383,20 @@
     }
 }
 
+/* Two-column quote form on desktop */
+@media (min-width: 1024px) {
+    .lead-capture-form {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+    /* Full-width rows */
+    .lead-capture-form .hero__field--full,
+    .lead-capture-form .captcha-field,
+    .lead-capture-form .hero__cta {
+        grid-column: 1 / -1;
+    }
+}
+
 /* Loading state for CTA button */
 .hero__cta.is-loading {
     position: relative;
