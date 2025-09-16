@@ -120,6 +120,11 @@
         </div>
 
         <div class="hero__field">
+          <label class="hero__label" for="lead2-email">Email</label>
+          <input class="hero__input" type="email" id="lead2-email" name="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+
+        <div class="hero__field">
           <label class="hero__label" for="lead2-pet-type">Pet Type</label>
           <select class="hero__input hero__input--icon hero__input--icon-paw" id="lead2-pet-type" name="pet_type" required>
             <option value="" disabled selected>Select pet type</option>
@@ -137,6 +142,13 @@
         <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
           <label for="lead2-website">Website</label>
           <input type="text" id="lead2-website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="hero__field">
+          <label class="hero__label" for="lead2-consent">
+            <input type="checkbox" id="lead2-consent" name="consent_to_share" required />
+            I agree to be contacted by relevant groomers via phone or email
+          </label>
         </div>
 
         {# CAPTCHA widget #}
