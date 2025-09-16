@@ -220,7 +220,10 @@ details[open] .faq__chevron {
   display: inline-flex;
   gap: 8px;
   align-items: center;
+  justify-content: center; /* center icon + text as a group */
+  text-align: center;      /* center multi-line text */
   margin-top: var(--space-2);
+  margin-inline: auto;     /* center the element itself within grid */
   color: var(--color-text-muted, #5c5c5c);
   font-size: 0.9375rem;
 }

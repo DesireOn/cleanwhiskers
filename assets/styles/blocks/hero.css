@@ -336,6 +336,13 @@
     grid-column: 1 / -1; /* full width under fields */
 }
 
+/* Ensure the privacy note spans full width and centers */
+.lead-capture-form .hero__note {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-inline: auto;
+}
+
 /* Inline input icons (hero top form only) */
 .hero .lead-capture-form .hero__input.hero__input--icon {
     padding-left: 44px; /* room for left icon */
@@ -392,7 +399,8 @@
     /* Full-width rows */
     .lead-capture-form .hero__field--full,
     .lead-capture-form .captcha-field,
-    .lead-capture-form .hero__cta {
+    .lead-capture-form .hero__cta,
+    .lead-capture-form .hero__note {
         grid-column: 1 / -1;
     }
 }
