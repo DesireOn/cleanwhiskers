@@ -170,9 +170,9 @@
           </svg>
           Your info is private and only shared with a matched groomer.
           By submitting, you agree to our
-          <a href="{{ path('app_homepage') }}#terms">Terms</a>
+          <a href="{{ path('app_terms') }}">Terms</a>
           and acknowledge our
-          <a href="{{ path('app_homepage') }}#privacy">Privacy Policy</a>.
+          <a href="{{ path('app_privacy') }}">Privacy Policy</a>.
           {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
             {% if captcha_provider|lower in ['recaptcha', 'google'] %}
               This site is protected by reCAPTCHA and the Google
