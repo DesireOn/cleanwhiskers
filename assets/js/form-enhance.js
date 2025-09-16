@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const forms = document.querySelectorAll('form.lead-capture-form');
   forms.forEach((form) => {
     const fields = form.querySelectorAll('input[required], select[required]');
+    const submitBtn = form.querySelector('button[type="submit"], .hero__cta.btn');
 
     fields.forEach((field) => {
       field.addEventListener('invalid', (e) => {
@@ -74,6 +75,23 @@ document.addEventListener('DOMContentLoaded', () => {
             () => container.classList.remove('is-shaking'),
             { once: true }
           );
+        }
+        // Ensure submit button isn't stuck in loading state on invalid
+        if (submitBtn) {
+          submitBtn.classList.remove('is-loading');
+          submitBtn.removeAttribute('aria-busy');
+          submitBtn.disabled = false;
+          const original = submitBtn.getAttribute('data-original-label');
+          if (original) submitBtn.textContent = original;
+        }
+      } else {
+        // Valid submission: show loading state to prevent duplicate submits
+        if (submitBtn && !submitBtn.classList.contains('is-loading')) {
+          submitBtn.setAttribute('data-original-label', submitBtn.textContent.trim());
+          submitBtn.classList.add('is-loading');
+          submitBtn.setAttribute('aria-busy', 'true');
+          submitBtn.disabled = true;
+          // Keep text but prepend a subtle spinner via CSS
         }
       }
     });
