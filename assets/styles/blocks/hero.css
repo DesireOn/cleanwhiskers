@@ -69,6 +69,30 @@
     gap: var(--space-3);
 }
 
+/* Privacy + terms note under CTA (dark-over-image) */
+.hero__note {
+    margin-top: var(--space-2);
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 0.9375rem; /* 15px */
+    line-height: 1.5;
+    max-width: 60ch;
+    margin-inline: auto;
+}
+
+.hero__note a {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.6);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 140ms ease, color 140ms ease;
+}
+
+.hero__note a:hover,
+.hero__note a:focus-visible {
+    text-decoration-color: #fff;
+    outline: 2px solid transparent; /* preserve focus ring area */
+}
+
 .hero__controls {
     display: grid;
     gap: var(--space-2);
@@ -204,13 +228,19 @@
     justify-content: center;
     align-items: center;
     min-block-size: 78px; /* reserve space for widget */
-    margin-block: var(--space-1) var(--space-2);
+    /* Rely on form grid gap for vertical rhythm */
+    margin: 0;
+    padding-block: var(--space-1);
+    /* Center within CSS grid when applicable */
+    justify-self: center;
+    max-inline-size: 100%;
 }
 
 .captcha-field .g-recaptcha,
 .captcha-field .h-captcha {
+    display: inline-block;
     margin-inline: auto;
-    transform-origin: left top;
+    transform-origin: center top;
 }
 
 /* Scale down captcha on very narrow screens to prevent overflow */
@@ -227,9 +257,9 @@
     .captcha-field .h-captcha { transform: scale(0.80); }
 }
 
-/* Align with inputs on larger screens */
+/* Keep CAPTCHA centered on larger screens as well */
 @media (min-width: 680px) {
-    .captcha-field { justify-content: flex-start; }
+    .captcha-field { justify-content: center; }
 }
 
 .hero--listing .hero__inner {
@@ -252,6 +282,15 @@
     font-size: clamp(var(--fs-hero-subtitle-min), 1.2vw + 0.75rem, var(--fs-hero-subtitle-max));
     margin-bottom: var(--space-4);
     color: var(--color-text);
+}
+
+/* Adjust note colors for light listing variant */
+.hero--listing .hero__note {
+    color: var(--color-text-muted, #5c5c5c);
+}
+.hero--listing .hero__note a {
+    color: var(--color-primary, var(--color-accent, #ff9800));
+    text-decoration-color: color-mix(in oklab, currentColor, #000 18%);
 }
 
 .hero--listing .hero__cta {
@@ -293,8 +332,21 @@
     gap: var(--space-2);
 }
 
+/* Optional helper text under inputs */
+.field-hint {
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 0.875rem;
+}
+
 .lead-capture-form .hero__cta {
     grid-column: 1 / -1; /* full width under fields */
+}
+
+/* Ensure the privacy note spans full width and centers */
+.lead-capture-form .hero__note {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-inline: auto;
 }
 
 /* Inline input icons (hero top form only) */
@@ -332,13 +384,48 @@
 }
 
 @media (min-width: 768px) {
+    /* Keep CTA forms single-column on all devices */
     .lead-capture-form {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         column-gap: var(--space-3);
         row-gap: var(--space-3);
         align-items: end;
     }
     .lead-capture-form .hero__cta {
-        grid-column: 1 / -1; /* keep CTA spanning both columns */
+        grid-column: 1 / -1; /* CTA remains full width */
     }
 }
+
+/* Two-column quote form on desktop */
+@media (min-width: 1024px) {
+    .lead-capture-form {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+    /* Full-width rows */
+    .lead-capture-form .hero__field--full,
+    .lead-capture-form .captcha-field,
+    .lead-capture-form .hero__cta,
+    .lead-capture-form .hero__note {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Loading state for CTA button */
+.hero__cta.is-loading {
+    position: relative;
+    pointer-events: none;
+}
+.hero__cta.is-loading::before {
+    content: "";
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-top-color: #fff;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: -2px;
+    animation: hero-btn-spin 700ms linear infinite;
+}
+@keyframes hero-btn-spin { to { transform: rotate(360deg); } }
