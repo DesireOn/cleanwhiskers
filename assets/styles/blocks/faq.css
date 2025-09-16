@@ -219,6 +219,20 @@ details[open] .faq__chevron {
   font-size: 0.9375rem;
 }
 
+.second-cta__note a {
+  color: var(--color-primary, var(--color-accent, #ff9800));
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, currentColor, #000 18%);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 140ms ease, color 140ms ease;
+}
+
+.second-cta__note a:hover,
+.second-cta__note a:focus-visible {
+  text-decoration-color: currentColor;
+  outline: 2px solid transparent;
+}
+
 /* Improve contrast for form labels when reused outside the hero */
 .second-cta-section .hero__label { color: var(--color-text); }
 

@@ -69,6 +69,30 @@
     gap: var(--space-3);
 }
 
+/* Privacy + terms note under CTA (dark-over-image) */
+.hero__note {
+    margin-top: var(--space-2);
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 0.9375rem; /* 15px */
+    line-height: 1.5;
+    max-width: 60ch;
+    margin-inline: auto;
+}
+
+.hero__note a {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.6);
+    text-underline-offset: 2px;
+    transition: text-decoration-color 140ms ease, color 140ms ease;
+}
+
+.hero__note a:hover,
+.hero__note a:focus-visible {
+    text-decoration-color: #fff;
+    outline: 2px solid transparent; /* preserve focus ring area */
+}
+
 .hero__controls {
     display: grid;
     gap: var(--space-2);
@@ -252,6 +276,15 @@
     font-size: clamp(var(--fs-hero-subtitle-min), 1.2vw + 0.75rem, var(--fs-hero-subtitle-max));
     margin-bottom: var(--space-4);
     color: var(--color-text);
+}
+
+/* Adjust note colors for light listing variant */
+.hero--listing .hero__note {
+    color: var(--color-text-muted, #5c5c5c);
+}
+.hero--listing .hero__note a {
+    color: var(--color-primary, var(--color-accent, #ff9800));
+    text-decoration-color: color-mix(in oklab, currentColor, #000 18%);
 }
 
 .hero--listing .hero__cta {
