@@ -228,13 +228,19 @@
     justify-content: center;
     align-items: center;
     min-block-size: 78px; /* reserve space for widget */
-    margin-block: var(--space-1) var(--space-2);
+    /* Rely on form grid gap for vertical rhythm */
+    margin: 0;
+    padding-block: var(--space-1);
+    /* Center within CSS grid when applicable */
+    justify-self: center;
+    max-inline-size: 100%;
 }
 
 .captcha-field .g-recaptcha,
 .captcha-field .h-captcha {
+    display: inline-block;
     margin-inline: auto;
-    transform-origin: left top;
+    transform-origin: center top;
 }
 
 /* Scale down captcha on very narrow screens to prevent overflow */
