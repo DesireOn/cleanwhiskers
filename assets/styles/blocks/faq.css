@@ -217,15 +217,25 @@ details[open] .faq__chevron {
 }
 
 .second-cta__note {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center; /* center icon + text as a group */
-  text-align: center;      /* center multi-line text */
+  /* Readable, single-flow text under CTA (no multi-item layout) */
+  display: block;
+  position: relative;
+  padding-left: 26px; /* space for lock icon */
+  text-align: left;
+  line-height: 1.5;
+  max-width: 62ch;
   margin-top: var(--space-2);
-  margin-inline: auto;     /* center the element itself within grid */
+  margin-inline: auto;
   color: var(--color-text-muted, #5c5c5c);
   font-size: 0.9375rem;
+}
+
+.second-cta__note svg {
+  position: absolute;
+  left: 0;
+  top: 0.3em; /* align roughly with first baseline */
+  width: 18px;
+  height: 18px;
 }
 
 .second-cta__note a {
@@ -301,6 +311,8 @@ details[open] .faq__chevron {
   .second-cta__form .second-cta__note,
   .second-cta__form .captcha-field,
   .second-cta__form .hero__field--full { grid-column: 1 / -1; }
+  /* On desktop, keep note visually tied to the left edge of the form */
+  .second-cta__form .second-cta__note { justify-self: start; }
 }
 
 @media (prefers-reduced-motion: reduce) {
