@@ -251,9 +251,9 @@
     .captcha-field .h-captcha { transform: scale(0.80); }
 }
 
-/* Align with inputs on larger screens */
+/* Keep CAPTCHA centered on larger screens as well */
 @media (min-width: 680px) {
-    .captcha-field { justify-content: flex-start; }
+    .captcha-field { justify-content: center; }
 }
 
 .hero--listing .hero__inner {
