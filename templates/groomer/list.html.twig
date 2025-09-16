@@ -110,7 +110,28 @@
             </div>
           {% endif %}
 
-          <button type="submit" class="hero__cta btn btn--accent">Get My Free Quote</button>
+          <button type="submit" class="hero__cta btn btn--accent" aria-describedby="lead-privacy-note">Get My Free Quote</button>
+          <p id="lead-privacy-note" class="hero__note">
+            By submitting, you agree to our
+            <a href="{{ path('app_homepage') }}#terms">Terms</a>
+            and acknowledge our
+            <a href="{{ path('app_homepage') }}#privacy">Privacy Policy</a>.
+            {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+              {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+                This site is protected by reCAPTCHA and the Google
+                <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
+                and
+                <a href="https://policies.google.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
+                apply.
+              {% elseif captcha_provider|lower == 'hcaptcha' %}
+                This site is protected by hCaptcha and its
+                <a href="https://www.hcaptcha.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
+                and
+                <a href="https://www.hcaptcha.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
+                apply.
+              {% endif %}
+            {% endif %}
+          </p>
         </form>
 
         <div class="hero__meta trust-symbols" aria-label="Trust indicators">
