@@ -326,6 +326,12 @@
     gap: var(--space-2);
 }
 
+/* Optional helper text under inputs */
+.field-hint {
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 0.875rem;
+}
+
 .lead-capture-form .hero__cta {
     grid-column: 1 / -1; /* full width under fields */
 }
@@ -376,3 +382,22 @@
         grid-column: 1 / -1; /* CTA remains full width */
     }
 }
+
+/* Loading state for CTA button */
+.hero__cta.is-loading {
+    position: relative;
+    pointer-events: none;
+}
+.hero__cta.is-loading::before {
+    content: "";
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-top-color: #fff;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: -2px;
+    animation: hero-btn-spin 700ms linear infinite;
+}
+@keyframes hero-btn-spin { to { transform: rotate(360deg); } }

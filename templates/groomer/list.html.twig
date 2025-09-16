@@ -64,12 +64,14 @@
 
           <div class="hero__field">
             <label class="hero__label" for="lead-phone">Phone Number</label>
-            <input class="hero__input hero__input--icon hero__input--icon-phone" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required />
+            <input class="hero__input hero__input--icon hero__input--icon-phone" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required pattern="^[0-9+().\\s-]{7,}$" title="Use digits and symbols like + ( ) -" aria-describedby="lead-phone-hint" />
+            <div id="lead-phone-hint" class="field-hint">We’ll only use this to connect you with a groomer. No spam.</div>
           </div>
 
           <div class="hero__field">
             <label class="hero__label" for="lead-email">Email</label>
-            <input class="hero__input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" />
+            <input class="hero__input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" aria-describedby="lead-email-hint" />
+            <div id="lead-email-hint" class="field-hint">Optional — helpful for sending quotes and updates.</div>
           </div>
 
           <div class="hero__field">
@@ -83,7 +85,8 @@
 
           <div class="hero__field">
             <label class="hero__label" for="lead-breed">Breed / Size</label>
-            <input class="hero__input hero__input--icon hero__input--icon-breed" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" />
+            <input class="hero__input hero__input--icon hero__input--icon-breed" type="text" id="lead-breed" name="breed_size" placeholder="e.g., Golden Retriever, Large" autocomplete="off" aria-describedby="lead-breed-hint" />
+            <div id="lead-breed-hint" class="field-hint">Optional — helps estimate timing and price.</div>
           </div>
 
           {# Honeypot field (hidden) #}
@@ -92,7 +95,7 @@
             <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
           </div>
 
-          <div class="hero__field">
+          <div class="hero__field hero__field--full">
             <label class="hero__label" for="lead-consent">
               <input type="checkbox" id="lead-consent" name="consent_to_share" required />
               I agree to be contacted by relevant groomers via phone or email

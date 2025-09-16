@@ -210,6 +210,12 @@ details[open] .faq__chevron {
   padding: var(--space-4);
 }
 
+/* Optional helper text under inputs */
+.second-cta__card .field-hint {
+  color: var(--color-text-muted, #5c5c5c);
+  font-size: 0.875rem;
+}
+
 .second-cta__note {
   display: inline-flex;
   gap: 8px;
@@ -280,6 +286,20 @@ details[open] .faq__chevron {
   }
 }
 
+/* Form layout: single column on mobile, two on desktop */
+.second-cta__form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+@media (min-width: 860px) {
+  .second-cta__form { grid-template-columns: repeat(2, 1fr); }
+  .second-cta__form .hero__cta,
+  .second-cta__form .second-cta__note,
+  .second-cta__form .captcha-field,
+  .second-cta__form .hero__field--full { grid-column: 1 / -1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .faq__chevron { transition: none; }
 }
@@ -309,3 +329,22 @@ details[open] .faq__chevron {
 .second-cta__card.is-shaking {
   animation: form-shake 420ms ease;
 }
+
+/* Loading state for CTA button (light theme) */
+.second-cta-section .hero__cta.is-loading {
+  position: relative;
+  pointer-events: none;
+}
+.second-cta-section .hero__cta.is-loading::before {
+  content: "";
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 999px;
+  border: 2px solid color-mix(in oklab, var(--color-text), #000 20%);
+  border-top-color: var(--color-text);
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: -2px;
+  animation: cta-btn-spin 700ms linear infinite;
+}
+@keyframes cta-btn-spin { to { transform: rotate(360deg); } }
