@@ -4,38 +4,129 @@
   <section class="container legal-page" aria-labelledby="privacy-title">
     <h1 id="privacy-title">Privacy Policy</h1>
     <p>We respect your privacy. This page explains what information we collect, how we use it, how we share it to fulfill your request, and your choices.</p>
-    <h2 id="what-we-collect">Information We Collect</h2>
+
+    <h2 id="do-not-sell">Do Not Sell or Share My Personal Information</h2>
     <p>
-      Contact details you provide (such as name, email, and phone), your city, and service preferences
-      so we can connect you with a relevant groomer and manage your request.
+      We do not sell your personal information. If our practices change, you will have the right to opt out by contacting us at
+      <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>
+      or using the
+      <a href="{{ path('app_privacy_do_not_sell') }}">Do Not Sell or Share My Info</a>
+      link.
     </p>
+
+    <h2 id="what-we-collect">Categories of Data Collected</h2>
+    <p>Under the CCPA/CPRA, we disclose the categories of personal information we collect:</p>
+    <div class="table-wrapper" role="region" aria-labelledby="data-categories-heading">
+      <h3 id="data-categories-heading" class="sr-only">Data Categories Table</h3>
+      <table class="legal-table" aria-describedby="data-categories-caption">
+        <caption id="data-categories-caption">Categories of personal information collected in the last 12 months</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Examples</th>
+            <th scope="col">Collected</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Identifiers</td>
+            <td>Name, email address, phone number</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Contact Information</td>
+            <td>City, service preferences, message content you submit</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Internet Activity</td>
+            <td>IP address, device/browser, pages viewed, referral, cookies</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Geolocation (approximate)</td>
+            <td>City/region inferred from IP or your input</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td>Precise Geolocation</td>
+            <td>GPS‑level or street‑level location</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Sensitive Personal Information</td>
+            <td>Government IDs, payment card data, precise geolocation, health data</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td>Inferences</td>
+            <td>Profiles or preferences derived from other data</td>
+            <td>No</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <h2 id="how-we-use">How We Use Information</h2>
     <p>
-      We use your information to process inquiries, match you with suitable groomers, and communicate about your request.
-      We do not sell your personal data.
+      We use your information to process inquiries, match you with suitable groomers, and communicate about your request. We also use analytics to improve site performance and detect/prevent abuse.
     </p>
-    <h2 id="data-sharing">Data Sharing</h2>
-    <p>
-      We share your contact details and service request with relevant, vetted groomers solely to fulfill your request.
-      We may also use trusted service providers (for example, email and SMS providers) to deliver messages and operate our service.
-      These providers act on our instructions and are not permitted to use your data for their own purposes.
-    </p>
+
+    <h2 id="data-sharing">Categories of Recipients</h2>
+    <p>We share personal information only as needed to operate our service:</p>
+    <ul>
+      <li><strong>Matched groomers:</strong> We share your request and contact details to connect you with relevant providers.</li>
+      <li><strong>Service providers:</strong> Email and SMS platforms, hosting/infrastructure, error monitoring, and analytics acting under our instructions.</li>
+      <li><strong>Compliance/safety:</strong> Where required by law, to protect rights and safety, or to prevent fraud/abuse.</li>
+    </ul>
+    <p>We do not sell your personal information.</p>
+
     <h2 id="retention">Data Retention</h2>
     <ul>
       <li><strong>Unclaimed leads:</strong> Purged after 90 days.</li>
       <li><strong>Lead records:</strong> Anonymized after 1 year (for reporting and fraud‑prevention trends).</li>
     </ul>
-    <p>
-      We may retain limited records as required by law, to resolve disputes, or to enforce our agreements.
-    </p>
-    <h2 id="your-choices">Your Choices</h2>
+    <p>We may retain limited records as required by law, to resolve disputes, or to enforce our agreements.</p>
+
+    <h2 id="your-rights">Your Rights (CCPA/CPRA and similar state laws)</h2>
     <ul>
-      <li><strong>Opt‑out of communications:</strong> Use the unsubscribe link included in our emails. You can also contact us to opt out.</li>
-      <li><strong>Access, correction, deletion:</strong> Email <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> to request access to, correction of, or deletion of your data.</li>
+      <li><strong>Right to know/access:</strong> Learn what we collect, how we use it, and who we share it with.</li>
+      <li><strong>Right to deletion:</strong> Request deletion of personal information (subject to legal exceptions).</li>
+      <li><strong>Right to correction:</strong> Request that inaccurate information be corrected.</li>
+      <li><strong>Right to opt out of sale/share:</strong> If we ever sell/share data, you can opt out via the
+        <a href="{{ path('app_privacy_do_not_sell') }}">Do Not Sell or Share My Info</a> link or by emailing
+        <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>.</li>
+      <li><strong>Right to limit use of sensitive data:</strong> We do not collect sensitive personal information. If that changes, you may limit its use.</li>
+      <li><strong>Right to non‑discrimination:</strong> We will not deny services, charge different prices, or provide a different level of service because you exercised your rights.</li>
     </ul>
+
+    <h2 id="sensitive-data">Sensitive Data Handling</h2>
     <p>
-      If you have any questions about this policy or your data, contact us at
-      <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>.
+      We do not collect sensitive personal information. If we ever collect information such as pets’ medical details, owner payment information, or precise geolocation, we will update this policy and provide appropriate rights and limitations.
     </p>
+
+    <h2 id="security">Data Security</h2>
+    <p>
+      We use industry‑standard safeguards to protect personal information, including encryption in transit (TLS) and access controls. No method of transmission or storage is fully secure, but we regularly review our protections.
+    </p>
+
+    <h2 id="appeals">Appeals Process</h2>
+    <p>
+      If we deny your privacy request, you may appeal by emailing
+      <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> with the subject “Privacy Request Appeal.” We will review and respond within 45 days, and inform you of any further options.
+    </p>
+
+    <h2 id="choices">How to Exercise Your Rights</h2>
+    <p>
+      Contact us at <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> or use the
+      <a href="{{ path('app_privacy_do_not_sell') }}">Do Not Sell or Share My Info</a> link. We may need to verify your identity (for example, by confirming your email or phone) and may request information reasonably necessary to process your request.
+    </p>
+
+    <h2 id="effective">Effective Date and Updates</h2>
+    <p>
+      Effective: September 17, 2025. We may update this policy to reflect changes to our practices. We will post updates here and revise the effective date.
+    </p>
+
+    <p>If you have any questions about this policy or your data, contact us at <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>.</p>
   </section>
 {% endblock %}
