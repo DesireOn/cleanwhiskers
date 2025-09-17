@@ -1,26 +1,41 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Privacy Policy{% endblock %}
-
 {% block body %}
-  <main class="container legal-page" aria-labelledby="privacy-title">
+  <section class="container legal-page" aria-labelledby="privacy-title">
     <h1 id="privacy-title">Privacy Policy</h1>
-
-    <p>We respect your privacy. This page explains what information we collect, how we use it, and your choices.</p>
-
+    <p>We respect your privacy. This page explains what information we collect, how we use it, how we share it to fulfill your request, and your choices.</p>
     <h2 id="what-we-collect">Information We Collect</h2>
-    <p>Contact details you provide (e.g., name, email, phone) and service preferences to connect you with a groomer.</p>
-
+    <p>
+      Contact details you provide (such as name, email, and phone), your city, and service preferences
+      so we can connect you with a relevant groomer and manage your request.
+    </p>
     <h2 id="how-we-use">How We Use Information</h2>
-    <p>To process your inquiry, match you with a groomer, and communicate about your request. We do not sell personal data.</p>
-
+    <p>
+      We use your information to process inquiries, match you with suitable groomers, and communicate about your request.
+      We do not sell your personal data.
+    </p>
+    <h2 id="data-sharing">Data Sharing</h2>
+    <p>
+      We share your contact details and service request with relevant, vetted groomers solely to fulfill your request.
+      We may also use trusted service providers (for example, email and SMS providers) to deliver messages and operate our service.
+      These providers act on our instructions and are not permitted to use your data for their own purposes.
+    </p>
     <h2 id="retention">Data Retention</h2>
-    <p>We retain lead and related records only as long as needed for matching, support, fraud prevention, and legal obligations. Typical retention periods will be published here. You may request deletion at any time.</p>
-
-    <h2 id="your-rights">Your Choices</h2>
-    <p>Contact us to access, correct, or delete your information. Marketing opt-ins (if any) can be revoked at any time.</p>
-
-    <p>For more details or requests, contact support at <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>.</p>
-  </main>
+    <ul>
+      <li><strong>Unclaimed leads:</strong> Purged after 90 days.</li>
+      <li><strong>Lead records:</strong> Anonymized after 1 year (for reporting and fraud‑prevention trends).</li>
+    </ul>
+    <p>
+      We may retain limited records as required by law, to resolve disputes, or to enforce our agreements.
+    </p>
+    <h2 id="your-choices">Your Choices</h2>
+    <ul>
+      <li><strong>Opt‑out of communications:</strong> Use the unsubscribe link included in our emails. You can also contact us to opt out.</li>
+      <li><strong>Access, correction, deletion:</strong> Email <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> to request access to, correction of, or deletion of your data.</li>
+    </ul>
+    <p>
+      If you have any questions about this policy or your data, contact us at
+      <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a>.
+    </p>
+  </section>
 {% endblock %}
-
