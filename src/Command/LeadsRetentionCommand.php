@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -31,9 +32,21 @@ final class LeadsRetentionCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addOption('now', null, InputOption::VALUE_REQUIRED, 'Override current time (ISO 8601) for cutoff calculations');
+    }
+
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $now = new DateTimeImmutable();
+        $nowOption = $input->getOption('now');
+        if (is_string($nowOption) && $nowOption !== '') {
+            $parsed = DateTimeImmutable::createFromFormat(DATE_ATOM, $nowOption) ?: new DateTimeImmutable($nowOption);
+            $now = $parsed ?: new DateTimeImmutable();
+        } else {
+            $now = new DateTimeImmutable();
+        }
         $unclaimedCutoff = $now->sub(new DateInterval('P90D'));
         $claimedCutoff = $now->sub(new DateInterval('P1Y'));
 
