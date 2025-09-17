@@ -38,6 +38,7 @@ final class LeadSubmissionValidatorTest extends TestCase
         $dto->phone = '+1 555 000 1234';
         $dto->petType = 'Dog';
         $dto->email = 'owner@example.com';
+        $dto->consentToShare = true;
         $dto->honeypot = null;
         $dto->captchaToken = 'ok';
         $dto->clientIp = '127.0.0.1';
