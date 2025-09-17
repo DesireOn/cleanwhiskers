@@ -85,6 +85,8 @@ body[data-menu-open="true"] .nav {
     padding: 0;
     font-size: 1.25rem;
     border-radius: var(--radius-sm);
+    position: relative;
+    transition: color 180ms ease;
 }
 
 .nav__link:hover,
@@ -148,6 +150,31 @@ body[data-menu-open="true"] .nav {
     }
     .nav__link {
         width: auto;
+        padding: var(--space-2) 0; /* give space for underline */
+    }
+    /* Subtle animated underline for desktop */
+    .nav__link::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 100%;
+        height: 2px;
+        background: var(--color-accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 180ms ease;
+        border-radius: 2px;
+    }
+    .nav__link:hover,
+    .nav__link:focus-visible {
+        background: transparent; /* remove mobile bg on desktop */
+        color: var(--color-accent);
+    }
+    .nav__link:hover::after,
+    .nav__link:focus-visible::after,
+    .nav__link[aria-current="page"]::after {
+        transform: scaleX(1);
     }
     .nav__close {
         display: none;
@@ -162,3 +189,6 @@ body[data-menu-open="true"] .nav {
         font-size: 1.125rem;
     }
 }
+
+/* Do not show underline decoration for CTA-style links */
+.nav__link--cta::after { content: none; }
