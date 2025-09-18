@@ -371,8 +371,27 @@
     <section class="city-cta city-cta--secondary" aria-labelledby="city-cta-secondary-title">
       <div class="city-section__inner">
         <div class="city-cta__content reveal-on-scroll">
-          <h2 id="city-cta-secondary-title">Try CleanWhiskers today and discover the easiest path to a freshly groomed pet — right here in {{ city.name }}.</h2>
-          <a class="btn btn--accent" href="#get-started">Claim Your Concierge Quote</a>
+          <div class="city-cta__card city-cta__card--secondary">
+            <span class="city-cta__badge city-cta__badge--secondary">Concierge support included</span>
+            <h2 id="city-cta-secondary-title">Try CleanWhiskers today and discover the easiest path to a freshly groomed pet — right here in {{ city.name }}.</h2>
+            <p>Share your pet’s needs once and our team coordinates the perfect {{ city.name }} grooming match from start to finish.</p>
+            <ul class="city-cta__highlights" role="list">
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">📋</span>
+                <span>Hand-vetted groomers with availability updates in real time</span>
+              </li>
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">🐾</span>
+                <span>Comfort-first grooming plans for anxious or senior pets</span>
+              </li>
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">☎️</span>
+                <span>Your concierge stays in touch until the appointment is confirmed</span>
+              </li>
+            </ul>
+            <a class="btn btn--accent city-cta__button" href="#get-started">Claim Your Concierge Quote</a>
+            <p class="city-cta__footnote">We follow up quickly — typically within one business day.</p>
+          </div>
         </div>
       </div>
     </section>
