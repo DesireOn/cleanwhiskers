@@ -2,16 +2,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/sort-dropdown.css') }}">
-    {# Reuse homepage groomer card/grid styles #}
-    <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/social-proof.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/faq.css') }}">
-    {# benefits-section styles now bundled via assets/app.js import #}
     <style>
       .reveal-on-scroll{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
       .reveal-in{opacity:1;transform:none}
@@ -24,7 +16,6 @@
     <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
     <script type="module" src="{{ asset('js/faq-accordion.js') }}" defer></script>
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
-    {# CAPTCHA widget script (if enabled) #}
     {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
         {% if captcha_provider|lower in ['recaptcha', 'google'] %}
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -35,117 +26,266 @@
 {% endblock %}
 
 {% block body %}
-  <div class="landing-page-container">
-    <section class="hero hero-section" aria-labelledby="lp-hero-title">
-      <img
-        class="hero__image hero-image"
-        src="{{ asset('images/hero-placeholder.jpg') }}"
-        alt="Happy pet after a grooming session"
-        fetchpriority="high"
-      />
-
-      <div class="hero__container hero__inner">
-        <h1 id="lp-hero-title" class="hero__title">
-          {{ 'The Easiest Way to Book' }} {{ service.name }} {{ 'in' }} {{ city.name }}
-        </h1>
-
-        <p class="hero__subtitle sub-headline">
-          Our network of independent local groomers is ready to pamper your pet. Get a free, no-obligation quote in 60 seconds.
-        </p>
-
-        <form class="hero__form lead-capture-form" method="post" action="/lead" novalidate>
-          <input type="hidden" name="city" value="{{ city.slug }}" />
-          <input type="hidden" name="service" value="{{ service.slug }}" />
-
-          <div class="hero__field">
-            <label class="hero__label" for="lead-full-name">Full Name</label>
-            <input class="hero__input hero__input--icon hero__input--icon-name" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
-          </div>
-
-          <div class="hero__field">
-            <label class="hero__label" for="lead-phone">Phone Number</label>
-            <input class="hero__input hero__input--icon hero__input--icon-phone" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required pattern="^[0-9+().\\s-]{7,}$" title="Use digits and symbols like + ( ) -" aria-describedby="lead-phone-hint" />
-            <div id="lead-phone-hint" class="field-hint">We’ll only use this to connect you with a groomer. No spam.</div>
-          </div>
-
-          <div class="hero__field">
-            <label class="hero__label" for="lead-email">Email</label>
-            <input class="hero__input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" aria-describedby="lead-email-hint" />
-            <div id="lead-email-hint" class="field-hint">Optional — helpful for sending quotes and updates.</div>
-          </div>
-
-          <div class="hero__field">
-            <label class="hero__label" for="lead-pet-type">Pet Type</label>
-            <select class="hero__input hero__input--icon hero__input--icon-paw" id="lead-pet-type" name="pet_type" required>
-              <option value="" disabled selected>Select pet type</option>
-              <option value="dog">Dog</option>
-              <option value="cat">Cat</option>
-            </select>
-          </div>
-
-          {# Breed/Size field removed per request #}
-
-          {# Honeypot field (hidden) #}
-          <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
-            <label for="lead-website">Website</label>
-            <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
-          </div>
-
-          <div class="hero__field hero__field--full">
-            <label class="hero__label" for="lead-consent">
-              <input type="checkbox" id="lead-consent" name="consent_to_share" required />
-              I agree that CleanWhiskers may share my request and contact details with local groomers, who may contact me by phone or email about this quote only.
-            </label>
-          </div>
-
-          {# CAPTCHA widget #}
-          {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
-            <div class="hero__field captcha-field">
-              {% if captcha_provider|lower in ['recaptcha', 'google'] %}
-                <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}" data-theme="dark"></div>
-              {% elseif captcha_provider|lower == 'hcaptcha' %}
-                <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}" data-theme="dark"></div>
-              {% endif %}
-            </div>
-          {% endif %}
-
-          <button type="submit" class="hero__cta btn btn--accent" aria-describedby="lead-privacy-note">Get My Free Quote</button>
-          <p id="lead-privacy-note" class="hero__note">
-            By submitting, you agree to our
-            <a href="{{ path('app_terms') }}">Terms</a>
-            and acknowledge our
-            <a href="{{ path('app_privacy') }}">Privacy Policy</a>.
-            {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
-              {% if captcha_provider|lower in ['recaptcha', 'google'] %}
-                This site is protected by reCAPTCHA and the Google
-                <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
-                and
-                <a href="https://policies.google.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
-                apply.
-              {% elseif captcha_provider|lower == 'hcaptcha' %}
-                This site is protected by hCaptcha and its
-                <a href="https://www.hcaptcha.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
-                and
-                <a href="https://www.hcaptcha.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
-                apply.
-              {% endif %}
-            {% endif %}
+  <div class="city-landing" data-route="app_groomer_list_by_city_service">
+    <section class="city-hero" aria-labelledby="city-hero-title">
+      <div class="city-hero__grid">
+        <div class="city-hero__content reveal-on-scroll">
+          <p class="city-hero__eyebrow">Concierge mobile grooming in {{ city.name }}</p>
+          <h1 id="city-hero-title" class="city-hero__title">
+            CleanWhiskers is your personalised mobile grooming concierge — submit one quote and we alert trusted {{ city.name }} groomers who can come to you.
+          </h1>
+          <p class="city-hero__lede">
+            Skip endless scrolling or cold calling. Tell us about your pet, preferred timing, and any special care notes once, and we immediately share that request with our {{ city.name }} mobile groomer network. You’ll hear from the groomer who claims your request to confirm the appointment details.
           </p>
-        </form>
+          <ul class="city-hero__highlights" aria-label="Why pet parents choose CleanWhiskers">
+            <li class="city-hero__highlight">Concierge outreach and follow-up handled by our team</li>
+            <li class="city-hero__highlight">Only vetted professionals equipped for your pet’s needs</li>
+            <li class="city-hero__highlight">Smooth booking experience without the usual back-and-forth</li>
+          </ul>
+        </div>
 
-        <div class="hero__meta trust-symbols" aria-label="Trust indicators">
-          <span class="hero__badge">✓ Local independent professionals</span>
-          <span class="hero__badge">✓ Serving the {{ city.name }} Area</span>
-          <span class="hero__badge">✓ Book in Minutes — No Stress</span>
+        <div class="city-hero__form reveal-on-scroll" id="get-started">
+          <div class="city-hero__form-card" role="group" aria-label="Request a tailored quote">
+            <h2 class="city-hero__form-title">Start your {{ service.name|lower }} quote</h2>
+            <p class="city-hero__form-subtitle">We’ll introduce you to the groomer who can take great care of your pet.</p>
+
+            <form class="lead-capture-form" method="post" action="/lead" novalidate>
+              <input type="hidden" name="city" value="{{ city.slug }}" />
+              <input type="hidden" name="service" value="{{ service.slug }}" />
+
+              <div class="form-field">
+                <label class="form-label" for="lead-full-name">Full Name</label>
+                <input class="form-input" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="lead-phone">Phone Number</label>
+                <input class="form-input" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required pattern="^[0-9+().\\s-]{7,}$" title="Use digits and symbols like + ( ) -" aria-describedby="lead-phone-hint" />
+                <div id="lead-phone-hint" class="field-hint">We’ll only use this to connect you with a groomer.</div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="lead-email">Email (optional)</label>
+                <input class="form-input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" aria-describedby="lead-email-hint" />
+                <div id="lead-email-hint" class="field-hint">Helpful for sharing quotes and appointment updates.</div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="lead-pet-type">Pet Type</label>
+                <select class="form-input" id="lead-pet-type" name="pet_type" required>
+                  <option value="" disabled selected>Select pet type</option>
+                  <option value="dog">Dog</option>
+                  <option value="cat">Cat</option>
+                </select>
+              </div>
+
+              <div class="form-field">
+                <label class="form-label" for="lead-notes">Care Notes</label>
+                <textarea class="form-input form-textarea" id="lead-notes" name="breed_size" rows="3" placeholder="Add coat type, grooming goals, timing, or special handling"></textarea>
+              </div>
+
+              <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
+                <label for="lead-website">Website</label>
+                <input type="text" id="lead-website" name="website" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="form-field form-field--checkbox">
+                <label class="form-label" for="lead-consent">
+                  <input type="checkbox" id="lead-consent" name="consent_to_share" required />
+                  I agree that CleanWhiskers may share my request and contact details with local groomers for this quote.
+                </label>
+              </div>
+
+              {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+                <div class="form-field captcha-field">
+                  {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}" data-theme="light"></div>
+                  {% elseif captcha_provider|lower == 'hcaptcha' %}
+                    <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key|default('') }}" data-theme="light"></div>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              <button type="submit" class="btn btn--accent form-submit" aria-describedby="lead-privacy-note">Get My Concierge Match</button>
+
+              <p id="lead-privacy-note" class="form-privacy">
+                By submitting, you agree to our
+                <a href="{{ path('app_terms') }}">Terms</a>
+                and acknowledge our
+                <a href="{{ path('app_privacy') }}">Privacy Policy</a>.
+                {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+                  {% if captcha_provider|lower in ['recaptcha', 'google'] %}
+                    This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
+                    and
+                    <a href="https://policies.google.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
+                    apply.
+                  {% elseif captcha_provider|lower == 'hcaptcha' %}
+                    This site is protected by hCaptcha and its
+                    <a href="https://www.hcaptcha.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
+                    and
+                    <a href="https://www.hcaptcha.com/terms" rel="noopener noreferrer" target="_blank">Terms of Service</a>
+                    apply.
+                  {% endif %}
+                {% endif %}
+              </p>
+            </form>
+          </div>
+
+          <ul class="city-hero__trust" aria-label="Service commitments">
+            <li>Vetted {{ city.name }} professionals</li>
+            <li>Concierge outreach included</li>
+            <li>No-obligation quotes</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="city-benefits" aria-labelledby="city-benefits-title">
+      <div class="city-section__inner">
+        <h2 id="city-benefits-title" class="city-section__heading">Why pet parents trust CleanWhiskers</h2>
+        <p class="city-section__lede">Because your time is valuable. We handle the outreach, shortlisting, and follow-up so you can keep your routine running smoothly.</p>
+
+        <div class="city-benefits__grid">
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Concierge coordination</h3>
+            <p class="benefit-card__copy">Instead of phoning around, we contact the groomers for you, track who’s available, and make sure only serious professionals reach out. You enter your info once and reclaim the hours you’d normally spend coordinating.</p>
+          </article>
+
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Tailored matching</h3>
+            <p class="benefit-card__copy">Unlike generic directories, we personalise every request — matching you with groomers equipped for your pet’s coat, temperament, and lifestyle.</p>
+          </article>
+
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Specialised care</h3>
+            <p class="benefit-card__copy">Worried about anxious pups, double coats, or senior cats? We factor all of that in before we pass the lead along, so only groomers who actually handle those needs will pick it up.</p>
+          </article>
+
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Vetted professionals</h3>
+            <p class="benefit-card__copy">Every groomer profile is reviewed by our team and continuously rated by pet owners like you. If standards slip, we pause sending new requests.</p>
+          </article>
+
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Peace of mind</h3>
+            <p class="benefit-card__copy">You’re not just booking grooming — you’re buying reliability and more quality time with your pet. Picture welcoming them back home fresh and relaxed without rearranging your day.</p>
+          </article>
+
+          <article class="benefit-card reveal-on-scroll">
+            <h3 class="benefit-card__title">Streamlined experience</h3>
+            <p class="benefit-card__copy">We’ve streamlined everything — from quote submission to groomer coordination — to deliver premium mobile grooming without the fuss.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="city-process" aria-labelledby="city-process-title">
+      <div class="city-section__inner">
+        <h2 id="city-process-title" class="city-section__heading">Here’s how it feels to book with us</h2>
+        <div class="city-process__grid">
+          <article class="process-step reveal-on-scroll">
+            <span class="process-step__number">1</span>
+            <h3 class="process-step__title">Tell us what your pet needs</h3>
+            <p class="process-step__copy">Tell us your schedule, pet details, and any special requests — we broadcast the opportunity to groomers who love working with pets like yours.</p>
+          </article>
+
+          <article class="process-step reveal-on-scroll">
+            <span class="process-step__number">2</span>
+            <h3 class="process-step__title">We coordinate the response</h3>
+            <p class="process-step__copy">Our team handles the outreach, tracks who’s available, and ensures only vetted groomers who fit your brief can claim the request.</p>
+          </article>
+
+          <article class="process-step reveal-on-scroll">
+            <span class="process-step__number">3</span>
+            <h3 class="process-step__title">You confirm and relax</h3>
+            <p class="process-step__copy">Once a groomer claims your request, you’ll connect directly to confirm the appointment. They bring the equipment — you enjoy the calm, freshly groomed pet.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="city-cta city-cta--primary" aria-labelledby="city-cta-primary-title">
+      <div class="city-section__inner">
+        <div class="city-cta__content reveal-on-scroll">
+          <h2 id="city-cta-primary-title">Ready to give your pet salon-quality care without leaving home?</h2>
+          <p>Let CleanWhiskers introduce you to the right {{ city.name }} mobile groomer today.</p>
+          <a class="btn btn--accent" href="#get-started">Start Your Quote</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section city-faq" aria-labelledby="city-faq-title">
+      <header class="faq__header">
+        <h2 id="city-faq-title">Frequently asked questions</h2>
+        <p id="faq-copy-status" class="faq__status" aria-live="polite"></p>
+      </header>
+
+      <div class="faq__list" role="list">
+        <details class="faq__item" id="faq-presence">
+          <summary class="faq__question">
+            <span>Do I need to be home?</span>
+            <a class="faq__anchor" href="#faq-presence" data-faq-anchor aria-label="Copy link to this question">🔗</a>
+            <svg class="faq__chevron" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="faq__answer">
+            <p>Most groomers prefer you (or a trusted adult) to be there for handoff and pick-up, but they’ll confirm what works when they accept your request.</p>
+          </div>
+        </details>
+
+        <details class="faq__item" id="faq-supplies">
+          <summary class="faq__question">
+            <span>Do I provide grooming supplies?</span>
+            <a class="faq__anchor" href="#faq-supplies" data-faq-anchor aria-label="Copy link to this question">🔗</a>
+            <svg class="faq__chevron" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="faq__answer">
+            <p>Mobile groomers bring their own equipment and products. If your pet needs something specific — hypoallergenic shampoo or calming aids — mention it in the quote form or during the follow-up.</p>
+          </div>
+        </details>
+
+        <details class="faq__item" id="faq-judged">
+          <summary class="faq__question">
+            <span>Will I feel judged?</span>
+            <a class="faq__anchor" href="#faq-judged" data-faq-anchor aria-label="Copy link to this question">🔗</a>
+            <svg class="faq__chevron" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="faq__answer">
+            <p>Not here. These groomers are professionals who work with all breeds, coat conditions, and grooming histories. Their focus is on comfort and care, not criticism.</p>
+          </div>
+        </details>
+
+        <details class="faq__item" id="faq-marketplace">
+          <summary class="faq__question">
+            <span>Why not just use a marketplace?</span>
+            <a class="faq__anchor" href="#faq-marketplace" data-faq-anchor aria-label="Copy link to this question">🔗</a>
+            <svg class="faq__chevron" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="faq__answer">
+            <p>Marketplaces can be noisy and unpredictable. We only share your details with groomers who’ve already demonstrated prompt responses and solid owner feedback, so you spend less time sifting and more time getting results.</p>
+          </div>
+        </details>
+
+        <details class="faq__item" id="faq-ease">
+          <summary class="faq__question">
+            <span>Will this really make my life easier?</span>
+            <a class="faq__anchor" href="#faq-ease" data-faq-anchor aria-label="Copy link to this question">🔗</a>
+            <svg class="faq__chevron" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </summary>
+          <div class="faq__answer">
+            <p>Clients tell us the difference shows the moment the grooming van arrives outside their door. No travel, no waiting rooms — just a calm pet and a tidy home.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="city-cta city-cta--secondary" aria-labelledby="city-cta-secondary-title">
+      <div class="city-section__inner">
+        <div class="city-cta__content reveal-on-scroll">
+          <h2 id="city-cta-secondary-title">Try CleanWhiskers today and discover the easiest path to a freshly groomed pet — right here in {{ city.name }}.</h2>
+          <a class="btn btn--accent" href="#get-started">Claim Your Concierge Quote</a>
         </div>
       </div>
     </section>
   </div>
-  {% include 'home/partials/_benefits_section.html.twig' with { cityName: city.name } %}
-  <hr class="section-divider" aria-hidden="true" />
-  {% include 'home/partials/_how_it_works_section.html.twig' with { cityName: city.name } %}
-  <hr class="section-divider" aria-hidden="true" />
-  {% include 'home/partials/_social_proof_section.html.twig' with { cityName: city.name } %}
-  <hr class="section-divider" aria-hidden="true" />
-  {% include 'home/partials/_faq_section.html.twig' with { cityName: city.name, citySlug: city.slug, serviceSlug: service.slug } %}
 {% endblock %}
