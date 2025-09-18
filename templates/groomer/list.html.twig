@@ -279,9 +279,27 @@
     <section class="city-cta city-cta--primary" aria-labelledby="city-cta-primary-title">
       <div class="city-section__inner">
         <div class="city-cta__content reveal-on-scroll">
-          <h2 id="city-cta-primary-title">Ready to give your pet salon-quality care without leaving home?</h2>
-          <p>Let CleanWhiskers introduce you to the right {{ city.name }} mobile groomer today.</p>
-          <a class="btn btn--accent" href="#get-started">Start Your Quote</a>
+          <div class="city-cta__card">
+            <span class="city-cta__badge">Mobile grooming, on your terms</span>
+            <h2 id="city-cta-primary-title">Ready to give your pet salon-quality care without leaving home?</h2>
+            <p>Let CleanWhiskers introduce you to the right {{ city.name }} mobile groomer today.</p>
+            <ul class="city-cta__highlights" role="list">
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">🚐</span>
+                <span>Same-week appointments across {{ city.name }}</span>
+              </li>
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">🛁</span>
+                <span>Tailored care plans for every coat and temperament</span>
+              </li>
+              <li class="city-cta__highlight">
+                <span class="city-cta__highlight-icon" aria-hidden="true">💬</span>
+                <span>Concierge follow-up so you only meet trusted groomers</span>
+              </li>
+            </ul>
+            <a class="btn btn--accent city-cta__button" href="#get-started">Start Your Quote</a>
+            <p class="city-cta__footnote">No spam — just curated matches from groomers who travel to you.</p>
+          </div>
         </div>
       </div>
     </section>
