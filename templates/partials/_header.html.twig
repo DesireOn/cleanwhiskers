@@ -1,25 +1,72 @@
 {% set currentRoute = app.request.attributes.get('_route') %}
 <header class="site-header">
-  <div class="nav-container">
+  <div class="site-header__inner">
     <a href="{{ path('app_homepage') }}" class="site-logo">
       <img src="{{ asset('images/logo.png') }}" alt="CleanWhiskers" />
       <span class="sr-only">CleanWhiskers</span>
     </a>
-    <button id="nav-toggle" class="nav-toggle" aria-label="{{ 'Menu'|trans }}" aria-expanded="false" aria-controls="primary-nav" aria-haspopup="true" type="button">
-      <span class="nav-toggle__icon" aria-hidden="true"></span>
-    </button>
-    <div id="primary-nav" class="nav" aria-label="{{ 'Primary'|trans }}" aria-hidden="true" role="dialog" aria-modal="true">
-      <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">&times;</button>
-      <nav class="nav__content" role="navigation" aria-label="{{ 'Primary'|trans }}">
-        <ul class="nav__list">
-          <li class="nav__item nav__item--cta">
-            <a class="nav__link nav__link--cta is-disabled" aria-disabled="true" tabindex="-1" title="{{ 'Coming soon'|trans }}" href="{{ path('app_register', {'role': 'groomer'}) }}">{{ 'List Your Business'|trans }} <span class="badge">{{ 'Coming soon'|trans }}</span></a>
-          </li>
-          <li class="nav__item"><a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a></li>
-          <li class="nav__item"><a class="nav__link" href="{{ path('app_privacy') }}" {% if currentRoute == 'app_privacy' %}aria-current="page"{% endif %}>{{ 'Privacy'|trans }}</a></li>
-          <li class="nav__item"><a class="nav__link" href="{{ path('app_terms') }}" {% if currentRoute == 'app_terms' %}aria-current="page"{% endif %}>{{ 'Terms'|trans }}</a></li>
-        </ul>
-      </nav>
+
+    <div class="site-header__nav">
+      <button
+        id="nav-toggle"
+        class="nav-toggle"
+        aria-label="{{ 'Menu'|trans }}"
+        aria-expanded="false"
+        aria-controls="primary-nav"
+        aria-haspopup="true"
+        type="button"
+      >
+        <span class="nav-toggle__label">{{ 'Menu'|trans }}</span>
+        <span class="nav-toggle__icon" aria-hidden="true">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </span>
+      </button>
+
+      <div
+        id="primary-nav"
+        class="nav"
+        aria-label="{{ 'Primary'|trans }}"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div class="nav__panel">
+          <div class="nav__header">
+            <p class="nav__eyebrow">{{ 'Navigation'|trans }}</p>
+            <button class="nav__close" type="button" aria-label="{{ 'Close menu'|trans }}">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <nav class="nav__content" role="navigation" aria-label="{{ 'Primary'|trans }}">
+            <ul class="nav__list">
+              <li class="nav__item">
+                <a
+                  class="nav__link nav__link--cta is-disabled"
+                  aria-disabled="true"
+                  tabindex="-1"
+                  title="{{ 'Coming soon'|trans }}"
+                  href="{{ path('app_register', {'role': 'groomer'}) }}"
+                >
+                  <span class="nav__link-label">{{ 'List Your Business'|trans }}</span>
+                  <span class="nav__pill">{{ 'Coming soon'|trans }}</span>
+                </a>
+              </li>
+              <li class="nav__item">
+                <a class="nav__link" href="{{ path('app_blog_index') }}" {% if currentRoute starts with 'app_blog' %}aria-current="page"{% endif %}>{{ 'Blog'|trans }}</a>
+              </li>
+              <li class="nav__item">
+                <a class="nav__link" href="{{ path('app_privacy') }}" {% if currentRoute == 'app_privacy' %}aria-current="page"{% endif %}>{{ 'Privacy'|trans }}</a>
+              </li>
+              <li class="nav__item">
+                <a class="nav__link" href="{{ path('app_terms') }}" {% if currentRoute == 'app_terms' %}aria-current="page"{% endif %}>{{ 'Terms'|trans }}</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
     </div>
   </div>
   <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>

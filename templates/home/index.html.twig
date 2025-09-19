@@ -3,28 +3,17 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/forms.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/search-7jFZvVk.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/how-it-works.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/why-cleanwhiskers.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/components/button.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/blocks/hero.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/utilities.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/blocks/groomer-card.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/card-groomer.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/popular-cities.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/popular-services.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/choose-guide.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/width-overrides.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/featured-groomers.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/sections/get-started.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/pages/homepage.css') }}">
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
     <script type="module" src="{{ asset('js/search-form.js') }}" defer></script>
-    <script type="module" src="{{ asset('js/sticky-search-Oh6C6P5.js') }}" defer></script>
     <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
     <script src="{{ asset('js/cta-button.js') }}" defer></script>
     <script src="{{ asset('js/lazy-images.js') }}" defer></script>
@@ -34,12 +23,14 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'home/partials/_sticky_search.html.twig' %}
-    {% include 'home/partials/_hero.html.twig' %}
-    {% include 'home/partials/_cta_banner.html.twig' %}
-    {% include 'home/partials/_how_it_works.html.twig' %}
-    {% include 'home/partials/_choose_guide.html.twig' %}
-    {% include 'home/partials/_why_cleanwhiskers.html.twig' %}
-    {% include 'home/_featured_groomers.html.twig' %}
-    {% include 'home/_popular_cities.html.twig' with {popularCities: popularCities|slice(0,5)} %}
+    <div class="home-landing city-landing" data-route="app_homepage">
+        {# Sticky search removed #}
+        {% include 'home/partials/_hero.html.twig' %}
+        {% include 'home/partials/_why_cleanwhiskers.html.twig' %}
+        {% include 'home/partials/_how_it_works.html.twig' %}
+        {% include 'home/partials/_choose_guide.html.twig' %}
+        {% include 'home/_featured_groomers.html.twig' %}
+        {% include 'home/_popular_cities.html.twig' with {popularCities: popularCities|slice(0,5)} %}
+        {% include 'home/partials/_cta_banner.html.twig' %}
+    </div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Do Not Sell or Share My Info{% endblock %}
+{% block body %}
+  <section class="container legal-page" aria-labelledby="dns-title">
+    <h1 id="dns-title">Do Not Sell or Share My Personal Information</h1>
+    <p>
+      We do not sell or share your personal information for cross‑context behavioral advertising.
+      If our practices change, you will have the right to opt out here or by contacting us.
+    </p>
+    <h2 id="how-to-opt-out">How to Opt Out</h2>
+    <ul>
+      <li>Email us at <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> with the subject “Do Not Sell or Share My Info”.</li>
+      <li>Include the email and phone number you used with our service so we can locate your record.</li>
+    </ul>
+    <p>
+      We may need to verify your identity to process the request. If you are an authorized agent, please include proof of authorization.
+    </p>
+    <p>
+      For more information about our data practices and your rights, see our
+      <a href="{{ path('app_privacy') }}">Privacy Policy</a>.
+    </p>
+  </section>
+{% endblock %}
+
