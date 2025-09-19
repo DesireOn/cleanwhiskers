@@ -1,51 +1,64 @@
-<section class="hero" aria-labelledby="hero-title">
-    <img
-        class="hero__image"
-        src="{{ asset('images/hero-grooming.jpg') }}"
-        alt=""
-        aria-hidden="true"
-        role="presentation"
-        fetchpriority="high"
-    />
-    <div class="hero__container">
-        <h1 id="hero-title" class="hero__title">
-            {{ 'Grooming shouldn\'t stress you or your pet — CleanWhiskers coordinates the calmest experience.'|trans }}
-        </h1>
-        <p class="hero__subtitle">
-            {{ 'One request. One tailored match. One freshly groomed best friend.'|trans }}
-        </p>
+<section class="hero city-hero home-hero" aria-labelledby="hero-title">
+    <div class="city-hero__grid home-hero__grid">
+        <div class="city-hero__content home-hero__content">
+            <p class="city-hero__eyebrow">{{ 'Concierge mobile grooming nationwide'|trans }}</p>
+            <h1 id="hero-title" class="city-hero__title home-hero__title">
+                {{ 'Grooming shouldn\'t stress you or your pet — share your city and our concierge team handles the rest.'|trans }}
+            </h1>
+            <p class="city-hero__tagline home-hero__tagline">
+                {{ 'One request. One tailored match. One freshly groomed best friend.'|trans }}
+            </p>
+            <p class="city-hero__lede home-hero__lede">
+                {{ 'Tell us where you are and we\'ll introduce you to vetted mobile groomers, coordinate outreach, and keep you updated until it\'s booked.'|trans }}
+            </p>
 
-        <form id="search-form" class="hero__form" method="get" action="/search" role="search" aria-describedby="city-help" autocomplete="off">
-            <label for="city" class="hero__label">{{ 'Where is your pet?'|trans }}</label>
-            <div class="hero__controls">
-                <input
-                    class="hero__input city-input"
-                    type="text"
-                    id="city"
-                    name="city"
-                    placeholder="{{ 'Enter city (e.g., Seattle)'|trans }}"
-                    autocomplete="off"
-                    inputmode="text"
-                    required
-                    role="combobox"
-                    aria-autocomplete="list"
-                    aria-expanded="false"
-                    aria-controls="city-list"
-                    aria-haspopup="listbox"
-                    aria-describedby="city-help"
-                >
-                <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
-                <button class="hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
-                    {{ ctaLinks.find.label|trans }}
-                </button>
+            <ul class="city-hero__highlights home-hero__highlights" aria-label="Why pet parents choose CleanWhiskers">
+                <li class="city-hero__highlight">{{ 'Concierge outreach with real people'|trans }}</li>
+                <li class="city-hero__highlight">{{ 'Vetted pros for anxious, senior, and special-care pets'|trans }}</li>
+                <li class="city-hero__highlight">{{ 'No-obligation matches tailored to your routine'|trans }}</li>
+            </ul>
+        </div>
+
+        <div class="city-hero__form home-hero__form" id="get-started">
+            <div class="city-hero__form-card home-hero__form-card" role="group" aria-labelledby="hero-form-title">
+                <h2 id="hero-form-title" class="city-hero__form-title home-hero__form-title">{{ 'Start with your city'|trans }}</h2>
+                <p class="city-hero__form-subtitle home-hero__form-subtitle">{{ 'We\'ll line up the groomer who fits your pet\'s coat, temperament, and timing.'|trans }}</p>
+
+                <form id="search-form" class="hero__form home-hero__search" method="get" action="/search" role="search" aria-describedby="city-help" autocomplete="off">
+                    <label for="city" class="hero__label home-hero__label">{{ 'Where is your pet?'|trans }}</label>
+                    <div class="hero__controls home-hero__controls">
+                        <input
+                            class="hero__input home-hero__input city-input"
+                            type="text"
+                            id="city"
+                            name="city"
+                            placeholder="{{ 'Enter city (e.g., Seattle)'|trans }}"
+                            autocomplete="off"
+                            inputmode="text"
+                            required
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-controls="city-list"
+                            aria-haspopup="listbox"
+                            aria-describedby="city-help"
+                        >
+                        <input type="hidden" name="service" value="{{ constant('App\\Entity\\Service::MOBILE_DOG_GROOMING') }}">
+                        <button class="hero__submit home-hero__submit search-form__button btn btn--accent" type="submit" id="search-submit">
+                            {{ ctaLinks.find.label|trans }}
+                        </button>
+                    </div>
+                    <span id="city-help" class="visually-hidden">{{ 'Start typing to choose your city from the suggestion list.'|trans }}</span>
+                </form>
+
+                <p class="home-hero__form-note">{{ 'No spam — we only share your request with one best-fit mobile groomer.'|trans }}</p>
             </div>
-            <span id="city-help" class="visually-hidden">{{ 'Focus or start typing to see suggestions for your city.'|trans }}</span>
-        </form>
 
-        <div class="hero__meta" aria-label="Service highlights">
-            <span class="hero__badge"><span aria-hidden="true">🚐</span> {{ 'Concierge outreach included'|trans }}</span>
-            <span class="hero__badge"><span aria-hidden="true">🛡️</span> {{ 'Vetted mobile professionals'|trans }}</span>
-            <span class="hero__badge"><span aria-hidden="true">📅</span> {{ 'Care plans for anxious or senior pets'|trans }}</span>
+            <ul class="city-hero__trust home-hero__trust" aria-label="Service commitments">
+                <li>{{ 'Hand-reviewed mobile professionals'|trans }}</li>
+                <li>{{ 'Concierge support through booking'|trans }}</li>
+                <li>{{ 'Free, no-obligation introductions'|trans }}</li>
+            </ul>
         </div>
     </div>
 </section>

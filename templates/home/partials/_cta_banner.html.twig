@@ -1,26 +1,29 @@
-<section class="get-started reveal-on-scroll" aria-labelledby="get-started-heading">
-    <div class="get-started__inner container">
-        <h2 id="get-started-heading" class="get-started__title">{{ 'Concierge mobile grooming, simplified'|trans }}</h2>
-        <p class="get-started__subtitle">{{ 'Choose how CleanWhiskers can support your next appointment.'|trans }}</p>
+<section class="city-cta city-cta--secondary home-cta-secondary reveal-on-scroll" aria-labelledby="get-started-heading">
+    <div class="city-section__inner">
+        <div class="city-cta__content">
+            <div class="city-cta__card city-cta__card--secondary">
+                <span class="city-cta__badge city-cta__badge--secondary">{{ 'Concierge support included'|trans }}</span>
+                <h2 id="get-started-heading">{{ 'Ready for a calmer grooming day?'|trans }}</h2>
+                <p>{{ 'Share your pet\'s needs once and we\'ll bring the right mobile groomer to your door.'|trans }}</p>
 
-        <div class="get-started__options" role="list">
-            <article class="get-started__card" role="listitem">
-                <div class="get-started__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/search.svg') }}" alt="" loading="lazy">
-                </div>
-                <h3 class="get-started__heading">{{ 'Get a concierge match'|trans }}</h3>
-                <p class="get-started__text">{{ 'Share your pet\'s needs and we\'ll introduce the right mobile groomer.'|trans }}</p>
-                <a href="#search-form" class="get-started__action btn btn--accent tap-target">{{ 'Start your quote'|trans }}</a>
-            </article>
+                <ul class="city-cta__highlights" role="list">
+                    <li class="city-cta__highlight">
+                        <span class="city-cta__highlight-icon" aria-hidden="true">🚐</span>
+                        <span>{{ 'Nationwide coverage with vetted pros'|trans }}</span>
+                    </li>
+                    <li class="city-cta__highlight">
+                        <span class="city-cta__highlight-icon" aria-hidden="true">🐾</span>
+                        <span>{{ 'Personalised plans for anxious or senior pets'|trans }}</span>
+                    </li>
+                    <li class="city-cta__highlight">
+                        <span class="city-cta__highlight-icon" aria-hidden="true">☎️</span>
+                        <span>{{ 'Concierge follow-up until the appointment is confirmed'|trans }}</span>
+                    </li>
+                </ul>
 
-            <article class="get-started__card" role="listitem">
-                <div class="get-started__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" loading="lazy">
-                </div>
-                <h3 class="get-started__heading">{{ 'Join the CleanWhiskers network'|trans }}</h3>
-                <p class="get-started__text">{{ 'Apply to receive concierge-managed leads from engaged pet parents.'|trans }}</p>
-                <a href="/register?role=groomer" class="get-started__action btn btn--accent tap-target is-disabled" aria-disabled="true" tabindex="-1" title="{{ 'Coming soon'|trans }}">{{ 'Join the waitlist'|trans }} <span class="badge">{{ 'Coming soon'|trans }}</span></a>
-            </article>
+                <a href="#search-form" class="btn btn--accent city-cta__button">{{ 'Start your quote'|trans }}</a>
+                <p class="city-cta__footnote">{{ 'We typically respond within one business day.'|trans }}</p>
+            </div>
         </div>
     </div>
 </section>

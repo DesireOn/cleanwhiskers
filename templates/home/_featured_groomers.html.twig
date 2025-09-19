@@ -1,9 +1,13 @@
 {% if featuredGroomers|length %}
-    <section id="featured-groomers" class="featured-groomers" aria-labelledby="featured-groomers-title">
-        <div class="featured-groomers__inner">
-            <h2 id="featured-groomers-title" class="featured-groomers__title">Concierge-picked groomers</h2>
-            <p class="featured-groomers__description">Hand-reviewed mobile pros our community keeps requesting.</p>
-            <div class="featured-groomers__grid" role="list">
+    <section id="featured-groomers" class="home-featured reveal-on-scroll" aria-labelledby="featured-groomers-title">
+        <div class="city-section__inner">
+            <header class="home-featured__header">
+                <span class="home-featured__kicker">{{ 'Concierge-picked groomers'|trans }}</span>
+                <h2 id="featured-groomers-title" class="home-featured__title">{{ 'Hand-reviewed mobile pros our community keeps requesting.'|trans }}</h2>
+                <p class="home-featured__lede">{{ 'Browse a sample of the groomers we introduce to pet parents every week.'|trans }}</p>
+            </header>
+
+            <div class="home-featured__grid" role="list">
                 {% for item in featuredGroomers %}
                     {% set g = item.profile %}
                     {% set badges = ['New', 'Verified'] %}
@@ -12,7 +16,7 @@
                         rating: item.rating,
                         reviewCount: item.reviewCount,
                         badges: badges,
-                        class: 'featured-groomer-card',
+                        class: 'home-featured__card',
                         ctaLabel: 'View Details'
                     }) }}
                 {% endfor %}
