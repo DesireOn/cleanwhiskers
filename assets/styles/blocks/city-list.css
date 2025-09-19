@@ -922,6 +922,46 @@
 }
 
 @media (max-width: 719px) {
+  .city-hero__content {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .city-hero__title,
+  .city-hero__lede,
+  .city-hero__form-title,
+  .city-hero__form-subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .city-hero__highlights {
+    justify-items: center;
+  }
+
+  .city-hero__highlight {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .city-hero__form {
+    width: min(100%, 32rem);
+    margin-inline: auto;
+  }
+
+  .city-hero__form-card {
+    width: 100%;
+  }
+
+  .city-hero__trust {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .city-hero__trust li {
+    text-align: center;
+  }
+
   .city-hero {
     padding-top: var(--space-4, 2rem);
   }
@@ -957,6 +997,42 @@
 
   .process-step__body {
     text-align: center;
+  }
+
+  .process-step {
+    justify-items: center;
+  }
+
+  .city-benefits__grid {
+    justify-items: center;
+  }
+
+  .benefit-card {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .benefit-card__icon {
+    margin-inline: auto;
+  }
+
+  .benefit-card__copy {
+    margin-inline: auto;
+  }
+
+  .city-cta__card {
+    align-items: center;
+  }
+
+  .city-cta__highlight {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .city-cta__button {
+    width: min(100%, 20rem);
+    justify-self: center;
   }
 }
 
