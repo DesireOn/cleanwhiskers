@@ -480,7 +480,7 @@
   box-shadow: 0 12px 28px rgba(24, 39, 75, 0.08);
   backdrop-filter: blur(10px);
   transition: transform 220ms ease, box-shadow 220ms ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .process-step::before {
