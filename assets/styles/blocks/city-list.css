@@ -3,6 +3,8 @@
 .city-landing {
   background-color: var(--color-cream, #fdfaf5);
   color: var(--color-text, #222222);
+  --heading-measure: min(30ch, 100%);
+  --content-measure: min(60ch, 100%);
 }
 
 .city-section__inner {
@@ -47,6 +49,8 @@
   font-size: clamp(2rem, 3vw + 1rem, 3.25rem);
   text-wrap: balance;
   margin: 0;
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .city-hero__tagline {
@@ -70,6 +74,8 @@
   font-size: clamp(1.05rem, 0.6vw + 1rem, 1.25rem);
   color: var(--color-text-muted, #5c5c5c);
   margin: 0;
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 .city-hero__highlights {
@@ -116,12 +122,16 @@
 .city-hero__form-title {
   margin: 0;
   font-size: clamp(1.5rem, 1vw + 1rem, 2rem);
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .city-hero__form-subtitle {
   margin: 0;
   color: var(--color-text-muted, #5c5c5c);
   font-size: 1rem;
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 .lead-capture-form {
@@ -298,15 +308,17 @@
 }
 
 .city-section__heading {
-  margin: 0;
+  margin: 0 auto;
   text-align: center;
   font-size: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .city-section__lede {
   margin: 0 auto;
   text-align: center;
-  max-width: 60ch;
+  max-width: var(--content-measure);
   color: var(--color-text-muted, #5c5c5c);
   font-size: clamp(1rem, 0.5vw + 0.9rem, 1.2rem);
 }
@@ -401,12 +413,16 @@
 .benefit-card__title {
   margin: 0;
   font-size: 1.3rem;
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .benefit-card__copy {
   margin: 0;
   color: var(--color-text-muted, #5c5c5c);
   line-height: 1.55;
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 
@@ -435,7 +451,7 @@
   position: relative;
   z-index: 1;
   text-align: center;
-  max-width: 48rem;
+  max-width: min(48rem, var(--content-measure));
   margin: 0 auto var(--space-5, 3rem);
   display: grid;
   gap: var(--space-2, 0.75rem);
@@ -457,9 +473,11 @@
 }
 
 .city-process__lede {
-  margin: 0;
+  margin: 0 auto;
   color: var(--color-text-muted, #505050);
   font-size: clamp(1rem, 0.5vw + 0.95rem, 1.2rem);
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 .city-process__grid {
@@ -574,12 +592,16 @@
 .process-step__title {
   margin: var(--space-2, 0.5rem) 0 0;
   font-size: 1.35rem;
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .process-step__copy {
   margin: 0;
   color: var(--color-text-muted, #535353);
   line-height: 1.55;
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 
@@ -712,6 +734,8 @@
   font-size: clamp(1.85rem, 2vw + 1.1rem, 2.75rem);
   line-height: 1.2;
   color: var(--color-text-strong, #1e1e1e);
+  width: 100%;
+  max-width: var(--heading-measure);
 }
 
 .city-cta__content p {
@@ -719,6 +743,8 @@
   color: var(--color-text-muted, #4d4d4d);
   font-size: clamp(1.02rem, 0.5vw + 0.95rem, 1.2rem);
   line-height: 1.6;
+  width: 100%;
+  max-width: var(--content-measure);
 }
 
 .city-cta__highlights {
