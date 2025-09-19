@@ -7,6 +7,17 @@
   --content-measure: min(60ch, 100%);
 }
 
+.city-landing .reveal-on-scroll {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.js .city-landing .reveal-on-scroll:not(.reveal-in) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .city-section__inner {
   max-width: var(--nav-max, 1200px);
   margin: 0 auto;
@@ -1052,6 +1063,13 @@
   .city-hero__form-card,
   .benefit-card,
   .process-step {
+    transition: none;
+  }
+
+  .city-landing .reveal-on-scroll,
+  .js .city-landing .reveal-on-scroll:not(.reveal-in) {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 }
