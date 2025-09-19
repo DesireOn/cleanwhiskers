@@ -25,6 +25,9 @@
 
   function closeMenu(doc, nav, toggle, overlay, state) {
     state = state || {};
+    if (!nav.classList.contains('is-open') && doc.body.dataset.menuOpen !== 'true') {
+      return;
+    }
     delete doc.body.dataset.menuOpen;
     doc.body.style.overflow = '';
     nav.classList.remove('is-open');
@@ -54,6 +57,9 @@
     doc.body.classList.add('js');
 
     function onDocumentClick(e) {
+      if (!nav.classList.contains('is-open')) {
+        return;
+      }
       if (!nav.contains(e.target) && !toggle.contains(e.target)) {
         closeMenu(doc, nav, toggle, overlay, focusState);
       }
