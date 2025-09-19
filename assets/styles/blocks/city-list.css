@@ -28,7 +28,8 @@
 
 .city-hero {
   position: relative;
-  padding: var(--space-5, 4rem) var(--space-3, 1rem);
+  /* Horizontal gutters come from .city-section__inner */
+  padding: var(--space-5, 4rem) 0;
   background:
     radial-gradient(32rem 32rem at 20% 0%, rgba(212, 233, 233, 0.45), transparent 70%),
     radial-gradient(28rem 28rem at 100% 80%, rgba(255, 152, 0, 0.18), transparent 65%),
@@ -40,6 +41,12 @@
   gap: var(--space-4, 2rem);
   max-width: var(--nav-max, 1200px);
   margin: 0 auto;
+}
+
+/* Avoid doubling vertical padding when nested inside the hero */
+.city-hero > .city-section__inner {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .city-hero__content {

@@ -27,6 +27,10 @@ export default function initCityAutocomplete(inputsParam) {
     document.body.appendChild(listEl);
     listEl.innerHTML = '';
     listEl.hidden = true;
+    listEl.setAttribute('aria-live', 'polite');
+    if (!listEl.getAttribute('aria-label')) {
+        listEl.setAttribute('aria-label', 'City suggestions');
+    }
 
     let activeIndex = -1;
     let currentInput = null;
@@ -43,7 +47,40 @@ export default function initCityAutocomplete(inputsParam) {
         activeIndex = -1;
     };
 
-    const navigate = (slug, card) => {
+    const positionList = (input) => {
+        const rect = input.getBoundingClientRect();
+        const viewportHeight = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
+        const spaceBelow = viewportHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        const verticalGap = 8;
+
+        let maxHeight = Math.min(360, spaceBelow - verticalGap);
+        let top = rect.bottom + window.scrollY + verticalGap;
+        let openUpwards = false;
+
+        if (maxHeight < 180 && spaceAbove > spaceBelow) {
+            maxHeight = Math.min(360, spaceAbove - verticalGap);
+            top = rect.top + window.scrollY - maxHeight - verticalGap;
+            openUpwards = true;
+        }
+
+        if (maxHeight < 180) {
+            maxHeight = Math.min(360, viewportHeight - verticalGap * 2);
+            if (maxHeight < 120) {
+                maxHeight = 120;
+            }
+            top = Math.max(verticalGap, Math.min(top, viewportHeight - maxHeight - verticalGap + window.scrollY));
+        }
+
+        listEl.classList.toggle('city-suggestions--reverse', openUpwards);
+        listEl.style.position = 'absolute';
+        listEl.style.left = `${rect.left + window.scrollX}px`;
+        listEl.style.top = `${top}px`;
+        listEl.style.width = `${rect.width}px`;
+        listEl.style.maxHeight = `${maxHeight}px`;
+    };
+
+    const navigate = (option, card) => {
         if (navigating) {
             return;
         }
@@ -70,9 +107,9 @@ export default function initCityAutocomplete(inputsParam) {
 
         try {
             if (currentInput) {
-                currentInput.value = slug;
+                currentInput.value = option.label || option.value;
             }
-            window.location.href = `/groomers/${slug}/${service}`;
+            window.location.href = `/groomers/${option.value}/${service}`;
         } catch (err) {
             cleanup();
             throw err;
@@ -117,17 +154,25 @@ export default function initCityAutocomplete(inputsParam) {
             card.dataset.value = opt.value;
             card.href = `/groomers/${opt.value}/${service}`;
 
+            const icon = document.createElement('span');
+            icon.className = 'city-card__icon';
+            icon.setAttribute('aria-hidden', 'true');
+            card.appendChild(icon);
+
             const label = document.createElement('span');
             label.className = 'city-card__label';
             label.innerHTML = regex ? opt.label.replace(regex, '<mark>$1</mark>') : opt.label;
             card.appendChild(label);
 
+            const meta = document.createElement('span');
+            meta.className = 'city-card__meta';
+            meta.textContent = 'Tap to see available groomers';
+            card.appendChild(meta);
+
             const handleNavigation = (e) => {
                 e.preventDefault();
-                navigate(opt.value, card);
+                navigate(opt, card);
             };
-            // Handle mouse/pointer selection before blur hides the list
-            card.addEventListener('pointerdown', handleNavigation);
             // Fallback for keyboard activation on the option itself
             card.addEventListener('click', handleNavigation);
             card.addEventListener('keydown', (e) => {
@@ -138,12 +183,26 @@ export default function initCityAutocomplete(inputsParam) {
 
             listEl.appendChild(card);
         });
-        if (matches.length) {
-            const rect = input.getBoundingClientRect();
-            listEl.style.position = 'absolute';
-            listEl.style.left = `${rect.left + window.scrollX}px`;
-            listEl.style.top = `${rect.bottom + window.scrollY}px`;
-            listEl.style.width = `${rect.width}px`;
+        if (!matches.length) {
+            const emptyState = document.createElement('div');
+            emptyState.className = 'city-card city-card--empty';
+            emptyState.setAttribute('role', 'status');
+
+            const emptyLabel = document.createElement('span');
+            emptyLabel.className = 'city-card__label';
+            emptyLabel.textContent = 'No matching cities yet';
+            emptyState.appendChild(emptyLabel);
+
+            const suggestion = document.createElement('span');
+            suggestion.className = 'city-card__meta';
+            suggestion.textContent = 'Try a nearby city or check your spelling.';
+            emptyState.appendChild(suggestion);
+
+            listEl.appendChild(emptyState);
+        }
+
+        if (listEl.childElementCount) {
+            positionList(input);
             listEl.hidden = false;
             input.setAttribute('aria-expanded', 'true');
             currentInput = input;
@@ -176,6 +235,15 @@ export default function initCityAutocomplete(inputsParam) {
         pointerDownOnList = false;
     });
 
+    const repositionIfOpen = () => {
+        if (!listEl.hidden && currentInput) {
+            positionList(currentInput);
+        }
+    };
+
+    window.addEventListener('resize', repositionIfOpen);
+    window.addEventListener('scroll', repositionIfOpen, true);
+
     inputs.forEach((input) => {
         input.addEventListener('input', () => onInput(input));
         input.addEventListener('focus', () => {
@@ -198,7 +266,10 @@ export default function initCityAutocomplete(inputsParam) {
                 if (activeIndex >= 0) {
                     e.preventDefault();
                     const item = listEl.querySelectorAll('[role="option"]')[activeIndex];
-                    navigate(item.dataset.value, item);
+                    const option = options.find((opt) => opt.value === item.dataset.value);
+                    if (option) {
+                        navigate(option, item);
+                    }
                 }
             } else if (e.key === 'Escape') {
                 hide();
