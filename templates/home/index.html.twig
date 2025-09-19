@@ -14,7 +14,6 @@
     {{ parent() }}
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
     <script type="module" src="{{ asset('js/search-form.js') }}" defer></script>
-    <script type="module" src="{{ asset('js/sticky-search-Oh6C6P5.js') }}" defer></script>
     <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
     <script src="{{ asset('js/cta-button.js') }}" defer></script>
     <script src="{{ asset('js/lazy-images.js') }}" defer></script>
@@ -25,7 +24,7 @@
 
 {% block body %}
     <div class="home-landing city-landing" data-route="app_homepage">
-        {% include 'home/partials/_sticky_search.html.twig' %}
+        {# Sticky search removed #}
         {% include 'home/partials/_hero.html.twig' %}
         {% include 'home/partials/_why_cleanwhiskers.html.twig' %}
         {% include 'home/partials/_how_it_works.html.twig' %}
