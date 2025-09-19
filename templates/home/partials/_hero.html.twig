@@ -5,18 +5,45 @@
             <h1 id="hero-title" class="city-hero__title home-hero__title">
                 {{ 'Grooming shouldn\'t stress you or your pet — share your city and our concierge team handles the rest.'|trans }}
             </h1>
-            <p class="city-hero__tagline home-hero__tagline">
-                {{ 'One request. One tailored match. One freshly groomed best friend.'|trans }}
-            </p>
-            <p class="city-hero__lede home-hero__lede">
-                {{ 'Tell us where you are and we\'ll introduce you to vetted mobile groomers, coordinate outreach, and keep you updated until it\'s booked.'|trans }}
-            </p>
 
-            <ul class="city-hero__highlights home-hero__highlights" aria-label="Why pet parents choose CleanWhiskers">
+            <div class="home-hero__summary">
+                <p class="city-hero__tagline home-hero__tagline">
+                    {{ 'One request. One tailored match. One freshly groomed best friend.'|trans }}
+                </p>
+                <p class="city-hero__lede home-hero__lede">
+                    {{ 'Tell us where you are and we\'ll introduce you to vetted mobile groomers, coordinate outreach, and keep you updated until it\'s booked.'|trans }}
+                </p>
+            </div>
+
+            <ul class="city-hero__highlights home-hero__highlights" aria-label="{{ 'Why pet parents choose CleanWhiskers'|trans }}">
                 <li class="city-hero__highlight">{{ 'Concierge outreach with real people'|trans }}</li>
                 <li class="city-hero__highlight">{{ 'Vetted pros for anxious, senior, and special-care pets'|trans }}</li>
                 <li class="city-hero__highlight">{{ 'No-obligation matches tailored to your routine'|trans }}</li>
             </ul>
+
+            <div class="home-hero__meta" aria-label="{{ 'Concierge grooming at a glance'|trans }}">
+                <div class="home-hero__stat">
+                    <span class="home-hero__stat-value">{{ '4.9★'|trans }}</span>
+                    <span class="home-hero__stat-label">{{ 'Average rating from recent concierge bookings'|trans }}</span>
+                </div>
+                <div class="home-hero__stat">
+                    <span class="home-hero__stat-value">{{ '1200+'|trans }}</span>
+                    <span class="home-hero__stat-label">{{ 'Mobile grooming introductions handled by our team'|trans }}</span>
+                </div>
+            </div>
+
+            <figure class="home-hero__testimonial" role="group" aria-labelledby="hero-testimonial">
+                <svg class="home-hero__testimonial-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+                    <path d="M14 20c0-6 4.5-11 10-11v5c-2.9 0-5 2.4-5 5h5v10h-10zm15 0c0-6 4.5-11 10-11v5c-2.9 0-5 2.4-5 5h5v10h-10z" fill="currentColor"/>
+                </svg>
+                <blockquote id="hero-testimonial" class="home-hero__testimonial-quote">
+                    {{ '“CleanWhiskers found a gentle groomer who comes right to our driveway. Scout trots into every appointment now.”'|trans }}
+                </blockquote>
+                <figcaption class="home-hero__testimonial-meta">
+                    <span class="home-hero__testimonial-name">{{ 'Alex & Scout'|trans }}</span>
+                    <span class="home-hero__testimonial-location">{{ 'Seattle, WA'|trans }}</span>
+                </figcaption>
+            </figure>
         </div>
 
         <div class="city-hero__form home-hero__form" id="get-started">
@@ -54,7 +81,7 @@
                 <p class="home-hero__form-note">{{ 'No spam — we only share your request with one best-fit mobile groomer.'|trans }}</p>
             </div>
 
-            <ul class="city-hero__trust home-hero__trust" aria-label="Service commitments">
+            <ul class="city-hero__trust home-hero__trust" aria-label="{{ 'Service commitments'|trans }}">
                 <li>{{ 'Hand-reviewed mobile professionals'|trans }}</li>
                 <li>{{ 'Concierge support through booking'|trans }}</li>
                 <li>{{ 'Free, no-obligation introductions'|trans }}</li>
