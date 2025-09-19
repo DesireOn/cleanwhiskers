@@ -871,7 +871,7 @@
   }
 
   .city-cta__highlights {
-    grid-template-columns: repeat(3, minmax(0, 10rem));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
