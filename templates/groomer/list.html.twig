@@ -4,16 +4,10 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/blocks/city-list.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/blocks/faq.css') }}">
-    <style>
-      .reveal-on-scroll{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
-      .reveal-in{opacity:1;transform:none}
-      @media (prefers-reduced-motion: reduce){.reveal-on-scroll{opacity:1;transform:none;transition:none}}
-    </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="module" src="{{ asset('js/section-reveal.js') }}" defer></script>
     <script type="module" src="{{ asset('js/faq-accordion.js') }}" defer></script>
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
     {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
@@ -29,7 +23,7 @@
   <div class="city-landing" data-route="app_groomer_list_by_city_service">
     <section class="city-hero" aria-labelledby="city-hero-title">
       <div class="city-hero__grid">
-        <div class="city-hero__content reveal-on-scroll">
+        <div class="city-hero__content">
           <p class="city-hero__eyebrow">Concierge mobile grooming in {{ city.name }}</p>
           <h1 id="city-hero-title" class="city-hero__title">
             Grooming shouldn't stress you or your pet. Let our service handle it.
@@ -46,7 +40,7 @@
           </ul>
         </div>
 
-        <div class="city-hero__form reveal-on-scroll" id="get-started">
+        <div class="city-hero__form" id="get-started">
           <div class="city-hero__form-card" role="group" aria-label="Request a tailored quote">
             <h2 class="city-hero__form-title">Start your {{ service.name|lower }} quote</h2>
             <p class="city-hero__form-subtitle">We’ll introduce you to the groomer who can take great care of your pet.</p>
@@ -160,7 +154,7 @@
         </div>
 
         <div class="city-benefits__grid">
-          <article class="benefit-card reveal-on-scroll" data-accent="coordination">
+          <article class="benefit-card" data-accent="coordination">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"></circle>
@@ -171,7 +165,7 @@
             <p class="benefit-card__copy">We contact the groomers for you, track who’s available, and make sure only serious professionals reach out. Enter your info once and reclaim the hours you’d normally spend coordinating.</p>
           </article>
 
-          <article class="benefit-card reveal-on-scroll" data-accent="matching">
+          <article class="benefit-card" data-accent="matching">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <path d="M16 10h8v8h-8zM24 18h8v8h-8zM16 26h8v8h-8z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
@@ -182,7 +176,7 @@
             <p class="benefit-card__copy">Unlike generic directories, we personalise every request — matching you with groomers equipped for your pet’s coat, temperament, and lifestyle.</p>
           </article>
 
-          <article class="benefit-card reveal-on-scroll" data-accent="care">
+          <article class="benefit-card" data-accent="care">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <path d="M24 32c6 0 12-4 12-10a10 10 0 0 0-10-10l-2 2-2-2a10 10 0 0 0-10 10c0 6 6 10 12 10z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
@@ -193,7 +187,7 @@
             <p class="benefit-card__copy">Worried about anxious pups, double coats, or senior cats? We factor all of that in before passing the lead along, so only groomers who actually handle those needs will pick it up.</p>
           </article>
 
-          <article class="benefit-card reveal-on-scroll" data-accent="vetting">
+          <article class="benefit-card" data-accent="vetting">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <path d="M10 18l14-8 14 8v10c0 8-6 12-14 16-8-4-14-8-14-16z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
@@ -204,7 +198,7 @@
             <p class="benefit-card__copy">Every groomer profile is reviewed by our team and continuously rated by pet owners like you. If standards slip, we pause sending new requests.</p>
           </article>
 
-          <article class="benefit-card reveal-on-scroll" data-accent="assurance">
+          <article class="benefit-card" data-accent="assurance">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <circle cx="16" cy="18" r="6" fill="none" stroke="currentColor" stroke-width="3"></circle>
@@ -217,7 +211,7 @@
             <p class="benefit-card__copy">You’re not just booking grooming — you’re buying reliability and more quality time with your pet. Picture welcoming them back home fresh and relaxed without rearranging your day.</p>
           </article>
 
-          <article class="benefit-card reveal-on-scroll" data-accent="experience">
+          <article class="benefit-card" data-accent="experience">
             <span class="benefit-card__icon" aria-hidden="true">
               <svg viewBox="0 0 48 48" focusable="false">
                 <path d="M10 30h28M14 24l10-12 10 12" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
@@ -240,7 +234,7 @@
         </header>
 
         <div class="city-process__grid" role="list">
-          <article class="process-step reveal-on-scroll" role="listitem">
+          <article class="process-step" role="listitem">
             <div class="process-step__badge" aria-hidden="true">
               <span class="process-step__number">1</span>
               <span class="process-step__label">Share</span>
@@ -251,7 +245,7 @@
             </div>
           </article>
 
-          <article class="process-step reveal-on-scroll" role="listitem">
+          <article class="process-step" role="listitem">
             <div class="process-step__badge" aria-hidden="true">
               <span class="process-step__number">2</span>
               <span class="process-step__label">Match</span>
@@ -262,7 +256,7 @@
             </div>
           </article>
 
-          <article class="process-step reveal-on-scroll" role="listitem">
+          <article class="process-step" role="listitem">
             <div class="process-step__badge" aria-hidden="true">
               <span class="process-step__number">3</span>
               <span class="process-step__label">Enjoy</span>
@@ -278,7 +272,7 @@
 
     <section class="city-cta city-cta--primary" aria-labelledby="city-cta-primary-title">
       <div class="city-section__inner">
-        <div class="city-cta__content reveal-on-scroll">
+        <div class="city-cta__content">
           <div class="city-cta__card">
             <span class="city-cta__badge">Mobile grooming, on your terms</span>
             <h2 id="city-cta-primary-title">Ready to give your pet salon-quality care without leaving home?</h2>
@@ -372,7 +366,7 @@
 
     <section class="city-cta city-cta--secondary" aria-labelledby="city-cta-secondary-title">
       <div class="city-section__inner">
-        <div class="city-cta__content reveal-on-scroll">
+        <div class="city-cta__content">
           <div class="city-cta__card city-cta__card--secondary">
             <span class="city-cta__badge city-cta__badge--secondary">Concierge support included</span>
             <h2 id="city-cta-secondary-title">Try CleanWhiskers today and discover the easiest path to a freshly groomed pet — right here in {{ city.name }}.</h2>
