@@ -166,6 +166,13 @@
   align-items: start;
 }
 
+/* Inline validation message styling for quote form */
+.form-field .field-error {
+  margin-top: 4px;
+  color: #d93025; /* accessible red */
+  font-size: 0.875rem;
+}
+
 .form-label {
   font-weight: 600;
   font-size: 0.95rem;
