@@ -63,4 +63,20 @@ class LeadRepository extends ServiceEntityRepository
 
         return $lead;
     }
+
+    public function findRecentByFingerprint(string $fingerprint, \DateTimeImmutable $threshold): ?Lead
+    {
+        /** @var Lead|null $lead */
+        $lead = $this->createQueryBuilder('l')
+            ->where('l.submissionFingerprint = :fp')
+            ->andWhere('l.createdAt >= :threshold')
+            ->setParameter('fp', $fingerprint)
+            ->setParameter('threshold', $threshold)
+            ->orderBy('l.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $lead;
+    }
 }

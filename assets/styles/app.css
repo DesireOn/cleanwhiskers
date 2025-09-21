@@ -68,6 +68,20 @@ body {
     overflow-x: hidden;
 }
 
+/* Inline form alerts (used for captcha and validation errors) */
+.form-alert {
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin: 0 0 var(--space-2) 0;
+    font-size: 0.95rem;
+}
+
+.form-alert--error {
+    background: #ffecec;
+    border: 1px solid #f5a7a7;
+    color: #8a1f1f;
+}
+
 h1,
 h2,
 h3 {
@@ -162,6 +176,28 @@ h3 { font-size: var(--fs-h3); }
 .cta-banner__link:focus,
 .cta-banner__link:hover {
     box-shadow: var(--shadow-md);
+}
+
+/* Generic card utility for simple panels */
+.card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Context variants used across internal pages */
+.card--info {
+    background: #eff6ff; /* soft blue */
+    border-color: #bfdbfe;
+    color: #0f172a;
+}
+
+.card--warning {
+    background: #fff7ed; /* soft amber */
+    border-color: #fed7aa;
+    color: #7c2d12;
 }
 
 /* Layout utilities */
@@ -261,4 +297,62 @@ h3 { font-size: var(--fs-h3); }
     .col-lg-10 { grid-column: span 10; }
     .col-lg-11 { grid-column: span 11; }
     .col-lg-12 { grid-column: span 12; }
+}
+
+/* Lead claim: Next steps */
+.next-steps {
+    padding: var(--space-3);
+}
+
+.next-steps__title {
+    font-size: var(--fs-h2);
+}
+
+.next-steps__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+    display: grid;
+    gap: var(--space-2);
+}
+
+.next-steps__item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3) var(--space-2) 3rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.next-steps__item::before {
+    content: counter(step);
+    counter-increment: step;
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@media (min-width: 768px) {
+    .next-steps__list {
+        gap: var(--space-3);
+    }
+    .next-steps__item {
+        padding-left: 3.25rem;
+    }
 }
