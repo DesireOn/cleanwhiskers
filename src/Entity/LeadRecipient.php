@@ -10,6 +10,9 @@ use App\Repository\LeadRecipientRepository;
 
 #[ORM\Entity(repositoryClass: LeadRecipientRepository::class)]
 #[ORM\Table(name: 'lead_recipient')]
+#[ORM\Index(name: 'idx_lead_recipient_commitment_confirmed_at', columns: ['commitment_confirmed_at'])]
+#[ORM\Index(name: 'idx_lead_recipient_contacted_at', columns: ['contacted_at'])]
+#[ORM\Index(name: 'idx_lead_recipient_auto_released_at', columns: ['auto_released_at'])]
 #[ORM\UniqueConstraint(name: 'uniq_lead_recipient_lead_email', columns: ['lead_id', 'email'])]
 class LeadRecipient
 {

@@ -10,6 +10,9 @@ use App\Repository\LeadWaitlistEntryRepository;
 
 #[ORM\Entity(repositoryClass: LeadWaitlistEntryRepository::class)]
 #[ORM\Table(name: 'lead_waitlist_entry')]
+#[ORM\Index(name: 'idx_waitlist_lead', columns: ['lead_id'])]
+#[ORM\Index(name: 'idx_waitlist_recipient', columns: ['lead_recipient_id'])]
+#[ORM\Index(name: 'idx_waitlist_created_at', columns: ['created_at'])]
 class LeadWaitlistEntry
 {
     #[ORM\Id]
@@ -42,4 +45,3 @@ class LeadWaitlistEntry
     public function setLeadRecipient(?LeadRecipient $recipient): void { $this->leadRecipient = $recipient; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
 }
-
