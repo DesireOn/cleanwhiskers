@@ -1,45 +1,63 @@
-<section id="why-cleanwhiskers" class="why-cleanwhiskers reveal-on-scroll" aria-labelledby="why-cleanwhiskers-title">
-    <header class="why-cleanwhiskers__header">
-        <p class="why-cleanwhiskers__eyebrow">{{ 'Why CleanWhiskers'|trans }}</p>
-        <h2 id="why-cleanwhiskers-title">{{ 'Everything your pet deserves'|trans }}</h2>
-        <p class="why-cleanwhiskers__lede">{{ 'Trusted groomers, flexible booking, and happy pets — all in one place.'|trans }}</p>
-    </header>
+<section class="city-benefits home-benefits reveal-on-scroll" aria-labelledby="home-benefits-title">
+    <div class="city-section__inner">
+        <div class="city-benefits__halo" aria-hidden="true"></div>
 
-    <ul class="why-cleanwhiskers__list" role="list">
-        <li class="why-cleanwhiskers__item">
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
-                </div>
-                <div class="why-cleanwhiskers__content">
-                    <h3 class="why-cleanwhiskers__title">{{ 'Local, Vetted Groomers'|trans }}</h3>
-                    <p class="why-cleanwhiskers__text">{{ 'We screen for quality, safety, and genuine care.'|trans }}</p>
-                </div>
-            </div>
-        </li>
-        <li class="why-cleanwhiskers__item">
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/calendar.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
-                </div>
-                <div class="why-cleanwhiskers__content">
-                    <h3 class="why-cleanwhiskers__title">{{ 'Stress‑Free Booking'|trans }}</h3>
-                    <p class="why-cleanwhiskers__text">{{ 'Flexible times, clear options, and no phone tag.'|trans }}</p>
-                </div>
-            </div>
-        </li>
-        <li class="why-cleanwhiskers__item">
-            <div class="why-cleanwhiskers__card">
-                <div class="why-cleanwhiskers__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/search.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
-                </div>
-                <div class="why-cleanwhiskers__content">
-                    <h3 class="why-cleanwhiskers__title">{{ 'Made for Your Pet'|trans }}</h3>
-                    <p class="why-cleanwhiskers__text">{{ 'Tailored services for comfort and consistent results.'|trans }}</p>
-                </div>
-            </div>
-        </li>
-    </ul>
+        <div class="city-benefits__intro">
+            <span class="city-benefits__kicker">{{ 'Concierge-level assurance'|trans }}</span>
+            <h2 id="home-benefits-title" class="city-section__heading">{{ 'Why pet parents trust CleanWhiskers'|trans }}</h2>
+            <p class="city-section__lede">{{ 'Because we handle the legwork, vet every mobile partner, and stay with you until the groomer is confirmed.'|trans }}</p>
 
+            <ul class="city-benefits__stats" aria-label="CleanWhiskers service highlights">
+                <li>{{ 'Hand-reviewed mobile grooming partners'|trans }}</li>
+                <li>{{ '1:1 concierge follow-up on every request'|trans }}</li>
+                <li>{{ 'Secure scheduling with proactive reminders'|trans }}</li>
+            </ul>
+        </div>
+
+        <div class="city-benefits__grid">
+            <article class="benefit-card" data-accent="coordination">
+                <span class="benefit-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                        <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5"></circle>
+                        <path d="M16 24l6 6 12-12" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </span>
+                <h3 class="benefit-card__title">{{ 'Concierge coordination'|trans }}</h3>
+                <p class="benefit-card__copy">{{ 'We reach out to trusted groomers for you, manage responses, and only connect you with the best fit.'|trans }}</p>
+            </article>
+
+            <article class="benefit-card" data-accent="matching">
+                <span class="benefit-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                        <path d="M16 10h8v8h-8zM24 18h8v8h-8zM16 26h8v8h-8z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+                        <path d="M12 14l-4 4m28-12l8 8m-20 12l-8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path>
+                    </svg>
+                </span>
+                <h3 class="benefit-card__title">{{ 'Tailored matching'|trans }}</h3>
+                <p class="benefit-card__copy">{{ 'Share your pet\'s coat, temperament, and care notes once — we filter for groomers who excel with those needs.'|trans }}</p>
+            </article>
+
+            <article class="benefit-card" data-accent="care">
+                <span class="benefit-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                        <path d="M24 32c6 0 12-4 12-10a10 10 0 0 0-10-10l-2 2-2-2a10 10 0 0 0-10 10c0 6 6 10 12 10z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+                        <path d="M18 28c1.4 1.6 3.4 2.6 6 2.6 2.6 0 4.6-1 6-2.6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"></path>
+                    </svg>
+                </span>
+                <h3 class="benefit-card__title">{{ 'Specialised care'|trans }}</h3>
+                <p class="benefit-card__copy">{{ 'Anxious pups, senior cats, double coats — we have groomers who know exactly how to care for them.'|trans }}</p>
+            </article>
+
+            <article class="benefit-card" data-accent="assurance">
+                <span class="benefit-card__icon" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" focusable="false">
+                        <path d="M10 18l14-8 14 8v10c0 8-6 12-14 16-8-4-14-8-14-16z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+                        <path d="M18 24l4 4 8-8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </span>
+                <h3 class="benefit-card__title">{{ 'Ongoing assurance'|trans }}</h3>
+                <p class="benefit-card__copy">{{ 'We check in on performance continuously and pause requests if standards slip.'|trans }}</p>
+            </article>
+        </div>
+    </div>
 </section>
-

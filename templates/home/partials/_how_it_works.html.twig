@@ -1,47 +1,44 @@
-<section id="how-it-works" class="how-it-works reveal-on-scroll" aria-labelledby="how-it-works-title">
-    <header class="how-it-works__header">
-        <p class="how-it-works__eyebrow">{{ 'Just 3 simple steps'|trans }}</p>
-        <h2 id="how-it-works-title">{{ 'How It Works'|trans }}</h2>
-        <p class="how-it-works__lede">{{ 'Find, book, relax — made for busy pet parents.'|trans }}</p>
-    </header>
+<section id="how-it-works" class="city-process home-process reveal-on-scroll" aria-labelledby="how-it-works-title">
+    <div class="city-section__inner">
+        <header class="city-process__header">
+            <span class="city-process__eyebrow">{{ 'The CleanWhiskers flow'|trans }}</span>
+            <h2 id="how-it-works-title" class="city-section__heading">{{ 'Here\'s how it feels to book with us'|trans }}</h2>
+            <p class="city-process__lede">{{ 'From first click to fresh fur, we guide every step so you can focus on cuddle time afterwards.'|trans }}</p>
+        </header>
 
-    <ol class="how-it-works__list" role="list">
-        <li class="how-it-works__item">
-            <a href="#search-form" class="how-it-works__card">
-                <div class="how-it-works__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/search.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+        <div class="city-process__grid" role="list">
+            <article class="process-step" role="listitem">
+                <div class="process-step__badge" aria-hidden="true">
+                    <span class="process-step__number">1</span>
+                    <span class="process-step__label">{{ 'Share'|trans }}</span>
                 </div>
-                <div class="how-it-works__content">
-                    <h3 class="how-it-works__title">{{ 'Search'|trans }}</h3>
-                    <p class="how-it-works__text">{{ 'Find trusted groomers near you.'|trans }}</p>
+                <div class="process-step__body">
+                    <h3 class="process-step__title">{{ 'Tell us what your pet needs'|trans }}</h3>
+                    <p class="process-step__copy">{{ 'Add your city, timing, coat notes, and any special care requests — it takes a minute and guides the match.'|trans }}</p>
                 </div>
-                <span class="how-it-works__cta" aria-hidden="true">→</span>
-            </a>
-        </li>
-        <li class="how-it-works__item">
-            <a href="/blog/how-to-book" class="how-it-works__card">
-                <div class="how-it-works__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/calendar.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
-                </div>
-                <div class="how-it-works__content">
-                    <h3 class="how-it-works__title">{{ 'Book'|trans }}</h3>
-                    <p class="how-it-works__text">{{ 'Pick a time that works for you.'|trans }}</p>
-                </div>
-                <span class="how-it-works__cta" aria-hidden="true">→</span>
-            </a>
-        </li>
-        <li class="how-it-works__item">
-            <a href="#featured-groomers" class="how-it-works__card">
-                <div class="how-it-works__icon" aria-hidden="true">
-                    <img src="{{ asset('illustrations/paw.svg') }}" alt="" width="64" height="64" loading="lazy" decoding="async">
-                </div>
-                <div class="how-it-works__content">
-                    <h3 class="how-it-works__title">{{ 'Relax'|trans }}</h3>
-                    <p class="how-it-works__text">{{ 'Your pet comes back fresh and happy.'|trans }}</p>
-                </div>
-                <span class="how-it-works__cta" aria-hidden="true">→</span>
-            </a>
-        </li>
-    </ol>
+            </article>
 
+            <article class="process-step" role="listitem">
+                <div class="process-step__badge" aria-hidden="true">
+                    <span class="process-step__number">2</span>
+                    <span class="process-step__label">{{ 'Match'|trans }}</span>
+                </div>
+                <div class="process-step__body">
+                    <h3 class="process-step__title">{{ 'We coordinate the response'|trans }}</h3>
+                    <p class="process-step__copy">{{ 'Our concierge team reaches out to vetted mobile groomers, tracks availability, and brings you the best-fit option.'|trans }}</p>
+                </div>
+            </article>
+
+            <article class="process-step" role="listitem">
+                <div class="process-step__badge" aria-hidden="true">
+                    <span class="process-step__number">3</span>
+                    <span class="process-step__label">{{ 'Enjoy'|trans }}</span>
+                </div>
+                <div class="process-step__body">
+                    <h3 class="process-step__title">{{ 'Confirm and relax'|trans }}</h3>
+                    <p class="process-step__copy">{{ 'You connect directly with the groomer to finalise details, they arrive equipped, and your pet returns calm and clean.'|trans }}</p>
+                </div>
+            </article>
+        </div>
+    </div>
 </section>

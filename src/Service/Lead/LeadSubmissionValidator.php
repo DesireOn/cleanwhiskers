@@ -50,6 +50,11 @@ final class LeadSubmissionValidator
             $errors[] = 'Please provide a valid phone number.';
         }
 
+        // 5) Explicit consent to share request
+        if ($dto->consentToShare === false) {
+            $errors[] = 'You must agree to share your request with matched groomers.';
+        }
+
         return array_values(array_unique($errors));
     }
 

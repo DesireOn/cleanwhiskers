@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}Do Not Sell or Share My Info{% endblock %}
+{% block body %}
+  <section class="container legal-page" aria-labelledby="dns-title">
+    <div class="legal-hero">
+      <h1 id="dns-title">Do Not Sell or Share My Personal Information</h1>
+      <p class="legal-lead">We don’t sell your personal information. If that ever changes, you can opt out at any time.</p>
+    </div>
+
+    <div class="legal-layout">
+      <nav class="legal-toc" aria-label="Do not sell table of contents">
+        <h2>On this page</h2>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#how-to-opt-out">How to Opt Out</a></li>
+          <li><a href="#verification">Verification</a></li>
+          <li><a href="#more-info">More Info</a></li>
+        </ul>
+      </nav>
+
+      <div class="legal-content">
+        <section id="overview" class="legal-section" aria-labelledby="overview-title">
+          <h2 id="overview-title" class="legal-anchor-title"><span class="hash">#</span> Overview</h2>
+          <p class="notice"><strong>Good news:</strong> We do not sell or share your personal information for cross‑context behavioral advertising.</p>
+          <p>If our practices change, you will have the right to opt out here or by contacting us.</p>
+        </section>
+
+        <section id="how-to-opt-out" class="legal-section" aria-labelledby="optout-title">
+          <h2 id="optout-title" class="legal-anchor-title"><span class="hash">#</span> How to Opt Out</h2>
+          <ul>
+            <li>Email us at <a href="mailto:support@cleanwhiskers.com">support@cleanwhiskers.com</a> with the subject “Do Not Sell or Share My Info”.</li>
+            <li>Include the email and phone number you used with our service so we can locate your record.</li>
+          </ul>
+        </section>
+
+        <section id="verification" class="legal-section" aria-labelledby="verification-title">
+          <h2 id="verification-title" class="legal-anchor-title"><span class="hash">#</span> Verification</h2>
+          <p>We may need to verify your identity to process the request. If you are an authorized agent, please include proof of authorization; we may also verify directly with the consumer.</p>
+        </section>
+
+        <section id="more-info" class="legal-section" aria-labelledby="more-info-title">
+          <h2 id="more-info-title" class="legal-anchor-title"><span class="hash">#</span> More Info</h2>
+          <p>For details about our data practices and your rights, see our <a href="{{ path('app_privacy') }}">Privacy Policy</a>.</p>
+        </section>
+      </div>
+    </div>
+  </section>
+{% endblock %}

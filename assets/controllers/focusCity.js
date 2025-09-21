@@ -4,6 +4,9 @@
 
 import { qs, on } from '../helpers/dom.js';
 
+// Detect homepage to alter behavior: only scroll, do not focus
+const IS_HOMEPAGE = !!document.querySelector('[data-route="app_homepage"]');
+
 function getCityInput() {
   // Prefer primary hero city field, fallback to sticky city input
   return (
@@ -140,7 +143,15 @@ async function centerAndFocusCity(targetEl) {
 }
 
 // Public hook for other controllers
-window.CW_focusCityAfterScroll = (targetEl) => centerAndFocusCity(targetEl);
+// On homepage, disable focusing to avoid popping city suggestions — just center scroll
+window.CW_focusCityAfterScroll = (targetEl) => {
+  if (IS_HOMEPAGE) {
+    const el = targetEl || getCityInput();
+    if (el) ensureCentered(el);
+    return;
+  }
+  return centerAndFocusCity(targetEl);
+};
 
 // Intercept anchor clicks to #search-form or #city to center+focus elegantly
 on(document, 'click', (e) => {
@@ -149,6 +160,14 @@ on(document, 'click', (e) => {
   const href = a.getAttribute('href');
   if (href === '#search-form' || href === '#city') {
     const target = document.querySelector(href);
+    // On homepage, only scroll without focusing to prevent suggestions popup
+    if (IS_HOMEPAGE) {
+      if (target) {
+        e.preventDefault();
+        ensureCentered(target);
+      }
+      return;
+    }
     e.preventDefault();
     centerAndFocusCity(target);
   }
