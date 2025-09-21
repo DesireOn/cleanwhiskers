@@ -10,7 +10,7 @@
     {{ parent() }}
     <script type="module" src="{{ asset('js/faq-accordion.js') }}" defer></script>
     <script type="module" src="{{ asset('js/form-enhance.js') }}" defer></script>
-    {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+    {% if (captcha_provider|default('')|lower) not in ['', 'none'] %}
         {% if captcha_provider|lower in ['recaptcha', 'google'] %}
             <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         {% elseif captcha_provider|lower == 'hcaptcha' %}
@@ -43,42 +43,49 @@
 
         <div class="city-hero__form" id="get-started">
           <div class="city-hero__form-card" role="group" aria-label="Request a tailored quote">
+            {# Pull any previously-submitted values from flash (consumed once) #}
+            {% set _form_values = (app.flashes('form_values')|first)|default({}) %}
+            {% for msg in app.flashes('form_error') %}
+              <div class="form-alert form-alert--error" role="alert" aria-live="polite">
+                <strong>Action needed:</strong> {{ msg }}
+              </div>
+            {% endfor %}
             <h2 class="city-hero__form-title">Start your {{ service.name|lower }} quote</h2>
             <p class="city-hero__form-subtitle">We’ll introduce you to the groomer who can take great care of your pet.</p>
 
-            <form class="lead-capture-form" method="post" action="/lead" novalidate>
+            <form class="lead-capture-form" id="lead-form" method="post" action="/lead" novalidate>
               <input type="hidden" name="city" value="{{ city.slug }}" />
               <input type="hidden" name="service" value="{{ service.slug }}" />
 
               <div class="form-field">
                 <label class="form-label" for="lead-full-name">Full Name</label>
-                <input class="form-input" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required />
+                <input class="form-input" type="text" id="lead-full-name" name="full_name" placeholder="Your full name" autocomplete="name" required value="{{ _form_values.full_name|default('') }}" />
               </div>
 
               <div class="form-field">
                 <label class="form-label" for="lead-phone">Phone Number</label>
-                <input class="form-input" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required pattern="^[0-9+().\\s-]{7,}$" title="Use digits and symbols like + ( ) -" aria-describedby="lead-phone-hint" />
+                <input class="form-input" type="tel" id="lead-phone" name="phone" placeholder="(555) 123-4567" inputmode="tel" autocomplete="tel" required pattern="^[0-9+().\\s-]{7,}$" title="Use digits and symbols like + ( ) -" aria-describedby="lead-phone-hint" value="{{ _form_values.phone|default('') }}" />
                 <div id="lead-phone-hint" class="field-hint">We’ll only use this to connect you with a groomer.</div>
               </div>
 
               <div class="form-field">
                 <label class="form-label" for="lead-email">Email (optional)</label>
-                <input class="form-input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" aria-describedby="lead-email-hint" />
+                <input class="form-input" type="email" id="lead-email" name="email" placeholder="you@example.com" autocomplete="email" aria-describedby="lead-email-hint" value="{{ _form_values.email|default('') }}" />
                 <div id="lead-email-hint" class="field-hint">Helpful for sharing quotes and appointment updates.</div>
               </div>
 
               <div class="form-field">
                 <label class="form-label" for="lead-pet-type">Pet Type</label>
                 <select class="form-input" id="lead-pet-type" name="pet_type" required>
-                  <option value="" disabled selected>Select pet type</option>
-                  <option value="dog">Dog</option>
-                  <option value="cat">Cat</option>
+                  <option value="" disabled {% if (_form_values.pet_type|default('')) == '' %}selected{% endif %}>Select pet type</option>
+                  <option value="dog" {% if (_form_values.pet_type|default('')) == 'dog' %}selected{% endif %}>Dog</option>
+                  <option value="cat" {% if (_form_values.pet_type|default('')) == 'cat' %}selected{% endif %}>Cat</option>
                 </select>
               </div>
 
               <div class="form-field">
                 <label class="form-label" for="lead-notes">Care Notes</label>
-                <textarea class="form-input form-textarea" id="lead-notes" name="breed_size" rows="3" placeholder="Add coat type, grooming goals, timing, or special handling"></textarea>
+                <textarea class="form-input form-textarea" id="lead-notes" name="breed_size" rows="3" placeholder="Add coat type, grooming goals, timing, or special handling">{{ _form_values.breed_size|default('') }}</textarea>
               </div>
 
               <div class="visually-hidden" aria-hidden="true" style="position:absolute; left:-10000px;">
@@ -88,12 +95,12 @@
 
               <div class="form-field form-field--checkbox">
                 <label class="form-label" for="lead-consent">
-                  <input type="checkbox" id="lead-consent" name="consent_to_share" required />
+                  <input type="checkbox" id="lead-consent" name="consent_to_share" required {% if _form_values.consent_to_share|default(false) %}checked{% endif %} />
                   I agree that CleanWhiskers may share my request and contact details with local groomers for this quote.
                 </label>
               </div>
 
-              {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+              {% if (captcha_provider|default('')|lower) not in ['', 'none'] %}
                 <div class="form-field captcha-field">
                   {% if captcha_provider|lower in ['recaptcha', 'google'] %}
                     <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key|default('') }}" data-theme="light"></div>
@@ -110,7 +117,7 @@
                 <a href="{{ path('app_terms') }}">Terms</a>
                 and acknowledge our
                 <a href="{{ path('app_privacy') }}">Privacy Policy</a>.
-                {% if captcha_provider is defined and captcha_provider|lower != 'none' and captcha_provider|length > 0 %}
+                {% if (captcha_provider|default('')|lower) not in ['', 'none'] %}
                   {% if captcha_provider|lower in ['recaptcha', 'google'] %}
                     This site is protected by reCAPTCHA and the Google
                     <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">Privacy Policy</a>
