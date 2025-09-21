@@ -38,10 +38,16 @@
       {% endif %}
     </p>
 
+    {% if reason == 'already_claimed' %}
+      <p id="waitlist-help" style="margin:.25rem 0 0; font-size:.95rem; color:#6c757d;">
+        Join the waitlist to get an email if this pet owner reopens the request, or when a similar lead appears near you. It’s free, first‑come first‑served, and you can opt out anytime. If you want a shot at similar local jobs, join; if you’re unavailable, no action needed.
+      </p>
+    {% endif %}
+
     <div style="margin-top:1.25rem; display:flex; gap:.75rem; align-items:center;">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
       {% if reason == 'already_claimed' %}
-        <button class="btn btn-secondary" id="join-waitlist-btn" data-waitlist-join="1">Join the waitlist</button>
+        <button class="btn btn-secondary" id="join-waitlist-btn" data-waitlist-join="1" aria-describedby="waitlist-help" title="Get notified about this or similar leads">Join the waitlist</button>
         <span id="waitlist-feedback" style="font-size:.95rem;"></span>
       {% endif %}
     </div>
