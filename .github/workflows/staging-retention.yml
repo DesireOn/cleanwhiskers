@@ -1,0 +1,28 @@
+name: Staging Data Retention
+
+on:
+  schedule:
+    - cron: '30 2 * * *' # Daily at 02:30 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: staging-retention
+  cancel-in-progress: false
+
+jobs:
+  retention:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      EC2_STAGING_HOST: ${{ secrets.EC2_STAGING_HOST }}
+      EC2_USER: ${{ secrets.EC2_USER }}
+    steps:
+      - name: Run retention on staging host
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no "$EC2_USER"@"$EC2_STAGING_HOST" \
+            "cd /var/www/staging.cleanwhiskers.com && /usr/bin/php bin/console app:leads:retention --env=prod"

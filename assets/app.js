@@ -20,3 +20,5 @@ import './styles/components/overlay-focus.css';
 import './controllers/index.js';
 // Benefits section styles (list page)
 import './styles/blocks/benefits-section.css';
+// Legal pages
+import './styles/blocks/legal.css';

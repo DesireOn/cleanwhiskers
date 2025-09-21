@@ -1,23 +1,24 @@
 /*
-  Hero (from scratch)
-  — Accessible, responsive, and minimal. Keeps existing class names.
+  Hero block
+  - Base structure shared by homepage hero and supporting forms
 */
 
 .hero {
     position: relative;
-    isolation: isolate; /* create a new stacking context for overlays */
+    isolation: isolate;
     display: grid;
     place-items: center;
-    min-block-size: min(80vh, 42rem);
-    padding-block: clamp(var(--space-4), 6vw, calc(var(--space-5) + 1rem));
-    padding-inline: var(--space-3);
-    /* Light-on-dark for better readability over imagery */
-    color: #fff;
-    background-color: var(--color-pastel);
-    overflow: clip;
+    min-block-size: clamp(32rem, 75vh, 48rem);
+    padding-block: clamp(var(--space-4), 6vw, calc(var(--space-5) + 1.5rem));
+    padding-inline: clamp(var(--space-3), 6vw, var(--space-5));
+    background:
+        radial-gradient(32rem 32rem at 10% -10%, rgba(78, 189, 182, 0.22), transparent 70%),
+        radial-gradient(28rem 28rem at 90% 100%, rgba(255, 152, 0, 0.18), transparent 75%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(253, 250, 245, 0.92));
+    color: var(--color-text, #222222);
+    overflow: hidden;
 }
 
-/* Background image layer */
 .hero__image {
     position: absolute;
     inset: 0;
@@ -27,39 +28,25 @@
     z-index: -2;
 }
 
-/* Contrast overlay for readability */
-.hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    /* Darker overlay to ensure sufficient text contrast on varied images */
-    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.30));
-    mix-blend-mode: multiply;
-    z-index: -1;
-}
-
-/* Foreground container */
 .hero__container {
     inline-size: min(100%, 64rem);
     margin-inline: auto;
-    text-align: center;
 }
 
 .hero__title {
-    margin: 0 0 var(--space-4);
+    margin: 0 0 var(--space-3);
     font-weight: 800;
-    letter-spacing: var(--ls-heading);
-    line-height: var(--lh-heading);
-    color: #fff; /* strong contrast on darkened image */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-    font-size: clamp(1.875rem, 4vw + 1rem, 3.5rem); /* 30px → 56px */
+    letter-spacing: var(--ls-heading, 0.02em);
+    line-height: var(--lh-heading, 1.2);
+    color: inherit;
+    text-wrap: balance;
+    font-size: clamp(2rem, 2.6vw + 1rem, 3.5rem);
 }
 
-/* Supporting copy under the title */
 .hero__subtitle {
     margin: 0 0 var(--space-4);
-    color: #f3f6f9;
-    font-size: clamp(1rem, 1.1vw + 0.75rem, 1.25rem);
+    color: rgba(34, 34, 34, 0.7);
+    font-size: clamp(1.05rem, 0.7vw + 1rem, 1.3rem);
     text-wrap: pretty;
 }
 
@@ -69,28 +56,25 @@
     gap: var(--space-3);
 }
 
-/* Privacy + terms note under CTA (dark-over-image) */
 .hero__note {
     margin-top: var(--space-2);
-    color: rgba(255, 255, 255, 0.84);
-    font-size: 0.9375rem; /* 15px */
+    color: rgba(34, 34, 34, 0.65);
+    font-size: 0.9375rem;
     line-height: 1.5;
     max-width: 60ch;
-    margin-inline: auto;
 }
 
 .hero__note a {
-    color: #fff;
+    color: inherit;
     text-decoration: underline;
-    text-decoration-color: rgba(255, 255, 255, 0.6);
     text-underline-offset: 2px;
     transition: text-decoration-color 140ms ease, color 140ms ease;
 }
 
 .hero__note a:hover,
 .hero__note a:focus-visible {
-    text-decoration-color: #fff;
-    outline: 2px solid transparent; /* preserve focus ring area */
+    text-decoration-color: currentColor;
+    outline: 2px solid transparent;
 }
 
 .hero__controls {
@@ -103,98 +87,95 @@
 .hero__label {
     margin: 0;
     font-weight: 600;
-    color: #e9f0f6; /* slightly softer than pure white */
+    color: rgba(34, 34, 34, 0.8);
 }
 
 .hero__input {
     inline-size: 100%;
-    min-block-size: 44px; /* tap target */
+    min-block-size: 48px;
     padding: var(--space-2) var(--space-3);
     font-size: 1rem;
-    color: #111;
-    background-color: #fff;
-    border: 1px solid var(--color-neutral);
-    border: 1px solid color-mix(in oklab, var(--color-neutral), #000 12%);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-sm);
+    color: var(--color-text, #222222);
+    background-color: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(34, 34, 34, 0.16);
+    border-radius: var(--radius-md, 10px);
+    box-shadow: 0 6px 20px rgba(31, 46, 61, 0.06);
+    transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
 .hero__input:focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline: 3px solid color-mix(in oklab, var(--color-accent), #000 10%);
-    outline-offset: 2px;
+    outline: none;
+    border-color: var(--color-accent, #ff9800);
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
 }
 
 .hero__submit {
     inline-size: 100%;
-    min-block-size: 44px;
+    min-block-size: 48px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-md, 10px);
     cursor: pointer;
-    transition: transform 120ms ease, filter 160ms ease;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: transform 150ms ease, filter 150ms ease;
 }
 
 .hero__submit:hover { filter: brightness(1.05); }
 .hero__submit:active { transform: translateY(1px); }
 .hero__submit:focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline: 3px solid color-mix(in oklab, var(--color-accent), #000 10%);
-    outline-offset: 2px;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.24);
 }
 
-/* Trust/meta row */
 .hero__meta {
     margin-top: var(--space-4);
     display: inline-flex;
     gap: var(--space-3);
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
 }
 
 .hero__badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5ch;
-    padding: 6px 10px;
+    padding: 0.5rem 0.9rem;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.35);
-    color: #fff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(253, 250, 245, 0.92));
+    color: rgba(34, 34, 34, 0.75);
     font-weight: 600;
     line-height: 1;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2) inset;
+    box-shadow: 0 12px 22px rgba(31, 46, 61, 0.12);
 }
 
-/* Breakpoints */
 @media (min-width: 680px) {
     .hero__controls {
-        grid-template-columns: 1fr auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: stretch;
     }
     .hero__submit { inline-size: auto; }
 }
 
 @media (min-width: 1024px) {
-    .hero { min-block-size: 70vh; }
-    .hero__title { font-size: clamp(2.25rem, 3vw + 1rem, 4rem); }
+    .hero { min-block-size: clamp(36rem, 78vh, 52rem); }
+    .hero__title { font-size: clamp(2.4rem, 2vw + 1.5rem, 3.75rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .hero__submit { transition: none; }
 }
 
-/* Inline error visuals (hero form) */
 .hero .lead-capture-form .hero__input[aria-invalid="true"] {
     border-color: #d93025;
-    box-shadow: 0 0 0 2px rgba(217,48,37,0.08);
+    box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.08);
 }
 
 .hero .lead-capture-form .field-error {
     margin-top: 4px;
-    color: #f3b0ab; /* softer on dark hero background */
+    color: #d93025;
     font-size: 0.875rem;
 }
 

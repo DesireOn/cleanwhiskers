@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {# Define an empty title block so block('title') is resolvable #}
-        {% block title %}{% endblock %}
+        {# Define the title block without rendering it #}
+        {% set _ %}{% block title %}{% endblock %}{% endset %}
         {% set pageTitle = block('title') %}
         {% set legacySeo = {
             title: pageTitle is not empty ? pageTitle : seo_title|default('Find trusted pet care | CleanWhiskers'),

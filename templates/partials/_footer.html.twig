@@ -2,8 +2,42 @@
   <h2 class="sr-only">Footer</h2>
   <div class="footer container">
     <section class="footer__brand">
-      <a href="{{ path('app_homepage') }}" class="footer__logo" aria-label="CleanWhiskers home">CleanWhiskers</a>
-      <p class="footer__tagline">Find trusted pet care near you.</p>
+      <a href="{{ path('app_homepage') }}" class="footer__logo" aria-label="CleanWhiskers home">
+        <span class="footer__logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="presentation" focusable="false" aria-hidden="true">
+            <path d="M14 4.5c1.3-2 3.6-2 4.9 0l1.2 1.8a2 2 0 002.1.88l2.1-.48c2.3-.52 3.8 1.5 2.9 3.5l-.9 1.96a2 2 0 000 1.64l.9 1.96c.9 2-.6 4-2.9 3.5l-2.1-.48a2 2 0 00-2.1.88l-1.2 1.8c-1.3 2-3.6 2-4.9 0l-1.2-1.8a2 2 0 00-2.1-.88l-2.1.48c-2.3.52-3.8-1.5-2.9-3.5l.9-1.96a2 2 0 000-1.64l-.9-1.96c-.9-2 .6-4 2.9-3.5l2.1.48a2 2 0 002.1-.88z" />
+            <circle cx="16" cy="16" r="3.5" />
+          </svg>
+        </span>
+        <span class="footer__wordmark">CleanWhiskers</span>
+      </a>
+      <p class="footer__tagline">The easier way to book trusted mobile groomers.</p>
+      <div class="footer__social-group">
+        <p class="footer__social-label">Stay in the loop</p>
+        <ul class="footer__social">
+          <li>
+            <a class="footer__social-link" href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Follow CleanWhiskers on Instagram">
+              <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
+                <path d="M7 3h10a4 4 0 014 4v10a4 4 0 01-4 4H7a4 4 0 01-4-4V7a4 4 0 014-4zm5 5.5A3.5 3.5 0 1015.5 12 3.5 3.5 0 0012 8.5zm0 1.5a2 2 0 11-2 2 2 2 0 012-2zm6.25-2.88a1 1 0 10-1.5 1.32 1 1 0 001.5-1.32z" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="footer__social-link" href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Follow CleanWhiskers on Facebook">
+              <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
+                <path d="M13.5 21H10V12H8V9h2V7.25C10 5 11.5 3.5 14.1 3.5c1 0 1.9.07 1.9.07V6h-1.4c-1.1 0-1.5.68-1.5 1.4V9h2.6l-.4 3h-2.2z" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="footer__social-link" href="https://www.youtube.com" target="_blank" rel="noopener" aria-label="Watch CleanWhiskers on YouTube">
+              <svg viewBox="0 0 24 24" role="presentation" focusable="false" aria-hidden="true">
+                <path d="M21.6 7.2a2.5 2.5 0 00-1.79-1.76A53.8 53.8 0 0012 5a53.8 53.8 0 00-7.81.44A2.5 2.5 0 002.4 7.2 26.6 26.6 0 002 12a26.6 26.6 0 00.4 4.8 2.5 2.5 0 001.79 1.76A53.8 53.8 0 0012 19a53.8 53.8 0 007.81-.44 2.5 2.5 0 001.79-1.76A26.6 26.6 0 0022 12a26.6 26.6 0 00-.4-4.8zM10 15.5v-7l6 3.5z" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
     </section>
 
     <nav class="footer__nav" aria-label="Company">
@@ -30,6 +64,7 @@
 
     <section class="footer__cta">
       <h3 class="footer__heading">Find mobile groomers near you</h3>
+      <p class="footer__cta-copy">Enter your city to see availability and book in minutes.</p>
       <form class="footer__form" action="{{ path('app_search_redirect') }}" method="get" role="search" aria-describedby="footer-city-help" autocomplete="off" novalidate>
         <label class="sr-only" for="footer-city">Enter city</label>
         <input
@@ -51,17 +86,19 @@
         <button class="search-form__button btn btn--accent" type="submit">Find Groomers</button>
       </form>
       <span id="footer-city-help" class="visually-hidden">Focus or type to see city suggestions. Use arrow keys to navigate.</span>
-      {# Social icons temporarily removed #}
     </section>
   </div>
 
   <div class="footer__legal container">
-    <p class="footer__copyright">&copy; {{ 'now'|date('Y') }} CleanWhiskers</p>
+    <p class="footer__copyright">&copy; {{ 'now'|date('Y') }} CleanWhiskers. All rights reserved.</p>
     <ul class="footer__legal-list">
       <li><a class="footer__link" href="{{ path('app_privacy') }}">Privacy</a></li>
       <li><a class="footer__link" href="{{ path('app_terms') }}">Terms</a></li>
       <li><a class="footer__link" href="#accessibility">Accessibility</a></li>
     </ul>
-    <a class="footer__top" href="#top">Back to top</a>
+    <a class="footer__top" href="#top" aria-label="Back to top">
+      <span aria-hidden="true">&#8593;</span>
+      Back to top
+    </a>
   </div>
 </footer>
