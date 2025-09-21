@@ -59,6 +59,18 @@ class LeadRecipient
     #[ORM\Column(name: 'released_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $releasedAt = null;
 
+    #[ORM\Column(name: 'commitment_confirmed_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $commitmentConfirmedAt = null;
+
+    #[ORM\Column(name: 'contacted_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $contactedAt = null;
+
+    #[ORM\Column(name: 'auto_released_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $autoReleasedAt = null;
+
+    #[ORM\Column(name: 'release_reason', length: 255, nullable: true)]
+    private ?string $releaseReason = null;
+
     public function __construct(Lead $lead, string $email, string $claimTokenHash, \DateTimeImmutable $tokenExpiresAt)
     {
         $this->lead = $lead;
@@ -99,4 +111,16 @@ class LeadRecipient
 
     public function getReleasedAt(): ?\DateTimeImmutable { return $this->releasedAt; }
     public function setReleasedAt(?\DateTimeImmutable $releasedAt): void { $this->releasedAt = $releasedAt; }
+
+    public function getCommitmentConfirmedAt(): ?\DateTimeImmutable { return $this->commitmentConfirmedAt; }
+    public function setCommitmentConfirmedAt(?\DateTimeImmutable $at): void { $this->commitmentConfirmedAt = $at; }
+
+    public function getContactedAt(): ?\DateTimeImmutable { return $this->contactedAt; }
+    public function setContactedAt(?\DateTimeImmutable $at): void { $this->contactedAt = $at; }
+
+    public function getAutoReleasedAt(): ?\DateTimeImmutable { return $this->autoReleasedAt; }
+    public function setAutoReleasedAt(?\DateTimeImmutable $at): void { $this->autoReleasedAt = $at; }
+
+    public function getReleaseReason(): ?string { return $this->releaseReason; }
+    public function setReleaseReason(?string $reason): void { $this->releaseReason = $reason; }
 }
