@@ -43,7 +43,15 @@
 
 /* Margin utilities */
 .mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
 .mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+
+@media (min-width: 1024px) {
+    .mb-8 { margin-bottom: 3rem; }
+    .mt-8 { margin-top: 3rem; }
+}
 
 /* Width utilities */
 /* Constrain content width for focused pages/sections */
