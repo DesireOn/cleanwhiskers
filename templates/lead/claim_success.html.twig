@@ -45,13 +45,15 @@
 
     {# Owner notes moved into the top details card #}
 
-    <h2 class="mb-4">Next steps</h2>
-    <ol style="padding-left:1.25rem; margin:0;">
-      <li>Introduce yourself by phone within 1–2 hours.</li>
-      <li>Reference their request for {{ serviceName }} in {{ cityName }}.</li>
-      <li>Share availability, pricing, and how to book.</li>
-      <li>If no response, follow up politely within 24–48 hours.</li>
-    </ol>
+    <section class="next-steps card">
+      <h2 class="next-steps__title mb-4">Next steps</h2>
+      <ol class="next-steps__list">
+        <li class="next-steps__item">Introduce yourself by phone within 1–2 hours.</li>
+        <li class="next-steps__item">Reference their request for {{ serviceName }} in {{ cityName }}.</li>
+        <li class="next-steps__item">Share availability, pricing, and how to book.</li>
+        <li class="next-steps__item">If no response, follow up politely within 24–48 hours.</li>
+      </ol>
+    </section>
 
   </section>
 {% endblock %}
