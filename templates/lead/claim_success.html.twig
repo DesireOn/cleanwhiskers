@@ -41,17 +41,7 @@
       </p>
     </div>
 
-    {% if undoEnabled and releaseUrl and releaseUntil %}
-      <div class="card card--warning mb-6">
-        <div class="flex items-center flex-wrap" style="gap:1rem; justify-content:space-between;">
-          <div style="min-width:220px; flex:1;">
-            <p class="mb-4"><strong>Changed your mind?</strong></p>
-            <p class="mb-0">You can release this lead until {{ releaseUntil|date('H:i, M j') }}.</p>
-          </div>
-          <a class="btn btn--accent tap-target" href="{{ releaseUrl }}" aria-label="Release this lead">Release this lead</a>
-        </div>
-      </div>
-    {% endif %}
+    {# Release this lead section removed as requested #}
 
     {# Owner notes moved into the top details card #}
 
