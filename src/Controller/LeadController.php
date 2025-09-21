@@ -35,9 +35,27 @@ final class LeadController extends AbstractController
 
         // Early CAPTCHA verification (short-circuit on failure)
         if (!$this->captcha->verify($dto->captchaToken, $dto->clientIp)) {
-            return $this->render('lead/submit_error.html.twig', [
-                'errors' => ['CAPTCHA verification failed.'],
-            ], new Response('', Response::HTTP_BAD_REQUEST));
+            $message = ($dto->captchaToken === null || trim($dto->captchaToken) === '')
+                ? 'Please complete the CAPTCHA to submit.'
+                : 'Captcha could not be verified. Please try again.';
+
+            $this->addFlash('form_error', $message);
+            // Preserve submitted values so the user doesn't need to retype
+            $this->addFlash('form_values', [
+                'full_name' => $dto->fullName,
+                'phone' => $dto->phone,
+                'email' => $dto->email,
+                'pet_type' => $dto->petType,
+                'breed_size' => $dto->breedSize,
+                'consent_to_share' => $dto->consentToShare,
+            ]);
+
+            // Redirect back to the form with anchor for better UX
+            $url = $this->generateUrl('app_groomer_list_by_city_service', [
+                'citySlug' => $dto->citySlug,
+                'serviceSlug' => $dto->serviceSlug,
+            ]);
+            return $this->redirect($url.'#get-started', Response::HTTP_FOUND);
         }
 
         $errors = $this->validator->validate($dto);
