@@ -56,7 +56,7 @@
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
       {% if reason == 'already_claimed' %}
         <button class="btn btn--accent" id="join-waitlist-btn" data-waitlist-join="1" aria-describedby="waitlist-help" title="Get notified about this or similar leads">Join the waitlist</button>
-        <span id="waitlist-feedback"></span>
+        <span id="waitlist-feedback" aria-live="polite"></span>
       {% endif %}
     </div>
       </div>
