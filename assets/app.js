@@ -24,3 +24,5 @@ import './styles/blocks/benefits-section.css';
 import './styles/blocks/legal.css';
 // Lead waitlist helper (used on claim invalid page)
 import './js/lead-waitlist.js';
+// Enhance lead capture forms: inline errors + disable submit on send
+import './js/form-enhance.js';
