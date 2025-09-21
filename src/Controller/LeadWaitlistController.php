@@ -26,8 +26,16 @@ final class LeadWaitlistController extends AbstractController
     {
         // Reuse the same signed params as claim links; the frontend will POST to this route
         // carrying the original query string (lid, rid, email, token, exp, signature).
+        // The signature was generated for the claim URL, not this join endpoint.
+        // Reconstruct the original claim URL with the same query string so UriSigner::check() matches.
+        $originalClaimUrl = $request->getSchemeAndHttpHost() . '/leads/claim';
+        $queryString = $request->getQueryString();
+        if ($queryString !== null && $queryString !== '') {
+            $originalClaimUrl .= '?' . $queryString;
+        }
+
         $dto = LeadClaimRequest::fromRaw(
-            uri: $request->getUri(),
+            uri: $originalClaimUrl,
             lid: (string) $request->query->get('lid', ''),
             rid: (string) $request->query->get('rid', ''),
             email: (string) $request->query->get('email', ''),
@@ -52,4 +60,3 @@ final class LeadWaitlistController extends AbstractController
         ], $status);
     }
 }
-
