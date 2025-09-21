@@ -13,7 +13,23 @@
       <p class="mb-4"><strong>Service:</strong> {{ serviceName }}</p>
       <p class="mb-4"><strong>City:</strong> {{ cityName }}</p>
       {% if lead.claimedAt %}
-        <p class="mb-0"><strong>Claimed at:</strong> {{ lead.claimedAt|date('H:i, M j') }}</p>
+        <p class="mb-4"><strong>Claimed at:</strong> {{ lead.claimedAt|date('H:i, M j') }}</p>
+      {% endif %}
+
+      <hr class="mb-4" />
+
+      <p class="mb-4"><strong>Owner name:</strong> {{ lead.fullName }}</p>
+      {# Temporarily hide email on success page #}
+      {# <p class="mb-4"><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></p> #}
+      {% if lead.phone %}
+        <p class="mb-4"><strong>Owner phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></p>
+      {% endif %}
+
+      {% if lead.petType %}
+        <p class="mb-4"><strong>Pet type:</strong> {{ lead.petType }}</p>
+      {% endif %}
+      {% if lead.breedSize %}
+        <p class="mb-0"><strong>Care notes:</strong> {{ lead.breedSize }}</p>
       {% endif %}
     </div>
 
@@ -37,21 +53,7 @@
       </div>
     {% endif %}
 
-    <h2 class="mb-4">Owner contact</h2>
-    <div class="card mb-6">
-      <p class="mb-4"><strong>Name:</strong> {{ lead.fullName }}</p>
-      {# Temporarily hide email on success page #}
-      {# <p style="margin:0 0 .25rem 0;"><strong>Email:</strong> <a href="mailto:{{ lead.email }}">{{ lead.email }}</a></p> #}
-      {% if lead.phone %}
-        <p class="mb-4"><strong>Phone:</strong> <a href="tel:{{ lead.phone }}">{{ lead.phone }}</a></p>
-      {% endif %}
-      {% if lead.petType %}
-        <p class="mb-4"><strong>Pet type:</strong> {{ lead.petType }}</p>
-      {% endif %}
-      {% if lead.breedSize %}
-        <p class="mb-0"><strong>Care notes:</strong> {{ lead.breedSize }}</p>
-      {% endif %}
-    </div>
+    {# Owner notes moved into the top details card #}
 
     <h2 class="mb-4">Next steps</h2>
     <ol style="padding-left:1.25rem; margin:0;">
