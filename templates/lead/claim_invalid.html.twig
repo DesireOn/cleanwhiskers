@@ -8,16 +8,24 @@
   {% endif %}
 {% endblock %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="{{ asset('styles/utilities.css') }}">
+  <link rel="stylesheet" href="{{ asset('styles/blocks/card.css') }}">
+{% endblock %}
+
 {% block body %}
-  <section class="container" style="max-width:720px;margin:2rem auto;">
-    <h1>
+  <section class="container container--narrow mt-6">
+    <div class="card">
+      <div class="card__body">
+    <h1 class="mb-4">
       {% if reason == 'already_claimed' %}
         This lead has already been claimed
       {% else %}
         We couldn’t verify your claim link
       {% endif %}
     </h1>
-    <p>
+    <p class="mb-4">
       {% if reason == 'expired' %}
         This link has expired. For security, claim links are time-limited.
       {% elseif reason == 'invalid_signature' %}
@@ -39,17 +47,19 @@
     </p>
 
     {% if reason == 'already_claimed' %}
-      <p id="waitlist-help" style="margin:.25rem 0 0; font-size:.95rem; color:#6c757d;">
-        Join the waitlist to get an email if this pet owner reopens the request, or when a similar lead appears near you. It’s free, first‑come first‑served, and you can opt out anytime. If you want a shot at similar local jobs, join; if you’re unavailable, no action needed.
+      <p id="waitlist-help" class="mb-4">
+        Join the waitlist to get an email if this pet owner reopens the request, or when a similar lead appears near you. It’s free, first‑come‑first‑served, and you can opt out anytime. If you want a shot at similar local jobs, join; if you’re unavailable, no action needed.
       </p>
     {% endif %}
 
-    <div style="margin-top:1.25rem; display:flex; gap:.75rem; align-items:center;">
+    <div class="flex gap-3 items-center flex-wrap mb-4">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
       {% if reason == 'already_claimed' %}
-        <button class="btn btn-secondary" id="join-waitlist-btn" data-waitlist-join="1" aria-describedby="waitlist-help" title="Get notified about this or similar leads">Join the waitlist</button>
-        <span id="waitlist-feedback" style="font-size:.95rem;"></span>
+        <button class="btn btn--accent" id="join-waitlist-btn" data-waitlist-join="1" aria-describedby="waitlist-help" title="Get notified about this or similar leads">Join the waitlist</button>
+        <span id="waitlist-feedback"></span>
       {% endif %}
+    </div>
+      </div>
     </div>
   </section>
 {% endblock %}

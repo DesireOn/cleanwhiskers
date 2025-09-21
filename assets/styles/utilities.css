@@ -45,6 +45,17 @@
 .mb-4 { margin-bottom: 1rem; }
 .mt-6 { margin-top: 1.5rem; }
 
+/* Width utilities */
+/* Constrain content width for focused pages/sections */
+.container--narrow {
+    max-width: 720px;
+}
+
+/* Flex utilities */
+.flex { display: flex; }
+.items-center { align-items: center; }
+.flex-wrap { flex-wrap: wrap; }
+
 /* Tap target utility */
 .tap-target {
     min-height: 48px;
