@@ -10,6 +10,7 @@ use App\Repository\LeadRepository;
 
 #[ORM\Entity(repositoryClass: LeadRepository::class)]
 #[ORM\Table(name: 'lead_capture')]
+#[ORM\UniqueConstraint(name: 'uniq_lead_submission_fingerprint', columns: ['submission_fingerprint'])]
 class Lead
 {
     public const STATUS_PENDING = 'pending';
@@ -71,6 +72,9 @@ class Lead
     #[ORM\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
     private \DateTimeImmutable $updatedAt;
 
+    #[ORM\Column(name: 'submission_fingerprint', length: 64, nullable: true)]
+    private ?string $submissionFingerprint = null;
+
     public function __construct(City $city, Service $service, string $fullName, string $email)
     {
         $this->city = $city;
@@ -123,4 +127,7 @@ class Lead
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void { $this->updatedAt = $updatedAt; }
+
+    public function getSubmissionFingerprint(): ?string { return $this->submissionFingerprint; }
+    public function setSubmissionFingerprint(?string $fingerprint): void { $this->submissionFingerprint = $fingerprint; }
 }
