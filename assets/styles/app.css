@@ -164,6 +164,28 @@ h3 { font-size: var(--fs-h3); }
     box-shadow: var(--shadow-md);
 }
 
+/* Generic card utility for simple panels */
+.card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Context variants used across internal pages */
+.card--info {
+    background: #eff6ff; /* soft blue */
+    border-color: #bfdbfe;
+    color: #0f172a;
+}
+
+.card--warning {
+    background: #fff7ed; /* soft amber */
+    border-color: #fed7aa;
+    color: #7c2d12;
+}
+
 /* Layout utilities */
 /* Breakpoints: sm=480px, md=768px, lg=1024px */
 
