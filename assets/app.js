@@ -22,3 +22,5 @@ import './controllers/index.js';
 import './styles/blocks/benefits-section.css';
 // Legal pages
 import './styles/blocks/legal.css';
+// Lead waitlist helper (used on claim invalid page)
+import './js/lead-waitlist.js';

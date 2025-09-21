@@ -38,8 +38,12 @@
       {% endif %}
     </p>
 
-    <div style="margin-top:1.25rem;">
+    <div style="margin-top:1.25rem; display:flex; gap:.75rem; align-items:center;">
       <a class="btn" href="{{ path('app_homepage') }}">Go to Homepage</a>
+      {% if reason == 'already_claimed' %}
+        <button class="btn btn-secondary" id="join-waitlist-btn" data-waitlist-join="1">Join the waitlist</button>
+        <span id="waitlist-feedback" style="font-size:.95rem;"></span>
+      {% endif %}
     </div>
   </section>
 {% endblock %}
