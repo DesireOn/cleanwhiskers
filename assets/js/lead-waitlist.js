@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const storageKey = `waitlist:${lid}:${rid}:${email}`;
 
   const markJoined = (message = 'Added to the waitlist. We will notify you.') => {
-    try { sessionStorage.setItem(storageKey, 'joined'); } catch (_) {}
+    try { localStorage.setItem(storageKey, 'joined'); } catch (_) {}
     btn.disabled = true;
     btn.setAttribute('aria-disabled', 'true');
     btn.classList.add('is-disabled');
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // If already joined earlier in this session, keep UI disabled
   try {
-    if (sessionStorage.getItem(storageKey) === 'joined') {
+    if (localStorage.getItem(storageKey) === 'joined') {
       markJoined('Already on the waitlist.');
     }
   } catch (_) {}
