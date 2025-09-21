@@ -10,7 +10,6 @@ use App\Repository\LeadRepository;
 
 #[ORM\Entity(repositoryClass: LeadRepository::class)]
 #[ORM\Table(name: 'lead_capture')]
-#[ORM\UniqueConstraint(name: 'uniq_lead_submission_fingerprint', columns: ['submission_fingerprint'])]
 class Lead
 {
     public const STATUS_PENDING = 'pending';

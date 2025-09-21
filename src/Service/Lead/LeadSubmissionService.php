@@ -11,6 +11,7 @@ use App\Repository\CityRepository;
 use App\Repository\ServiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use DateTimeImmutable;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 final class LeadSubmissionService
@@ -21,6 +22,7 @@ final class LeadSubmissionService
         private readonly EntityManagerInterface $em,
         private readonly MessageBusInterface $bus,
         private readonly LeadTokenFactory $leadTokenFactory,
+        private readonly int $dedupeWindowMinutes = 10,
     ) {
     }
 
@@ -36,20 +38,24 @@ final class LeadSubmissionService
         $email = ($dto->email !== null && trim($dto->email) !== '') ? $dto->email : 'owner@invalid.local';
         $email = mb_strtolower(trim($email));
 
-        // Compute idempotency fingerprint for identical submissions
+        // Compute idempotency fingerprint for identical submissions (bucketed by time window)
+        $bucket = (int) floor((new DateTimeImmutable())->getTimestamp() / max(60, $this->dedupeWindowMinutes * 60));
         $fingerprint = $this->computeFingerprint(
             $email,
             (string) ($city->getId() ?? ''),
             (string) ($service->getId() ?? ''),
             (string) ($dto->phone ?? ''),
             (string) ($dto->petType ?? ''),
-            (string) ($dto->breedSize ?? '')
+            (string) ($dto->breedSize ?? ''),
+            $bucket
         );
 
-        // If an identical submission already exists, return it without dispatching again
-        $existing = $this->em->getRepository(\App\Entity\Lead::class)->findOneBy(['submissionFingerprint' => $fingerprint]);
+        // Time-window dedupe: collapse identical submissions within the last N minutes
+        /** @var \App\Repository\LeadRepository $leadRepo */
+        $leadRepo = $this->em->getRepository(\App\Entity\Lead::class);
+        $threshold = (new DateTimeImmutable())->modify(sprintf('-%d minutes', $this->dedupeWindowMinutes));
+        $existing = $leadRepo->findRecentByFingerprint($fingerprint, $threshold);
         if ($existing instanceof \App\Entity\Lead) {
-            // Re-dispatch to ensure outreach in case prior attempt didn’t process
             if ($existing->getId() !== null) {
                 $this->bus->dispatch(new DispatchLeadMessage((int) $existing->getId()));
             }
@@ -66,17 +72,14 @@ final class LeadSubmissionService
         // Issue owner token
         $this->leadTokenFactory->issueOwnerToken($lead);
 
-        // Persist (guard against race by catching unique violation)
+        // Persist with DB-level safeguard for races
         try {
             $this->em->persist($lead);
             $this->em->flush();
         } catch (UniqueConstraintViolationException $e) {
-            /** @var \App\Entity\Lead|null $dupe */
-            $dupe = $this->em->getRepository(\App\Entity\Lead::class)->findOneBy(['submissionFingerprint' => $fingerprint]);
-            if ($dupe instanceof \App\Entity\Lead) {
-                if ($dupe->getId() !== null) {
-                    $this->bus->dispatch(new DispatchLeadMessage((int) $dupe->getId()));
-                }
+            $dupe = $leadRepo->findRecentByFingerprint($fingerprint, $threshold);
+            if ($dupe instanceof \App\Entity\Lead && $dupe->getId() !== null) {
+                $this->bus->dispatch(new DispatchLeadMessage((int) $dupe->getId()));
                 return $dupe;
             }
             throw $e;
@@ -88,7 +91,7 @@ final class LeadSubmissionService
         return $lead;
     }
 
-    private function computeFingerprint(string $email, string $cityId, string $serviceId, string $phone, string $petType, string $breedSize): string
+    private function computeFingerprint(string $email, string $cityId, string $serviceId, string $phone, string $petType, string $breedSize, int $bucket): string
     {
         $parts = [
             trim(mb_strtolower($email)),
@@ -97,6 +100,7 @@ final class LeadSubmissionService
             trim(preg_replace('/\D+/', '', $phone) ?? ''), // numbers only for phone
             trim(mb_strtolower($petType)),
             trim(mb_strtolower($breedSize)),
+            (string) $bucket,
         ];
         return hash('sha256', implode('|', $parts));
     }

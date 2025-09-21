@@ -9,6 +9,7 @@ parameters:
     alerts.admin_email: '%env(string:ALERT_EMAIL)%'
     feature.lead_claim_undo: '%env(bool:FEATURE_LEAD_CLAIM_UNDO)%'
     lead.undo_window_minutes: '%env(int:LEAD_UNDO_WINDOW_MINUTES)%'
+    lead.dedupe_window_minutes: '%env(int:LEAD_DEDUPE_WINDOW_MINUTES)%'
 
 services:
     # default configuration for services in *this* file
@@ -41,6 +42,10 @@ services:
     App\Service\FeatureFlags:
         arguments:
             $featureLeadsEnabled: '%feature.leads.enabled%'
+
+    App\Service\Lead\LeadSubmissionService:
+        arguments:
+            $dedupeWindowMinutes: '%lead.dedupe_window_minutes%'
 
     # CAPTCHA configuration
     # Provider-aware delegating verifier; chooses implementation via env CAPTCHA_PROVIDER
